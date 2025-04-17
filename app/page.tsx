@@ -3,7 +3,7 @@ import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
 export default function Home() {
   return (
     <>
-      <WebsiteJsonLd company="Aesthetic Clinics" url={process.env.NEXT_PUBLIC_BASE_URL} />
+      <WebsiteJsonLd company="Aesthetic Clinics Malaysia" url={process.env.NEXT_PUBLIC_BASE_URL} />
       <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 sm:p-20">
         <main className="row-start-2 flex flex-col items-center justify-center gap-[32px] text-center">
           <h1 className="max-w-3xl text-center text-4xl font-black leading-snug">

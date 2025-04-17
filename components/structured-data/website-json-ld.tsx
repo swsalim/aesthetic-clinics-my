@@ -6,7 +6,7 @@ interface WebsiteJsonLdProps {
 }
 
 export default function WebsiteJsonLd({
-  company = 'Aesthetic Clinics',
+  company = 'Aesthetic Clinics Malaysia',
   url = 'https://www.aestheticclinics.my/',
 }: WebsiteJsonLdProps) {
   return (
