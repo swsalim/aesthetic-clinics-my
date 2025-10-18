@@ -1,22 +1,27 @@
+import { absoluteUrl } from '@/lib/utils';
+
 import JsonLd from './json-ld';
 
 interface WebsiteJsonLdProps {
-  company: string | undefined;
-  url: string | undefined;
+  name?: string;
 }
 
-export default function WebsiteJsonLd({
-  company = 'Aesthetic Clinics Malaysia',
-  url = 'https://www.aestheticclinics.my/',
-}: WebsiteJsonLdProps) {
+export default function WebsiteJsonLd({ name = 'Aesthetic Clinics Malaysia' }: WebsiteJsonLdProps) {
   return (
     <JsonLd id="website-jsonld">
       {{
         '@context': 'https://schema.org',
         '@type': 'WebSite',
-        name: company,
-        url,
+        name,
+        url: absoluteUrl('/'),
         inLanguage: 'en-US',
+        description:
+          'Discover top aesthetic clinics across Malaysia. Compare services, reviews, and prices to find trusted doctors for your beauty and skincare needs.',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: 'https://www.aestheticclinic.my/search?q={search_term_string}',
+          'query-input': 'required name=search_term_string',
+        },
       }}
     </JsonLd>
   );

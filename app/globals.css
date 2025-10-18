@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html body[data-scroll-locked] {
+  --removed-body-scroll-bar-size: 0 !important;
+  overflow: visible !important;
+  overflow-y: scroll !important;
+  margin-right: 0 !important;
+}
+
+@layer base {
+  * {
+    @apply font-medium;
+  }
+
+  a {
+    @apply border-b-2 border-transparent font-medium text-blue-500 no-underline duration-200 dark:text-blue-300;
+  }
+
+  a:hover {
+    @apply border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400;
+  }
+}

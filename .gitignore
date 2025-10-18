@@ -44,3 +44,12 @@ service_account_google.json
 
 .cursorrules
 .cursor/mcp.json
+
+service_account.json
+
+sitemap*.xml
+
+/tasks/data/parsedData
+/tasks/data/OLD
+
+/public/*.xml
