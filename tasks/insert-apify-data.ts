@@ -251,7 +251,7 @@ class ClinicDataProcessor {
       // Process location
       const location = `POINT(${listing.longitude} ${listing.latitude})`;
 
-      const listingData: ClinicInsert = {
+      const listingData: Omit<ClinicInsert, 'images'> = {
         name: listing.title,
         area_id: 'a757a604-1e3b-4919-9b74-a760af3f31e8', // Cheras
         state_id: 'bf230f5e-798c-40ae-bfcb-d8c7fd1440d1', // Kuala Lumpur
