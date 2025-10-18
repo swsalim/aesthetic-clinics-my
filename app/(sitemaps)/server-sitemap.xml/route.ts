@@ -4,8 +4,8 @@ import { absoluteUrl } from '@/lib/utils';
 
 import { getAreaListings } from '@/helpers/areas';
 import { getClinicListings } from '@/helpers/clinics';
-import { getDoctorListings } from '@/helpers/doctors';
-import { getAllServices } from '@/helpers/services';
+// import { getDoctorListings } from '@/helpers/doctors';
+// import { getAllServices } from '@/helpers/services';
 import { getStateListings } from '@/helpers/states';
 
 interface SitemapEntry {
@@ -17,8 +17,8 @@ export async function GET() {
   const states = await getStateListings();
   const areas = await getAreaListings();
   const clinics = await getClinicListings();
-  const doctors = await getDoctorListings();
-  const services = await getAllServices();
+  // const doctors = await getDoctorListings();
+  // const services = await getAllServices();
 
   const fields: SitemapEntry[] = [];
 
@@ -39,7 +39,7 @@ export async function GET() {
       lastmod: new Date().toISOString(),
     });
     fields.push({
-      loc: absoluteUrl(`/${state.slug}/doctors`),
+      loc: absoluteUrl(`/${state.slug}/dentists`),
       lastmod: new Date().toISOString(),
     });
   });
@@ -51,22 +51,24 @@ export async function GET() {
     });
   });
 
-  doctors.forEach((doctor) => {
-    fields.push({
-      loc: absoluteUrl(`/doctor/${doctor.slug}`),
-      lastmod: new Date().toISOString(),
-    });
-  });
+  // TODO: add doctors and services
+  // doctors.forEach((doctor) => {
+  //   fields.push({
+  //     loc: absoluteUrl(`/dentist/${doctor.slug}`),
+  //     lastmod: new Date().toISOString(),
+  //   });
+  // });
 
-  services.forEach((service) => {
-    fields.push({
-      loc: absoluteUrl(`/services/${service.slug}`),
-      lastmod: new Date().toISOString(),
-    });
-  });
+  // services.forEach((service) => {
+  //   fields.push({
+  //     loc: absoluteUrl(`/services/${service.slug}`),
+  //     lastmod: new Date().toISOString(),
+  //   });
+  // });
 
   // Add static pages
-  const staticPages = ['/', '/browse', '/doctors', '/submit'];
+  // const staticPages = ['/', '/browse', '/dentists', '/submit'];
+  const staticPages = ['/', '/browse'];
 
   staticPages.forEach((page) => {
     fields.push({
