@@ -6,7 +6,7 @@ export const siteConfig: SiteConfig = {
   title: 'Find the Best Aesthetic Clinics in Malaysia | Aesthetic Clinic MY',
   description:
     'Discover top aesthetic clinics across Malaysia. Compare services, reviews, and prices to find trusted doctors for your beauty and skincare needs.',
-  siteName: 'Aesthetic ClinicsY',
+  siteName: 'Aesthetic Clinics MY',
   url: new URL(absoluteUrl()),
   openGraph: {
     image: '/images/og-default.png',
