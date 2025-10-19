@@ -16,7 +16,7 @@ import {
 
 import { siteConfig } from '@/config/site';
 
-import { absoluteUrl } from '@/lib/utils';
+import { absoluteUrl, cn } from '@/lib/utils';
 
 import {
   getClinicBySlugStatic,
@@ -42,7 +42,7 @@ import BusinessJsonLd from '@/components/structured-data/business-json-ld';
 import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
 import { Badge } from '@/components/ui/badge';
 import Breadcrumb from '@/components/ui/breadcrumb';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import Container from '@/components/ui/container';
 import Prose from '@/components/ui/prose';
 import { StarRating } from '@/components/ui/star-rating';
@@ -437,25 +437,12 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                         </a>
                       </Button>
                     )}
-                    {/* add a button with a map icon that opens the map in a new tab and show directions to the clinic */}
-                    <Button
-                      variant="outline"
-                      asChild
-                      className="flex-grow-0 justify-center p-3 text-blue-500 hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-400">
-                      <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${parsedClinic.name}`}
-                        target="_blank"
-                        rel="nofollow noopener noreferrer"
-                        aria-label="Visit business on Google Maps">
-                        <CarIcon className="h-5 w-5" />
-                      </a>
-                    </Button>
                   </div>
                 )}
               </div>
             </div>
             {/* right column */}
-            <div className="mt-5 flex flex-col-reverse justify-between gap-x-4 gap-y-4 sm:flex-row lg:mt-0">
+            <div className="mt-5 flex flex-col-reverse justify-between gap-x-4 gap-y-4 sm:flex-col lg:mt-0">
               {!parsedClinic.is_permanently_closed && parsedClinic.phone && (
                 <>
                   <BookAppointmentButton
@@ -464,6 +451,23 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                     areaSlug={parsedClinic.area?.slug ?? ''}
                     clinicSlug={clinicSlug}
                   />
+                  {/* add a button with a map icon that opens the map in a new tab and show directions to the clinic */}
+                  <Button
+                    variant="outline"
+                    asChild
+                    className="flex-grow-0 justify-center p-3 text-blue-500 hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-400">
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${parsedClinic.name}`}
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      aria-label="Visit business on Google Maps"
+                      className={cn(
+                        buttonVariants({ variant: 'secondary' }),
+                        'flex items-center gap-x-2',
+                      )}>
+                      <CarIcon className="h-5 w-5" /> Get Directions
+                    </a>
+                  </Button>
                   <StickyBookButton
                     phone={parsedClinic.phone}
                     stateSlug={parsedClinic.state?.slug ?? ''}

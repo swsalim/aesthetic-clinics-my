@@ -41,51 +41,12 @@ function FooterBadges() {
   return (
     <div className="flex flex-row flex-wrap items-center justify-start gap-6">
       <div>
-        <a
-          href="https://productburst.com/product/aesthetic-clinics-malaysia"
-          target="_blank"
-          rel="noopener noreferrer">
-          <img
-            src="https://3188a5210b07f4ad511bbcdc967bc67b.cdn.bubble.io/f1747782156422x193143061268857820/pB-Badge-dark.png"
-            alt="Featured on ProductBurst"
-            width="147"
-            height="34"
-          />
-        </a>
-      </div>
-      <div>
         <a href="https://fazier.com/launches/aestheticclinics.my" target="_blank">
           <img
             src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&theme=neutral"
             width="170"
             height="34"
             alt="Fazier badge"
-          />
-        </a>
-      </div>
-      <div>
-        <a href="https://liiinks.net" target="_blank">
-          <svg width="102" height="34" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
-            <rect width="120" height="40" rx="8" fill="#667eea" />
-            <text
-              x="60"
-              y="25"
-              fontFamily="Arial, sans-serif"
-              fontSize="12"
-              fill="white"
-              textAnchor="middle">
-              Liiinks
-            </text>
-          </svg>
-        </a>
-      </div>
-      <div>
-        <a href="https://theindiewall.net" target="_blank">
-          <img
-            src="https://theindiewall.net/indiewall.svg"
-            alt="IndieWall"
-            width="68"
-            height="34"
           />
         </a>
       </div>
