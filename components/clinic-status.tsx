@@ -14,7 +14,9 @@ function getClinicStatus(
   specialHours: Partial<ClinicSpecialHours>[],
   date: Date = new Date(),
 ): ClinicStatus {
-  const dayOfWeek = date.getDay() - 1;
+  // Convert JavaScript day (0=Sunday, 1=Monday, ..., 6=Saturday)
+  // to database day (0=Monday, 1=Tuesday, ..., 6=Sunday)
+  const dayOfWeek = date.getDay() === 0 ? 6 : date.getDay() - 1;
   const currentTime = date.toTimeString().slice(0, 5); // HH:mm format
 
   // Helper function to check if current time is within 30 minutes of a target time

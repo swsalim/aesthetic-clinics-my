@@ -54,7 +54,7 @@ function FooterBadges() {
         </a>
       </div>
       <div>
-        <a href="https://fazier.com/launches/www.aestheticclinics.my" target="_blank">
+        <a href="https://fazier.com/launches/aestheticclinics.my" target="_blank">
           <img
             src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&theme=neutral"
             width="170"

@@ -7,7 +7,7 @@ import { ExternalLinkIcon } from 'lucide-react';
 
 import { siteConfig } from '@/config/site';
 
-import { createServerClient } from '@/lib/supabase';
+import { createAdminClient } from '@/lib/supabase';
 
 import Container from '@/components/ui/container';
 import Prose from '@/components/ui/prose';
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BrowsePage() {
-  const supabase = await createServerClient();
+  const supabase = await createAdminClient();
 
   const [{ data: statesData }, { data: areasData }] = await Promise.all([
     supabase.from('states').select('id, name, slug', { count: 'exact' }),
