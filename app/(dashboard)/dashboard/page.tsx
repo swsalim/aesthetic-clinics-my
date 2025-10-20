@@ -135,12 +135,22 @@ export default function Dashboard() {
         },
         (payload) => {
           console.log('Clinic change received:', payload);
+          console.log('Event type:', payload.eventType);
+          console.log('New data:', payload.new);
+          console.log('Old data:', payload.old);
 
           // Refetch data when changes occur
           fetchData(fromDate, toDate);
         },
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Clinics channel subscription status:', status);
+        if (status === 'SUBSCRIBED') {
+          console.log('Successfully subscribed to clinics changes');
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('Error subscribing to clinics channel');
+        }
+      });
 
     const doctorsChannel: RealtimeChannel = supabase
       .channel('doctors-changes')
@@ -153,12 +163,22 @@ export default function Dashboard() {
         },
         (payload) => {
           console.log('Doctor change received:', payload);
+          console.log('Event type:', payload.eventType);
+          console.log('New data:', payload.new);
+          console.log('Old data:', payload.old);
 
           // Refetch data when changes occur
           fetchData(fromDate, toDate);
         },
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Doctors channel subscription status:', status);
+        if (status === 'SUBSCRIBED') {
+          console.log('Successfully subscribed to doctors changes');
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('Error subscribing to doctors channel');
+        }
+      });
 
     // Cleanup subscriptions on unmount
     return () => {

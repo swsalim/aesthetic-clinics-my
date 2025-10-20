@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { ClinicDetails, ClinicHours, ClinicImage } from '@/types/clinic';
+import { YouTubeEmbed } from '@next/third-parties/google';
 import {
   AwardIcon,
   CarIcon,
@@ -489,6 +490,16 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                   <h2 className="my-0">About {parsedClinic.name}</h2>
                   <TruncatedHtml html={parsedClinic.description} limit={80} />
                 </article>
+              )}
+
+              {parsedClinic.featured_video && (
+                <div>
+                  <YouTubeEmbed
+                    videoid={parsedClinic.featured_video.split('v=')[1]}
+                    height={400}
+                    params="controls=0"
+                  />
+                </div>
               )}
 
               <DoctorPracticeAvatar clinicSlug={clinicSlug} />
