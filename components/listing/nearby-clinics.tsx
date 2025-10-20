@@ -25,7 +25,7 @@ async function NearbyClinicsContent({
 }: NearbyClinicsProps) {
   const nearbyClinics = await getClinicsNearLocation(latitude, longitude, radiusInKm, limit);
 
-  if (!nearbyClinics || nearbyClinics.length === 0) {
+  if (!nearbyClinics || nearbyClinics.length < 2) {
     return null;
   }
 
