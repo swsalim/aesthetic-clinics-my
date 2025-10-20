@@ -15,7 +15,7 @@ function FooterCopyright() {
           Built by{' '}
           <a
             href="https://www.yuurrific.com?ref=aestheticclinics.my"
-            className="inline-block font-medium underline underline-offset-4 transition-colors duration-200 hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-100 focus:ring-offset-2 focus:ring-offset-gray-900"
+            className="inline-block font-medium text-blue-400 underline underline-offset-4 transition-colors duration-200 hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-100 focus:ring-offset-2 focus:ring-offset-gray-900"
             target="_blank"
             rel="noopener noreferrer">
             Yuurrific
@@ -26,7 +26,7 @@ function FooterCopyright() {
           Privacy-friendly analytics by{' '}
           <a
             href="https://go.yuurrific.com/seline"
-            className="inline-block rotate-0 rounded-md bg-blue-600 px-2 py-1 text-gray-100 transition duration-100 ease-out hover:-rotate-3 hover:bg-blue-700 hover:ease-in focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+            className="inline-block rotate-0 rounded-md bg-blue-500 px-2 py-1 text-gray-100 transition duration-100 ease-out hover:-rotate-3 hover:bg-blue-600 hover:text-gray-100 hover:ease-in focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
             target="_blank"
             rel="noopener noreferrer">
             Seline
@@ -94,8 +94,30 @@ export default function Footer() {
             </p>
           </div>
           <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div className="mt-10 md:mt-0"></div>
+            <div className="md:grid md:gap-8">
+              <div className="mt-10 md:mt-0">
+                <h3 className="font-semibold leading-6 text-gray-100">Other Health Directories</h3>
+                <ul role="list" className="mt-6 space-y-4">
+                  <li>
+                    <a
+                      className="leading-6 text-gray-300 transition-colors duration-200 hover:text-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-50/50 focus:ring-offset-2 focus:ring-offset-gray-900"
+                      href="https://www.clinicgeek.com/"
+                      target="_blank"
+                      rel="noopener noreferrer">
+                      Clinic Geek
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="leading-6 text-gray-300 transition-colors duration-200 hover:text-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-50/50 focus:ring-offset-2 focus:ring-offset-gray-900"
+                      href="https://www.dentalclinicclosetome.my/"
+                      target="_blank"
+                      rel="noopener noreferrer">
+                      Dental Clinics Malaysia
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div className="mt-10 md:mt-0"></div>

@@ -19,8 +19,8 @@ const Logo: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...pr
           src="logos/aesthetic-clinics-my-v2.png"
           directory="aesthetic-clinics-my"
           alt="Aesthetic Clinics Malaysia"
-          width={40}
-          height={40}
+          width={300}
+          height={300}
           className="h-full w-auto object-contain"
           priority
         />
