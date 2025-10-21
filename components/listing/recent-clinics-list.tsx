@@ -41,7 +41,7 @@ export function RecentClinicsList() {
           )
           .eq('is_active', true)
           .order('modified_at', { ascending: false })
-          .limit(8);
+          .limit(20);
 
         if (error) throw error;
         setClinics((data as unknown as Partial<Clinic>[]) || []);
@@ -95,7 +95,7 @@ export function RecentClinicsList() {
       <div className="mt-10 flex justify-center sm:mt-14">
         <Button variant="primary" size="large" asChild rounded>
           <Link href="/browse" className="no-underline">
-            Discover clinics near me
+            View More
           </Link>
         </Button>
       </div>
