@@ -9,6 +9,7 @@ import { siteConfig } from '@/config/site';
 
 import { createAdminClient } from '@/lib/supabase';
 
+import PageHeading from '@/components/page-heading';
 import Container from '@/components/ui/container';
 import Prose from '@/components/ui/prose';
 import { Wrapper } from '@/components/ui/wrapper';
@@ -71,12 +72,9 @@ export default async function BrowsePage() {
   return (
     <>
       <Wrapper>
+        <PageHeading title="Browse LCP-Certified Aesthetic Clinics in Malaysia by State"></PageHeading>
         <Container>
           <Prose>
-            <div className="max-w-3xl">
-              <h1>Browse LCP-Certified Aesthetic Clinics in Malaysia by State</h1>
-            </div>
-
             <div className="my-12 flex flex-col gap-6">
               {states.map((state) => (
                 <div key={state.id} className="flex w-full flex-col items-start gap-6">

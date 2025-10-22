@@ -17,12 +17,13 @@ export async function Hero() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center gap-8 px-6 pb-6 pt-0 sm:gap-16 sm:p-20">
       <div className="row-start-2 flex flex-col items-start justify-center gap-12 text-start">
-        <div className="flex flex-col gap-2">
-          <h1 className="max-w-xl text-balance text-start text-4xl font-black capitalize leading-tight md:text-5xl">
-            Let&apos;s find a perfect aesthetic clinic for you
+        <div className="flex flex-col gap-5">
+          <h1 className="max-w-3xl text-balance text-start text-4xl font-black capitalize leading-tight md:text-5xl md:leading-snug">
+            Find LCP-Certified Aesthetic Clinics in Malaysia
           </h1>
-          <p className="max-w-xl text-start text-base font-medium text-gray-500 dark:text-gray-300">
-            Malaysia&apos;s Most Trusted Aesthetic Clinic Directory
+          <p className="max-w-3xl text-start text-xl font-medium text-gray-500 dark:text-gray-300">
+            Browse top-rated LCP-certified aesthetic clinics and qualified aesthetic doctors in
+            Malaysia with peace of mind.
           </p>
 
           <svg
@@ -47,7 +48,7 @@ export async function Hero() {
               'w-full rounded-full bg-blue-500 capitalize text-white hover:bg-blue-600',
             )}
             href="/browse">
-            Find a Clinic near you
+            Browse All States
           </Link>
         </div>
         {/* <div className="flex w-full flex-col items-center justify-center gap-6 text-center text-sm font-semibold text-gray-900 dark:text-gray-50">

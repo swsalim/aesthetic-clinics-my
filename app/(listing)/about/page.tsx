@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { siteConfig } from '@/config/site';
 
 import BrowseClinics from '@/components/call-to-action/browse-clinics';
+import PageHeading from '@/components/page-heading';
 import Container from '@/components/ui/container';
 import Prose from '@/components/ui/prose';
 import { Wrapper } from '@/components/ui/wrapper';
@@ -55,15 +56,16 @@ export default async function BrowsePage() {
   return (
     <>
       <Wrapper>
+        <PageHeading title="About Us">
+          <p>
+            AestheticClinics.my is dedicated to helping Malaysians discover trusted, high-quality
+            aesthetic and cosmetic clinics across the country. Our goal is simple: to make it easy
+            for you to find certified professionals offering safe, effective, and evidence-based
+            treatments — all in one convenient directory.
+          </p>
+        </PageHeading>
         <Container>
           <Prose>
-            <h1>About Us</h1>
-            <p className="max-w-3xl text-start text-lg font-medium text-gray-500 dark:text-gray-300">
-              AestheticClinics.my is dedicated to helping Malaysians discover trusted, high-quality
-              aesthetic and cosmetic clinics across the country. Our goal is simple: to make it easy
-              for you to find certified professionals offering safe, effective, and evidence-based
-              treatments — all in one convenient directory.
-            </p>
             <h2>Our Mission</h2>
             <p>
               We believe that everyone deserves to feel confident in their own skin. That’s why we

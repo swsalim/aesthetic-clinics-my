@@ -10,8 +10,8 @@ export default function Home() {
     <>
       <LogoJsonLd logo={absoluteUrl('/images/logo.png')} url={absoluteUrl('/')} />
       <Hero />
-      <RecentClinics />
       <ExploreStates />
+      <RecentClinics />
     </>
   );
 }
