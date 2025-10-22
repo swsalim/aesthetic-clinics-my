@@ -10,13 +10,13 @@ const Logo: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...pr
       <span className="sr-only">Aesthetic Clinics</span>
       <div
         className={cn(
-          'relative flex h-8 w-8 items-center justify-center sm:h-10 sm:w-10',
+          'relative flex h-16 w-16 items-center justify-center sm:h-16 sm:w-16',
           className,
         )}
         aria-hidden="true"
         {...props}>
         <ImageKit
-          src="logos/aesthetic-clinics-my-v2.png"
+          src="logos/aesthetic-clinics-my-v3.png"
           directory="aesthetic-clinics-my"
           alt="Aesthetic Clinics Malaysia"
           width={300}

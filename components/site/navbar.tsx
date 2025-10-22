@@ -108,9 +108,9 @@ export default function Navbar() {
           ? 'dark:border-brand-600 border-gray-200 dark:bg-gray-900/50'
           : 'border-transparent',
       )}>
-      <Container className="flex h-16 items-center justify-between">
+      <Container className="flex h-16 items-center justify-between md:h-20">
         <Link href="/" className="flex items-center gap-x-2 text-xl hover:border-transparent">
-          <Logo className="h-8 w-auto fill-blue-500" />
+          <Logo className="h-10 w-auto fill-blue-500" />
         </Link>
         <NavigationMenu className="hidden lg:block">
           <NavigationMenuList>

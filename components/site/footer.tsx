@@ -74,7 +74,7 @@ function FooterLogo() {
       className="inline-block hover:border-transparent hover:no-underline focus:outline-none focus:ring-2 focus:ring-gray-100 focus:ring-offset-2 focus:ring-offset-gray-900"
       prefetch={false}
       aria-label="Home">
-      <Logo className="relative h-8 w-8 sm:h-10 sm:w-10" />
+      <Logo className="relative h-12 w-12 sm:h-14 sm:w-14" />
     </Link>
   );
 }
@@ -105,7 +105,7 @@ export default function Footer() {
       </h2>
       <div className="mx-auto max-w-7xl px-6 pt-8">
         <div className="lg:gap-8 xl:grid xl:grid-cols-3 xl:gap-16">
-          <div className="space-y-4">
+          <div className="space-y-2">
             <FooterLogo />
             <p className="text-base leading-6 text-gray-300">
               Your trusted source for finding top-rated aesthetic clinics across Malaysia.
