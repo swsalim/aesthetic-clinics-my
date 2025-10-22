@@ -14,8 +14,9 @@ import Prose from '@/components/ui/prose';
 import { Wrapper } from '@/components/ui/wrapper';
 
 const config = {
-  title: 'Find Top Aesthetic Clinic near you',
-  description: 'Find top aesthetic clinics all over Malaysia and book an appointment today.',
+  title: 'Find Top LCP-Certified Aesthetic Clinics across Malaysia',
+  description:
+    'Find top LCP-certified aesthetic clinics all over Malaysia and book an appointment today.',
   url: '/browse',
 };
 
@@ -72,10 +73,10 @@ export default async function BrowsePage() {
       <Wrapper>
         <Container>
           <Prose>
-            <h1>Find Aesthetic Clinics in Malaysia</h1>
-            <p>
-              Click <Link href="/doctors">here</Link> to find a aesthetic doctor near you.
-            </p>
+            <div className="max-w-3xl">
+              <h1>Browse LCP-Certified Aesthetic Clinics in Malaysia by State</h1>
+            </div>
+
             <div className="my-12 flex flex-col gap-6">
               {states.map((state) => (
                 <div key={state.id} className="flex w-full flex-col items-start gap-6">

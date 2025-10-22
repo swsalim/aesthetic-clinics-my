@@ -68,7 +68,7 @@ export async function GET() {
 
   // Add static pages
   // const staticPages = ['/', '/browse', '/dentists', '/submit'];
-  const staticPages = ['/', '/browse'];
+  const staticPages = ['/', '/browse', '/about'];
 
   staticPages.forEach((page) => {
     fields.push({

@@ -90,7 +90,7 @@ export default function Footer() {
           <div className="space-y-4">
             <FooterLogo />
             <p className="text-base leading-6 text-gray-300">
-              Explore top-rated aesthetic clinics across Malaysia.
+              Your trusted source for finding top-rated aesthetic clinics across Malaysia.
             </p>
           </div>
           <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">

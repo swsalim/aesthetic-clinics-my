@@ -16,7 +16,7 @@ export default function Prose({
         className,
         'prose prose-gray max-w-none font-medium dark:prose-invert',
         // headings
-        'prose-headings:relative prose-headings:scroll-mt-[6rem] prose-headings:capitalize prose-h1:mb-4 prose-h1:font-semibold prose-h2:text-xl prose-h2:font-semibold prose-h3:text-lg prose-h3:font-medium md:prose-h2:text-2xl md:prose-h3:text-xl',
+        'prose-headings:relative prose-headings:scroll-mt-[6rem] prose-headings:capitalize prose-h1:mb-4 prose-h1:font-black prose-h1:leading-snug prose-h2:text-xl prose-h2:font-semibold prose-h3:text-lg prose-h3:font-medium md:prose-h2:text-2xl md:prose-h3:text-xl',
         // lead
         'prose-lead:text-gray-500',
         // 'prose-p:mt-2 prose-p:mb-2',

@@ -78,13 +78,17 @@ export const navItems: {
   }[];
 }[] = [
   {
-    name: 'Browse Location',
+    name: 'Browse States',
     href: '/browse',
   },
   {
-    name: 'Doctors',
-    href: '/doctors',
+    name: 'About Us',
+    href: '/about',
   },
+  // {
+  //   name: 'Doctors',
+  //   href: '/doctors',
+  // },
   // {
   //   name: 'Submit',
   //   href: '/submit',
@@ -99,7 +103,7 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        'sticky top-0 w-full border-b bg-white/50 backdrop-blur-md transition-all duration-75',
+        'sticky top-0 z-10 w-full border-b bg-white/50 backdrop-blur-md transition-all duration-75',
         scrolled
           ? 'dark:border-brand-600 border-gray-200 dark:bg-gray-900/50'
           : 'border-transparent',
