@@ -85,10 +85,10 @@ export const navItems: {
     name: 'About Us',
     href: '/about',
   },
-  // {
-  //   name: 'Doctors',
-  //   href: '/doctors',
-  // },
+  {
+    name: 'Browse Doctors',
+    href: '/doctors',
+  },
   // {
   //   name: 'Submit',
   //   href: '/submit',

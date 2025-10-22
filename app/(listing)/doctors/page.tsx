@@ -15,11 +15,11 @@ import { getDoctors } from '@/helpers/doctors';
 
 import { LazyAdsArticle } from '@/components/ads/lazy-ads-article';
 import { DoctorCard } from '@/components/cards/doctor-card';
+import PageHeading from '@/components/page-heading';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import WebPageJsonLd from '@/components/structured-data/web-page-json-ld';
 import Container from '@/components/ui/container';
 import { Pagination } from '@/components/ui/pagination';
-import Prose from '@/components/ui/prose';
 import { Wrapper } from '@/components/ui/wrapper';
 
 type DentistsPageProps = {
@@ -188,31 +188,27 @@ export default async function DentistsPage({ searchParams }: DentistsPageProps) 
         dangerouslySetInnerHTML={addListItemsJsonLd()}
       />
       <Wrapper>
+        <PageHeading title="Browse LCP-Certified Aesthetic Doctors in Malaysia">
+          <p className="text-balance">
+            Browse aesthetic doctors by{' '}
+            <Link
+              href="/browse"
+              className="text-blue-500 hover:border-blue-600 hover:text-blue-600"
+              prefetch={false}>
+              state
+            </Link>
+            , or{' '}
+            <Link
+              href="/browse"
+              className="text-blue-500 hover:border-blue-600 hover:text-blue-600"
+              prefetch={false}>
+              city
+            </Link>
+            . Helping you find aesthetic doctors near you, faster.
+          </p>
+        </PageHeading>
         <Container>
           <div className="flex min-w-0 flex-1 flex-col gap-y-6 md:gap-y-12">
-            <Prose>
-              <h1 className="text-balance text-4xl font-black">
-                Find the Best Aesthetic Doctors in Malaysia
-              </h1>
-              <p className="text-balance text-lg font-medium text-gray-600">
-                Browse aesthetic doctors by{' '}
-                <Link
-                  href="/browse"
-                  className="text-blue-500 hover:border-blue-600 hover:text-blue-600"
-                  prefetch={false}>
-                  state
-                </Link>
-                , or{' '}
-                <Link
-                  href="/browse"
-                  className="text-blue-500 hover:border-blue-600 hover:text-blue-600"
-                  prefetch={false}>
-                  city
-                </Link>
-                . Helping you find aesthetic doctors near you, faster.
-              </p>
-            </Prose>
-
             <section className="">
               <h2 className="mb-6 text-2xl font-semibold">Browse Aesthetic Doctors by State</h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">

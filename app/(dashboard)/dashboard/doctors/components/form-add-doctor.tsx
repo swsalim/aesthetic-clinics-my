@@ -311,7 +311,6 @@ export default function FormAddDoctor({ clinics }: AddDoctorFormProps) {
           specialty: finalData.specialty,
           qualification: finalData.qualification,
           status: finalData.status,
-          images: finalData.images,
           featured_video: finalData.featured_video,
           is_active: finalData.is_active,
           is_featured: finalData.is_featured,

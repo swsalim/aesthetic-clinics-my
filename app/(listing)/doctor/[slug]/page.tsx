@@ -137,6 +137,7 @@ export default async function DentistPage({ params }: DentistPageProps) {
       ? doctorWithClinics.clinics[0]
       : null;
 
+  // TODO: add page heading
   return (
     <>
       {doctorWithClinics.clinics && doctorWithClinics.clinics.length > 0 && (
