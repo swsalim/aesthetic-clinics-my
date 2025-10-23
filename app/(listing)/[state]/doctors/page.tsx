@@ -23,7 +23,6 @@ import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
 import Breadcrumb from '@/components/ui/breadcrumb';
 import Container from '@/components/ui/container';
 import { Pagination } from '@/components/ui/pagination';
-import Prose from '@/components/ui/prose';
 import { Wrapper } from '@/components/ui/wrapper';
 
 type DentistsByStatePageProps = {
@@ -53,7 +52,7 @@ export async function generateMetadata({
   const currentMonth = currentDate.toLocaleString('en-US', { month: 'long' });
   const currentYear = currentDate.getFullYear();
 
-  const title = `Top ${totalDoctors} Aesthetic Doctors in ${stateData.name} [${currentMonth} ${currentYear}]`;
+  const title = `Top ${totalDoctors} LCP-Certified Aesthetic Doctors in ${stateData.name} [${currentMonth} ${currentYear}]`;
   const description = `Discover ${totalDoctors} aesthetic doctors in ${stateData.name}. Browse by city or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details.`;
   const url = !page
     ? absoluteUrl(`/${state}/doctors`)
@@ -190,7 +189,7 @@ export default async function DentistsByStatePage({
     };
   };
 
-  const title = `Aesthetic Doctors in ${stateData.name}`;
+  const title = `Browse LCP-Certified Aesthetic Doctors in ${stateData.name}`;
   const description = `Discover ${totalDoctors} aesthetic doctors in ${stateData.name}. Browse by city or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details.`;
 
   return (
@@ -217,7 +216,7 @@ export default async function DentistsByStatePage({
       </Wrapper>
 
       <Wrapper className="pt-0 md:pt-0">
-        <PageHeading title={`Browse LCP-Certified Aesthetic Doctors in ${stateData.name}`}>
+        <PageHeading title={title}>
           <p>
             Discover {totalDoctors} aesthetic doctors in {stateData.name}. Browse by city or clinic
             to find a aesthetic doctor near you.
