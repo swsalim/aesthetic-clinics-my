@@ -16,6 +16,7 @@ import { getStateListings, getStateMetadataBySlug } from '@/helpers/states';
 
 import { LazyAdsArticle } from '@/components/ads/lazy-ads-article';
 import { DoctorCard } from '@/components/cards/doctor-card';
+import PageHeading from '@/components/page-heading';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import WebPageJsonLd from '@/components/structured-data/web-page-json-ld';
 import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
@@ -207,74 +208,77 @@ export default async function DentistsByStatePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={addListItemsJsonLd()}
       />
-      <Wrapper>
+      <Wrapper size="sm">
         <Container>
           <div className="flex min-w-0 flex-1 flex-col gap-y-6 md:gap-y-12">
             <Breadcrumb items={breadcrumbItems} />
+          </div>
+        </Container>
+      </Wrapper>
 
-            <Prose>
-              <h1 className="text-balance text-4xl font-black">{title}</h1>
-              <p className="text-balance text-lg font-medium text-gray-600">
-                Discover {totalDoctors} aesthetic doctors in {stateData.name}. Browse by city or
-                clinic to find a aesthetic doctor near you.
-              </p>
-            </Prose>
+      <Wrapper className="pt-0 md:pt-0">
+        <PageHeading title={`Browse LCP-Certified Aesthetic Doctors in ${stateData.name}`}>
+          <p>
+            Discover {totalDoctors} aesthetic doctors in {stateData.name}. Browse by city or clinic
+            to find a aesthetic doctor near you.
+          </p>
+        </PageHeading>
 
-            <div className="space-y-8">
-              {/* Featured Aesthetic Doctors */}
-              {featuredDoctors.length > 0 && (
-                <section>
-                  <h2 className="mb-6 text-2xl font-semibold">
-                    Featured Aesthetic Doctors in {stateData.name}
-                  </h2>
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4">
-                    {featuredDoctors.slice(0, 6).map((doctor) => (
-                      <DoctorCard key={doctor.id} doctor={doctor} />
+        <Container>
+          <div className="space-y-8">
+            {/* Featured Aesthetic Doctors */}
+            {featuredDoctors.length > 0 && (
+              <section>
+                <h2 className="mb-6 text-2xl font-semibold">
+                  Featured Aesthetic Doctors in {stateData.name}
+                </h2>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4">
+                  {featuredDoctors.slice(0, 6).map((doctor) => (
+                    <DoctorCard key={doctor.id} doctor={doctor} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* All Aesthetic Doctors */}
+            <section>
+              <h2 className="mb-6 text-balance text-xl font-bold md:text-2xl">
+                All Aesthetic Doctors in {stateData.name} ({totalDoctors})
+              </h2>
+              {doctors.length > 0 ? (
+                <>
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                    {doctors.map((doctor, index) => (
+                      <React.Fragment key={doctor.id}>
+                        {(index + 1) % 6 == 0 && <LazyAdsArticle />}
+                        <DoctorCard doctor={doctor} />
+                      </React.Fragment>
                     ))}
                   </div>
-                </section>
-              )}
-
-              {/* All Aesthetic Doctors */}
-              <section>
-                <h2 className="mb-6 text-balance text-xl font-bold md:text-2xl">
-                  All Aesthetic Doctors in {stateData.name} ({totalDoctors})
-                </h2>
-                {doctors.length > 0 ? (
-                  <>
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                      {doctors.map((doctor, index) => (
-                        <React.Fragment key={doctor.id}>
-                          {(index + 1) % 6 == 0 && <LazyAdsArticle />}
-                          <DoctorCard doctor={doctor} />
-                        </React.Fragment>
-                      ))}
-                    </div>
-                    <Pagination currentPage={currentPage} totalPages={totalPages} />
-                  </>
-                ) : (
-                  <div className="flex flex-col items-center justify-center gap-y-4 py-12">
-                    <h3 className="text-balance text-xl font-semibold">
-                      No aesthetic doctors found in {stateData.name}
-                    </h3>
-                    <p className="text-balance text-gray-600">
-                      We couldn&apos;t find any aesthetic doctors in {stateData.name} at the moment.
-                    </p>
-                    <div className="flex flex-col gap-y-2 md:flex-row md:gap-x-3">
-                      <Link
-                        href="/doctors"
-                        className={cn(
-                          'inline-flex items-center gap-x-2 text-blue-600 hover:text-blue-800',
-                        )}
-                        prefetch={false}>
-                        Browse all aesthetic doctors
-                        <ArrowRightIcon className="h-4 w-4" />
-                      </Link>
-                    </div>
+                  <Pagination currentPage={currentPage} totalPages={totalPages} />
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center gap-y-4 py-12">
+                  <h3 className="text-balance text-xl font-semibold">
+                    No aesthetic doctors found in {stateData.name}
+                  </h3>
+                  <p className="text-balance text-gray-600">
+                    We couldn&apos;t find any aesthetic doctors in {stateData.name} at the moment.
+                  </p>
+                  <div className="flex flex-col gap-y-2 md:flex-row md:gap-x-3">
+                    <Link
+                      href="/doctors"
+                      className={cn(
+                        'inline-flex items-center gap-x-2 text-blue-600 hover:text-blue-800',
+                      )}
+                      prefetch={false}>
+                      Browse all aesthetic doctors
+                      <ArrowRightIcon className="h-4 w-4" />
+                    </Link>
                   </div>
-                )}
-              </section>
-            </div>
+                </div>
+              )}
+            </section>
           </div>
         </Container>
       </Wrapper>

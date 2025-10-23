@@ -9,6 +9,8 @@ import { ImageKit } from '@/components/image/image-kit';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+import { StarRating } from '../ui/star-rating';
+
 interface DoctorCardProps {
   doctor: ClinicDoctor;
 }
@@ -57,6 +59,11 @@ export function DoctorCard({ doctor }: DoctorCardProps) {
                   {primaryClinic.name}
                 </p>
               </div>
+              {primaryClinic.rating !== null && primaryClinic.rating !== undefined && (
+                <div className="mb-1 flex-shrink-0">
+                  <StarRating rating={primaryClinic.rating} />
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <MapPinIcon className="h-4 w-4 flex-shrink-0 text-blue-300" aria-hidden="true" />
                 <p className="line-clamp-2 text-sm text-gray-500">

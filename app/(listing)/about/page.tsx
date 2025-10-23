@@ -55,7 +55,7 @@ export const metadata: Metadata = {
 export default async function BrowsePage() {
   return (
     <>
-      <Wrapper>
+      <Wrapper className="pt-0 md:pt-0">
         <PageHeading title="About Us">
           <p>
             AestheticClinics.my is dedicated to helping Malaysians discover trusted, high-quality

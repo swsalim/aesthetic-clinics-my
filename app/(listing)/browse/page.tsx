@@ -71,7 +71,7 @@ export default async function BrowsePage() {
 
   return (
     <>
-      <Wrapper>
+      <Wrapper className="pt-0 md:pt-0">
         <PageHeading title="Browse LCP-Certified Aesthetic Clinics in Malaysia by State"></PageHeading>
         <Container>
           <Prose>
