@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   if (!table) {
     return new Response('No table name provided', { status: 400 });
   }
-  if (table !== 'ratings' && table !== 'locations') {
+  if (!['clinics', 'areas', 'states', 'doctors'].includes(table)) {
     return new Response('Invalid table name', { status: 400 });
   }
 
