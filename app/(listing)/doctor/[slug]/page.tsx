@@ -93,7 +93,6 @@ export async function generateStaticParams() {
 }
 
 // Force static generation - this ensures the page is generated at build time
-export const dynamic = 'force-static';
 export const revalidate = 3600; // Revalidate every hour (3600 seconds)
 
 export default async function DentistPage({ params }: DentistPageProps) {

@@ -29,7 +29,9 @@ const nextConfig: NextConfig = {
   },
   // Bundle analyzer configuration
   ...(process.env.ANALYZE === 'true' && {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     webpack: (config: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { BundleAnalyzerPlugin } = require('@next/bundle-analyzer')({
         enabled: true,
       });
@@ -38,7 +40,8 @@ const nextConfig: NextConfig = {
     },
   }),
   // Advanced webpack configuration for better code splitting
-  webpack: (config: any, { isServer }: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  webpack: (config: any, { isServer }: { isServer: boolean }) => {
     if (!isServer) {
       // Split dashboard-specific chunks
       config.optimization.splitChunks = {

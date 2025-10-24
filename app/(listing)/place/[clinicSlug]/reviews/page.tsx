@@ -96,7 +96,6 @@ export async function generateMetadata({ params }: ReviewsPageProps): Promise<Me
 }
 
 // Force static generation - this ensures the page is generated at build time
-export const dynamic = 'force-static';
 export const revalidate = 3600; // Revalidate every hour (3600 seconds)
 
 export default async function ReviewsPage({ params }: ReviewsPageProps) {

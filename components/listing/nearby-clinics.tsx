@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { ClinicHours, ClinicImage } from '@/types/clinic';
+import { Clinic, ClinicHours, ClinicImage } from '@/types/clinic';
 
 import { getClinicsNearLocation } from '@/helpers/clinics';
 
@@ -30,7 +30,7 @@ async function NearbyClinicsContent({
   }
 
   // Filter out the current clinic and get up to 4 nearby clinics
-  const filteredClinics = nearbyClinics.slice(1, 5);
+  const filteredClinics = nearbyClinics.slice(1, 5) as Clinic[];
 
   return (
     <Wrapper size="lg" className="pt-12 md:pt-12">
@@ -60,7 +60,7 @@ async function NearbyClinicsContent({
                 hours={Array.isArray(clinic.hours) ? (clinic.hours as Partial<ClinicHours>[]) : []}
                 specialHours={[]}
                 openOnPublicHolidays={clinic.open_on_public_holidays ?? false}
-                distance={clinic.distance_km}
+                distance={clinic.distance_km ?? 0}
               />
             ))}
           </div>
