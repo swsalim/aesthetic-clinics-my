@@ -3,12 +3,13 @@ import { revalidateTag } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
-  const { secret, table } = await request.json();
-
-  // Check secret (use a strong secret in production)
-  if (secret !== process.env.SUPABASE_REVALIDATE_TOKEN) {
-    return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+  // Verify the request is from Supabase (use a secret token)
+  const authHeader = request.headers.get('authorization');
+  if (authHeader !== `Bearer ${process.env.SUPABASE_REVALIDATE_TOKEN}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  const { table } = await request.json();
 
   if (!table) {
     return new Response('No table name provided', { status: 400 });
@@ -35,5 +36,5 @@ export async function POST(request: Request) {
     revalidateTag('doctors-by-state-slug');
   }
 
-  return NextResponse.json({ revalidated: true });
+  return NextResponse.json({ revalidated: true, now: Date.now() });
 }
