@@ -1,3 +1,5 @@
+import { unstable_cache } from 'next/cache';
+
 import {
   Clinic,
   ClinicArea,
@@ -11,6 +13,44 @@ import {
 } from '@/types/clinic';
 
 import { createAdminClient, createServerClient } from '@/lib/supabase';
+
+export const getRecentClinics = unstable_cache(
+  async (limit: number = 20) => {
+    const supabase = createAdminClient();
+
+    const { data, error } = await supabase
+      .from('clinics')
+      .select(
+        `
+        id,
+        name,
+        slug,
+        address,
+        phone,
+        postal_code,
+        rating,
+        images:clinic_images(image_url, imagekit_file_id),
+        open_on_public_holidays,
+        hours:clinic_hours(*),
+        special_hours:clinic_special_hours(*),
+        area:areas!inner(name),
+        state:states!inner(name)
+      `,
+      )
+      .eq('is_active', true)
+      .order('modified_at', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+
+    return (data as unknown as Partial<Clinic>[]) || [];
+  },
+  ['recent-clinics'],
+  {
+    revalidate: 600, // Cache for 10 minutes
+    tags: ['clinics'],
+  },
+);
 
 export async function getClinicMetadataBySlug(slug: string, status: string = 'approved') {
   const supabase = createAdminClient();

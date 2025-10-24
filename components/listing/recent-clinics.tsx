@@ -1,8 +1,17 @@
-import Container from '../ui/container';
-import { Wrapper } from '../ui/wrapper';
-import { RecentClinicsList } from './recent-clinics-list';
+import Link from 'next/link';
 
-export function RecentClinics() {
+import { ClinicImage } from '@/types/clinic';
+
+import { getRecentClinics } from '@/helpers/clinics';
+
+import { ClinicCard } from '@/components/cards/clinic-card';
+import { Button } from '@/components/ui/button';
+import Container from '@/components/ui/container';
+import { Wrapper } from '@/components/ui/wrapper';
+
+export async function RecentClinics() {
+  const clinics = await getRecentClinics(20);
+
   return (
     <Wrapper>
       <Container>
@@ -14,7 +23,38 @@ export function RecentClinics() {
             Browse verified reviews, clinic hours, and contact details to book your visit.
           </p>
         </div>
-        <RecentClinicsList />
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8 lg:grid-cols-4">
+          {clinics.map((clinic) => {
+            return (
+              <ClinicCard
+                key={clinic.id}
+                slug={clinic.slug || ''}
+                name={clinic.name || ''}
+                address={clinic.address || ''}
+                phone={clinic.phone || ''}
+                postalCode={clinic.postal_code || ''}
+                state={clinic.state?.name || ''}
+                area={clinic.area?.name || ''}
+                image={
+                  clinic.images?.[0]
+                    ? (clinic.images[0] as unknown as ClinicImage).image_url
+                    : undefined
+                }
+                rating={clinic.rating}
+                hours={clinic.hours || []}
+                specialHours={clinic.special_hours || []}
+                openOnPublicHolidays={clinic.open_on_public_holidays || false}
+              />
+            );
+          })}
+        </div>
+        <div className="mt-10 flex justify-center sm:mt-14">
+          <Button variant="primary" size="large" asChild rounded>
+            <Link href="/browse" className="no-underline">
+              View More
+            </Link>
+          </Button>
+        </div>
       </Container>
     </Wrapper>
   );

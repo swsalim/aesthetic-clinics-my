@@ -13,7 +13,7 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 
-import { Calendar } from '@/components/dashboard/calendar';
+import { Calendar } from '@/components/dashboard/dynamic-imports';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Skeleton } from '@/components/ui/skeleton';

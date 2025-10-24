@@ -1,3 +1,5 @@
+import { unstable_cache } from 'next/cache';
+
 import { Clinic, ClinicState } from '@/types/clinic';
 
 import { createAdminClient, createServerClient } from '@/lib/supabase';
@@ -11,15 +13,39 @@ interface AreaData {
   clinics: Partial<Clinic>[];
 }
 
-export async function getAreaMetadataBySlug(areaSlug: string) {
-  const supabase = createAdminClient();
+export const getAreaMetadataBySlug = unstable_cache(
+  async (areaSlug: string) => {
+    const supabase = createAdminClient();
 
-  const { data: area } = await supabase.rpc('get_area_metadata_by_slug', {
-    area_slug: areaSlug,
-  });
+    const { data: area } = await supabase.rpc('get_area_metadata_by_slug', {
+      area_slug: areaSlug,
+    });
 
-  return area as AreaData | null;
-}
+    return area as AreaData | null;
+  },
+  ['area-metadata-by-slug'],
+  {
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['area-metadata'],
+  },
+);
+
+export const getAreaListings = unstable_cache(
+  async () => {
+    const supabase = createAdminClient();
+
+    const { data: areasData } = await supabase
+      .from('areas')
+      .select('id, name, slug, state_id', { count: 'exact' });
+
+    return areasData || [];
+  },
+  ['areas-for-browse'],
+  {
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['areas'],
+  },
+);
 
 export async function getAreaListings() {
   const supabase = createAdminClient();
@@ -64,14 +90,21 @@ export async function getAreaBySlug(areaSlug: string, from: number, to: number) 
 /**
  * Fetches an area by its slug with all related data using admin client for static generation
  */
-export async function getAreaBySlugStatic(areaSlug: string, from: number, to: number) {
-  const supabase = createAdminClient();
+export const getAreaBySlugStatic = unstable_cache(
+  async (areaSlug: string, from: number, to: number) => {
+    const supabase = createAdminClient();
 
-  const { data: area } = await supabase.rpc('get_ranged_area_metadata_by_slug', {
-    area_slug: areaSlug,
-    from_index: from,
-    to_index: to,
-  });
+    const { data: area } = await supabase.rpc('get_ranged_area_metadata_by_slug', {
+      area_slug: areaSlug,
+      from_index: from,
+      to_index: to,
+    });
 
-  return area as AreaData | null;
-}
+    return area as AreaData | null;
+  },
+  ['area-static-by-slug'],
+  {
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['area-static'],
+  },
+);

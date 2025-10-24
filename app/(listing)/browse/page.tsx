@@ -7,7 +7,8 @@ import { ExternalLinkIcon } from 'lucide-react';
 
 import { siteConfig } from '@/config/site';
 
-import { createAdminClient } from '@/lib/supabase';
+import { getAreaListings } from '@/helpers/areas';
+import { getStateListings } from '@/helpers/states';
 
 import PageHeading from '@/components/page-heading';
 import Container from '@/components/ui/container';
@@ -59,15 +60,10 @@ export const metadata: Metadata = {
 };
 
 export default async function BrowsePage() {
-  const supabase = await createAdminClient();
+  const [statesData, areasData] = await Promise.all([getStateListings(), getAreaListings()]);
 
-  const [{ data: statesData }, { data: areasData }] = await Promise.all([
-    supabase.from('states').select('id, name, slug', { count: 'exact' }),
-    supabase.from('areas').select('id, name, slug, state_id', { count: 'exact' }),
-  ]);
-
-  const states = (statesData || []) as ClinicState[];
-  const areas = (areasData || []) as ClinicArea[];
+  const states = statesData as ClinicState[];
+  const areas = areasData as ClinicArea[];
 
   return (
     <>

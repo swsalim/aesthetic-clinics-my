@@ -2,7 +2,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 
 import { createServerClient } from '@/lib/supabase';
 
-import { DataTableClient } from './data-table-client';
+import { DataTableClient } from './dynamic-data-table';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

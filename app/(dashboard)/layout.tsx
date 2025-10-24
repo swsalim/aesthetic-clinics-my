@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { createServerClient } from '@/lib/supabase';
 
-import DashboardHeader from '@/components/dashboard/dashboard-header';
+import { DashboardHeader } from '@/components/dashboard/dynamic-imports';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
