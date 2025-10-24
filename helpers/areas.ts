@@ -30,7 +30,7 @@ export const getAreaMetadataBySlug = unstable_cache(
   },
 );
 
-export const getAreaListings = unstable_cache(
+export const getAreasForBrowse = unstable_cache(
   async () => {
     const supabase = createAdminClient();
 
