@@ -11,7 +11,7 @@ import { siteConfig } from '@/config/site';
 
 import { absoluteUrl, cn, getPagination } from '@/lib/utils';
 
-import { getAreaBySlugStatic, getAreaListings, getAreaMetadataBySlug } from '@/helpers/areas';
+import { getAreaBySlug, getAreaListings, getAreaMetadataBySlug } from '@/helpers/areas';
 import { getStateMetadataBySlug } from '@/helpers/states';
 
 import { LazyAdsArticle } from '@/components/ads/lazy-ads-article';
@@ -132,7 +132,7 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
   // Fetch area metadata and clinics data in parallel
   const [areaMeta, areaData, stateMeta] = await Promise.all([
     getAreaMetadataBySlug(area),
-    getAreaBySlugStatic(area, from, to),
+    getAreaBySlug(area, from, to),
     getStateMetadataBySlug(state),
   ]);
 

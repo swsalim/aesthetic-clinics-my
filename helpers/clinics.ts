@@ -52,39 +52,46 @@ export const getRecentClinics = unstable_cache(
   },
 );
 
-export async function getClinicMetadataBySlug(slug: string, status: string = 'approved') {
-  const supabase = createAdminClient();
+export const getClinicMetadataBySlug = unstable_cache(
+  async (slug: string, status: string = 'approved') => {
+    const supabase = createAdminClient();
 
-  const { data: clinicData } = (await supabase
-    .from('clinics')
-    .select(
-      `
-      id,
-      name,
-      slug,
-      description,
-      area:areas(name),
-      state:states(name)
-    `,
-    )
-    .match({ slug, is_active: true, status })
-    .single()) as {
-    data: {
-      id: string;
-      name: string;
-      slug: string;
-      description: string;
-      area: {
+    const { data: clinicData } = (await supabase
+      .from('clinics')
+      .select(
+        `
+        id,
+        name,
+        slug,
+        description,
+        area:areas(name),
+        state:states(name)
+      `,
+      )
+      .match({ slug, is_active: true, status })
+      .single()) as {
+      data: {
+        id: string;
         name: string;
-      };
-      state: {
-        name: string;
+        slug: string;
+        description: string;
+        area: {
+          name: string;
+        };
+        state: {
+          name: string;
+        };
       };
     };
-  };
 
-  return clinicData ?? null;
-}
+    return clinicData ?? null;
+  },
+  ['clinic-metadata'],
+  {
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['clinics', 'clinic-metadata'],
+  },
+);
 
 export async function getClinicListings(status: string = 'approved') {
   const supabase = createAdminClient();
@@ -286,8 +293,8 @@ export const getClinicsNearLocation = unstable_cache(
   },
   ['nearby-clinics'],
   {
-    revalidate: 300, // Cache for 5 minutes
-    tags: ['clinics', 'location'],
+    revalidate: 600, // Cache for 10 minutes
+    tags: ['clinics'],
   },
 );
 

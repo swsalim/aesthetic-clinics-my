@@ -44,7 +44,7 @@ export const getStateListings = unstable_cache(
   },
   ['states-for-browse'],
   {
-    revalidate: 3600, // Cache for 1 hour
+    revalidate: 2592000, // Cache for 30 days
     tags: ['states'],
   },
 );

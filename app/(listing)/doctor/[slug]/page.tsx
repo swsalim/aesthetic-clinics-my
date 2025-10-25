@@ -8,11 +8,7 @@ import { siteConfig } from '@/config/site';
 
 import { absoluteUrl, cn } from '@/lib/utils';
 
-import {
-  getDoctorBySlugStatic,
-  getDoctorListings,
-  getDoctorMetadataBySlug,
-} from '@/helpers/doctors';
+import { getDoctorBySlug, getDoctorListings, getDoctorMetadataBySlug } from '@/helpers/doctors';
 
 import { LazyAdsLeaderboard } from '@/components/ads/lazy-ads-leaderboard';
 import { LazyAdsSquare } from '@/components/ads/lazy-ads-square';
@@ -98,7 +94,7 @@ export const revalidate = 3600; // Revalidate every hour (3600 seconds)
 export default async function DentistPage({ params }: DentistPageProps) {
   const { slug } = await params;
   // Use static generation function for build-time data fetching
-  const doctor = await getDoctorBySlugStatic(slug);
+  const doctor = await getDoctorBySlug(slug);
 
   if (!doctor) {
     notFound();

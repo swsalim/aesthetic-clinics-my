@@ -133,64 +133,44 @@ export const getDoctorMetadataBySlug = unstable_cache(
   },
 );
 
-export async function getDoctorListings(status: string = 'approved') {
-  const supabase = createAdminClient();
+export const getDoctorListings = unstable_cache(
+  async (status: string = 'approved') => {
+    const supabase = createAdminClient();
 
-  const { data: doctorData } = (await supabase
-    .from('clinic_doctors')
-    .select(
-      `
-      id,
-      name,
-      slug,
-      is_active,
-      status
-    `,
-    )
-    .match({ is_active: true, status })) as {
-    data: {
-      id: string;
-      name: string;
-      slug: string;
-      is_active: boolean | null;
-      status: string | null;
-    }[];
-  };
+    const { data: doctorData } = (await supabase
+      .from('clinic_doctors')
+      .select(
+        `
+        id,
+        name,
+        slug,
+        is_active,
+        status
+      `,
+      )
+      .match({ is_active: true, status })) as {
+      data: {
+        id: string;
+        name: string;
+        slug: string;
+        is_active: boolean | null;
+        status: string | null;
+      }[];
+    };
 
-  return doctorData ?? [];
-}
-
-/**
- * Fetches a doctor by its slug with all related data
- */
-export async function getDoctorBySlug(
-  slug: string,
-  status: string = 'approved',
-): Promise<ClinicDoctor | null> {
-  const supabase = await createServerClient();
-
-  const { data, error } = await supabase
-    .from('clinic_doctors')
-    .select(DOCTOR_WITH_CLINICS_SELECT)
-    .match({ slug, is_active: true, status })
-    .single();
-
-  if (error) {
-    console.error('Error fetching doctor:', error);
-    return null;
-  }
-
-  if (!data) {
-    return null;
-  }
-
-  return transformDoctorData(data as unknown as RawDoctorWithClinics);
-}
+    return doctorData ?? [];
+  },
+  ['doctor-listings'],
+  {
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['doctors'],
+  },
+);
 
 /**
  * Fetches a doctor by its slug with all related data using admin client for static generation
  */
-export const getDoctorBySlugStatic = unstable_cache(
+export const getDoctorBySlug = unstable_cache(
   async (slug: string, status: string = 'approved'): Promise<ClinicDoctor | null> => {
     const supabase = createAdminClient();
 
