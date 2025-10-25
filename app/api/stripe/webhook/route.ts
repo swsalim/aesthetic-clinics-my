@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService } from '@/services/database.service';
 import Stripe from 'stripe';
 
+import { absoluteUrl } from '@/lib/utils';
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -49,7 +51,7 @@ export async function POST(request: NextRequest) {
 
         // Send notification email
         try {
-          await fetch(`${process.env.NEXTAUTH_URL}/api/send-email/clinic-notification`, {
+          await fetch(absoluteUrl('/api/send-email/clinic-notification'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
