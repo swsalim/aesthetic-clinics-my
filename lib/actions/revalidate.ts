@@ -12,6 +12,7 @@ export async function revalidateAreas() {
 
 export async function revalidateStates() {
   revalidateTag('states');
+  revalidateTag('popular-states');
 }
 
 export async function revalidateDoctors() {
