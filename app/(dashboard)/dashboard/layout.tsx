@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 
+import RevalidateButtons from '@/components/dashboard/revalidate-buttons';
 import Container from '@/components/ui/container';
 
 export const metadata: Metadata = {
@@ -21,8 +22,13 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <section className="max-w-8xl mx-auto px-4 py-8 sm:px-6">
-      <Container>{children}</Container>
-    </section>
+    <>
+      <section className="max-w-8xl mx-auto px-4 py-8 sm:px-6">
+        <Container>
+          <RevalidateButtons />
+          {children}
+        </Container>
+      </section>
+    </>
   );
 }
