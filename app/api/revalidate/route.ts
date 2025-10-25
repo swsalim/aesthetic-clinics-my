@@ -19,21 +19,14 @@ export async function POST(request: Request) {
   }
 
   if (table === 'clinics') {
-    revalidateTag('recent-clinics');
-    revalidateTag('nearby-clinics');
-    revalidateTag('clinic-reviews');
+    revalidateTag('clinics');
   } else if (table === 'areas') {
-    revalidateTag('area-metadata-by-slug');
-    revalidateTag('area-for-browse');
-    revalidateTag('area-static-by-slug');
+    revalidateTag('areas');
   } else if (table === 'states') {
-    revalidateTag('state-metadata-by-slug');
-    revalidateTag('state-for-browse');
-    revalidateTag('state-static-by-slug');
+    revalidateTag('states');
+    revalidateTag('popular-states');
   } else if (table === 'doctors') {
-    revalidateTag('doctor-metadata-by-slug');
-    revalidateTag('doctor-static-by-slug');
-    revalidateTag('doctors-by-state-slug');
+    revalidateTag('doctors');
   }
 
   return NextResponse.json({ revalidated: true, now: Date.now() });

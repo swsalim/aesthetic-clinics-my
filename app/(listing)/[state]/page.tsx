@@ -12,7 +12,7 @@ import { siteConfig } from '@/config/site';
 import { absoluteUrl, cn, getPagination } from '@/lib/utils';
 
 import { getDoctorsByState } from '@/helpers/doctors';
-import { getStateBySlugStatic, getStateListings, getStateMetadataBySlug } from '@/helpers/states';
+import { getStateBySlug, getStateListings, getStateMetadataBySlug } from '@/helpers/states';
 
 import { LazyAdsArticle } from '@/components/ads/lazy-ads-article';
 import { ClinicCard } from '@/components/cards/clinic-card';
@@ -124,7 +124,7 @@ export default async function StatePage({ params, searchParams }: StatePageProps
   // Fetch state metadata and clinics data in parallel
   const [stateMeta, stateData] = await Promise.all([
     getStateMetadataBySlug(state),
-    getStateBySlugStatic(state, from, to),
+    getStateBySlug(state, from, to),
   ]);
 
   if (!stateMeta || !stateData) {

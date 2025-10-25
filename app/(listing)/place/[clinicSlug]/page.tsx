@@ -19,11 +19,7 @@ import { siteConfig } from '@/config/site';
 
 import { absoluteUrl, cn } from '@/lib/utils';
 
-import {
-  getClinicBySlugStatic,
-  getClinicListings,
-  getClinicMetadataBySlug,
-} from '@/helpers/clinics';
+import { getClinicBySlug, getClinicListings, getClinicMetadataBySlug } from '@/helpers/clinics';
 import { getServiceIcon } from '@/helpers/services';
 
 import { LazyAdsLeaderboard } from '@/components/ads/lazy-ads-leaderboard';
@@ -249,7 +245,7 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
   const { clinicSlug } = await params;
 
   // Use static generation function for build-time data fetching
-  const parsedClinic = await getClinicBySlugStatic(clinicSlug);
+  const parsedClinic = await getClinicBySlug(clinicSlug);
 
   if (!parsedClinic) {
     notFound();

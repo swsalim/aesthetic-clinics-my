@@ -2,7 +2,7 @@ import { unstable_cache } from 'next/cache';
 
 import { Clinic, ClinicArea } from '@/types/clinic';
 
-import { createAdminClient, createServerClient } from '@/lib/supabase';
+import { createAdminClient } from '@/lib/supabase';
 
 // Type definitions for the state data
 
@@ -28,7 +28,7 @@ export const getStateMetadataBySlug = unstable_cache(
   ['state-metadata-by-slug'],
   {
     revalidate: 3600, // Cache for 1 hour
-    tags: ['state-metadata'],
+    tags: ['states'],
   },
 );
 
@@ -50,28 +50,9 @@ export const getStateListings = unstable_cache(
 );
 
 /**
- * Fetches a clinic by its state with all related data
- */
-export async function getStateBySlug(
-  stateSlug: string,
-  from: number,
-  to: number,
-): Promise<StateData | null> {
-  const supabase = await createServerClient();
-
-  const { data: state } = await supabase.rpc('get_ranged_state_metadata_by_slug', {
-    state_slug: stateSlug,
-    from_index: from,
-    to_index: to,
-  });
-
-  return state as StateData | null;
-}
-
-/**
  * Fetches a state by its slug with all related data using admin client for static generation
  */
-export const getStateBySlugStatic = unstable_cache(
+export const getStateBySlug = unstable_cache(
   async (stateSlug: string, from: number, to: number): Promise<StateData | null> => {
     const supabase = createAdminClient();
 
@@ -83,9 +64,9 @@ export const getStateBySlugStatic = unstable_cache(
 
     return state as StateData | null;
   },
-  ['state-static-by-slug'],
+  ['state-by-slug'],
   {
     revalidate: 3600, // Cache for 1 hour
-    tags: ['state-static'],
+    tags: ['states'],
   },
 );

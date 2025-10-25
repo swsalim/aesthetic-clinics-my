@@ -110,33 +110,9 @@ export async function getClinicListings(status: string = 'approved') {
 }
 
 /**
- * Fetches a clinic by its slug with all related data
- */
-
-export async function getClinicBySlug(
-  slug: string,
-  status: string = 'approved',
-): Promise<ClinicDetails | null> {
-  const supabase = await createServerClient();
-
-  const { data, error } = await supabase.rpc('get_clinic_by_slug', {
-    slug_input: slug,
-    status_input: status,
-    review_limit: 6,
-  });
-
-  if (error) {
-    console.error('Error fetching nearest clinics:', error);
-    return null;
-  }
-
-  return data as unknown as ClinicDetails;
-}
-
-/**
  * Fetches a clinic by its slug with all related data using admin client for static generation
  */
-export async function getClinicBySlugStatic(
+export async function getClinicBySlug(
   slug: string,
   status: string = 'approved',
 ): Promise<ClinicDetails | null> {
@@ -157,7 +133,7 @@ export async function getClinicBySlugStatic(
 }
 
 export async function getClinicByServiceMetadataId(id: string) {
-  const supabase = await createServerClient();
+  const supabase = await createAdminClient();
 
   // TODO: get approved clinics
   const { data: clinicIds } = await supabase
@@ -178,7 +154,7 @@ export async function getClinicByServiceId(
   to: number,
   status: string = 'approved',
 ) {
-  const supabase = await createServerClient();
+  const supabase = await createAdminClient();
 
   // First get clinic IDs that have this service
   const { data: clinicIds } = await supabase

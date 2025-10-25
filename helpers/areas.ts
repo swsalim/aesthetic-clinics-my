@@ -2,7 +2,7 @@ import { unstable_cache } from 'next/cache';
 
 import { Clinic, ClinicState } from '@/types/clinic';
 
-import { createAdminClient, createServerClient } from '@/lib/supabase';
+import { createAdminClient } from '@/lib/supabase';
 
 interface AreaData {
   id: string;
@@ -26,7 +26,7 @@ export const getAreaMetadataBySlug = unstable_cache(
   ['area-metadata-by-slug'],
   {
     revalidate: 3600, // Cache for 1 hour
-    tags: ['area-metadata'],
+    tags: ['areas'],
   },
 );
 
@@ -73,24 +73,9 @@ export async function getAreaListings() {
 }
 
 /**
- * Fetches a clinic by its state with all related data
- */
-export async function getAreaBySlug(areaSlug: string, from: number, to: number) {
-  const supabase = await createServerClient();
-
-  const { data: area } = await supabase.rpc('get_ranged_area_metadata_by_slug', {
-    area_slug: areaSlug,
-    from_index: from,
-    to_index: to,
-  });
-
-  return area as AreaData | null;
-}
-
-/**
  * Fetches an area by its slug with all related data using admin client for static generation
  */
-export const getAreaBySlugStatic = unstable_cache(
+export const getAreaBySlug = unstable_cache(
   async (areaSlug: string, from: number, to: number) => {
     const supabase = createAdminClient();
 
@@ -102,9 +87,9 @@ export const getAreaBySlugStatic = unstable_cache(
 
     return area as AreaData | null;
   },
-  ['area-static-by-slug'],
+  ['area-by-slug'],
   {
     revalidate: 3600, // Cache for 1 hour
-    tags: ['area-static'],
+    tags: ['areas'],
   },
 );

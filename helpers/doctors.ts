@@ -129,7 +129,7 @@ export const getDoctorMetadataBySlug = unstable_cache(
   ['doctor-metadata-by-slug'],
   {
     revalidate: 3600, // Cache for 1 hour
-    tags: ['doctor-metadata'],
+    tags: ['doctors'],
   },
 );
 
@@ -211,10 +211,10 @@ export const getDoctorBySlugStatic = unstable_cache(
 
     return transformDoctorData(data as unknown as RawDoctorWithClinics);
   },
-  ['doctor-static-by-slug'],
+  ['doctor-by-slug'],
   {
     revalidate: 3600, // Cache for 1 hour
-    tags: ['doctor-static'],
+    tags: ['doctors'],
   },
 );
 
@@ -380,9 +380,9 @@ export const getDoctorsByState = unstable_cache(
 
     return { data: doctors, count: typedResult.count || 0 };
   },
-  ['doctors-by-state-slug'],
+  ['doctors-by-state'],
   {
     revalidate: 3600, // Cache for 1 hour
-    tags: ['doctors-by-state'],
+    tags: ['doctors'],
   },
 );

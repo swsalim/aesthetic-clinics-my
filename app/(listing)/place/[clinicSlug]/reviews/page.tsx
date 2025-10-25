@@ -10,7 +10,7 @@ import { siteConfig } from '@/config/site';
 
 import { absoluteUrl } from '@/lib/utils';
 
-import { getClinicBySlugStatic, getClinicMetadataBySlug } from '@/helpers/clinics';
+import { getClinicBySlug, getClinicMetadataBySlug } from '@/helpers/clinics';
 
 import BusinessJsonLd from '@/components/structured-data/business-json-ld';
 import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
@@ -101,7 +101,7 @@ export const revalidate = 3600; // Revalidate every hour (3600 seconds)
 export default async function ReviewsPage({ params }: ReviewsPageProps) {
   const { clinicSlug } = await params;
 
-  const parsedClinic = await getClinicBySlugStatic(clinicSlug);
+  const parsedClinic = await getClinicBySlug(clinicSlug);
 
   if (!parsedClinic) {
     notFound();
