@@ -24,7 +24,7 @@ export const ClinicSubmissionEmail = ({
     <EmailLayout preview={`Thank you for your ${clinicName} listing submission`}>
       <Container className="px-6 py-4">
         <Heading className="mb-2 text-2xl font-bold text-gray-900">
-          Thank You for Your Dental Clinic Listing Submission
+          Thank You for Your Aesthetic Clinic Listing Submission
         </Heading>
 
         <Text className="text-base text-gray-700">Dear {recipientName},</Text>

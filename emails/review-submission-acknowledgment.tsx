@@ -54,14 +54,14 @@ export const ReviewSubmissionAcknowledgmentEmail = ({
         </Text>
 
         <Text className="mt-4 text-base text-gray-700">
-          Your feedback helps other patients make informed decisions about their dental care, and we
-          truly value your contribution to our community.
+          Your feedback helps other patients make informed decisions about their aesthetic care, and
+          we truly value your contribution to our community.
         </Text>
 
         <Text className="mt-6 text-base text-gray-700">
           Best regards,
           <br />
-          The Dental Clinic Malaysia Team
+          The Aesthetic Clinics Malaysia Team
         </Text>
       </Section>
     </EmailLayout>

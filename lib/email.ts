@@ -150,7 +150,7 @@ export const sendNewClinicNotification = async ({
   try {
     const subject =
       price === 'instant'
-        ? 'Your Premium Dental Clinic Listing: Live Within 24 Hours'
+        ? 'Your Premium Aesthetic Clinic Listing: Live Within 24 Hours'
         : 'Aesthetic Clinic Listing Received - Processing Confirmation';
     const { error } = await resend.batch.send([
       {
