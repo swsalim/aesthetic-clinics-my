@@ -32,7 +32,17 @@ export const getStateMetadataBySlug = unstable_cache(
   },
 );
 
-export const getStateListings = unstable_cache(
+export const getStateListings = async () => {
+  const supabase = createAdminClient();
+
+  const { data: statesData } = await supabase
+    .from('states')
+    .select('id, name, slug', { count: 'exact' });
+
+  return statesData || [];
+};
+
+export const getStatesForBrowse = unstable_cache(
   async () => {
     const supabase = createAdminClient();
 

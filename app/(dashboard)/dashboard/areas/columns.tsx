@@ -71,8 +71,8 @@ export const columns: ColumnDef<AreaTableData>[] = [
       );
     },
     filterFn: (row, id, value) => {
-      const stateSlug = row.getValue('state') as string;
-      return value.includes(stateSlug);
+      const stateName = row.getValue('name') as string;
+      return stateName.toLowerCase().includes(value.toLowerCase());
     },
     enableSorting: true,
     enableHiding: true,

@@ -8,7 +8,7 @@ import { ExternalLinkIcon } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 
 import { getAreasForBrowse } from '@/helpers/areas';
-import { getStateListings } from '@/helpers/states';
+import { getStatesForBrowse } from '@/helpers/states';
 
 import PageHeading from '@/components/page-heading';
 import Container from '@/components/ui/container';
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BrowsePage() {
-  const [statesData, areasData] = await Promise.all([getStateListings(), getAreasForBrowse()]);
+  const [statesData, areasData] = await Promise.all([getStatesForBrowse(), getAreasForBrowse()]);
 
   const states = statesData as ClinicState[];
   const areas = areasData as ClinicArea[];

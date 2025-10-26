@@ -47,7 +47,7 @@ export const getAreasForBrowse = unstable_cache(
   },
 );
 
-export const getAreaListings = unstable_cache(
+export const getAreaListings =
   async () => {
     const supabase = createAdminClient();
 
@@ -71,13 +71,7 @@ export const getAreaListings = unstable_cache(
     };
 
     return areaData ?? [];
-  },
-  ['area-listings'],
-  {
-    revalidate: 2592000, // Cache for 30 days
-    tags: ['areas'],
-  },
-);
+  }
 
 /**
  * Fetches an area by its slug with all related data using admin client for static generation
