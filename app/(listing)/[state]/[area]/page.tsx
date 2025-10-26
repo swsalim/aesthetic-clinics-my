@@ -190,15 +190,25 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
         description={description}
         clinics={(areaData.clinics?.slice(0, 20) as Partial<Clinic>[]) || []}
       />
-      <Wrapper
-        style={{
-          backgroundImage: `url('${areaData.image || areaData.state?.image}')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center center',
-          backgroundRepeat: 'no-repeat',
-          position: 'relative',
-        }}
-        className="before:absolute before:inset-0 before:bg-black/50 before:content-['']">
+      <Wrapper className="relative overflow-hidden">
+        {/* Optimized background image using Next.js Image */}
+        {(areaData.image || areaData.state?.image) && (
+          <ImageKit
+            src={areaData.image || areaData.state?.image || ''}
+            alt={`${areaData.name}, ${areaData.state?.name} aesthetic clinics background`}
+            width={1920}
+            height={600}
+            priority
+            quality={85}
+            sizes="100vw"
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{
+              objectPosition: 'center center',
+            }}
+          />
+        )}
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/50" />
         <Container className="relative z-10">
           <div className="flex flex-col gap-4 py-12 md:py-24">
             <Breadcrumb items={breadcrumbItems} theme="dark" />

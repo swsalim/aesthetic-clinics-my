@@ -63,7 +63,7 @@ const getPopularStatesWithRandomization = unstable_cache(
   ['popular-states-randomized'],
   {
     revalidate: 3600, // Cache for 1 hour
-    tags: ['popular-states'],
+    tags: ['states'],
   },
 );
 
