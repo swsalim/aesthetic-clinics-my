@@ -22,7 +22,11 @@ export function ImageKit({
   const isOnImageKit = src.startsWith(
     `https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT_ID}`,
   );
-  const imageSrc = directory ? `${directory}/${src}` : src;
+  const imageSrc = directory
+    ? `aesthetic-clinics-my/${directory}/${src}`
+    : isOnImageKit
+      ? src
+      : `aesthetic-clinics-my/${src}`;
   return (
     <Image
       loader={isOnImageKit ? bypassImageKitLoader : imageKitLoader}

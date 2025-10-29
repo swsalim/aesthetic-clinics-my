@@ -281,7 +281,36 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                     .map((clinic, index) => {
                       return (
                         <React.Fragment key={clinic.slug}>
-                          {(index + 1) % 6 == 0 && <LazyAdsArticle />}
+                          {index === 5 && (
+                            <div className="flex flex-col items-center justify-center gap-2 text-center">
+                              <a
+                                href="https://dub.sh/loreal-skincare"
+                                target="_blank"
+                                className="hover:!border-b-transparent">
+                                <ImageKit
+                                  src="loreal-skin-care.avif"
+                                  directory="images"
+                                  alt="Darlie toothpaste"
+                                  width={600}
+                                  height={600}
+                                  priority
+                                  quality={85}
+                                  sizes="100vw"
+                                  className="mb-0 h-auto w-full object-cover"
+                                  style={{
+                                    objectPosition: 'center center',
+                                  }}
+                                />
+                              </a>
+                              <a
+                                href="https://dub.sh/watsons-promo"
+                                target="_blank"
+                                className="text-sm !font-medium text-blue-500 hover:border-0 hover:text-blue-400 hover:no-underline dark:text-blue-300 dark:hover:text-blue-400">
+                                Browse Watsons Promotions
+                              </a>
+                            </div>
+                          )}
+                          {index !== 5 && (index + 1) % 6 == 0 && <LazyAdsArticle />}
                           <ClinicCard
                             key={clinic.slug}
                             slug={clinic.slug ?? ''}
@@ -314,7 +343,6 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                   <div className="relative size-64 md:size-96">
                     <ImageKit
                       src="lost-boy.png"
-                      directory="aesthetic-clinics-my"
                       alt="No aesthetic clinics found"
                       width={500}
                       height={500}

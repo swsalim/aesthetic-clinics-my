@@ -23,10 +23,10 @@ import { getClinicBySlug, getClinicListings, getClinicMetadataBySlug } from '@/h
 import { getServiceIcon } from '@/helpers/services';
 
 import { LazyAdsLeaderboard } from '@/components/ads/lazy-ads-leaderboard';
-import { LazyAdsSquare } from '@/components/ads/lazy-ads-square';
 import { ClinicStatus } from '@/components/clinic-status';
 import AddReviewForm from '@/components/forms/add-review-form';
 import { ImageGallery } from '@/components/image/image-gallery';
+import { ImageKit } from '@/components/image/image-kit';
 import { BookAppointmentButton } from '@/components/listing/book-appointment-button';
 import DoctorPractice from '@/components/listing/doctor-practice';
 import DoctorPracticeAvatar from '@/components/listing/doctor-practice-avatar';
@@ -499,6 +499,28 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
 
               <DoctorPracticeAvatar clinicSlug={clinicSlug} />
 
+              <div className="flex flex-col gap-2 text-center">
+                <a
+                  href="https://dub.sh/watsons-nivea"
+                  className="hover:!border-b-transparent"
+                  target="_blank">
+                  <ImageKit
+                    src="nivea-promo.avif"
+                    directory="images"
+                    alt="Watsons Club - Shop to Sail Pianoland Cruise"
+                    width={600}
+                    height={600}
+                    priority
+                    quality={85}
+                    sizes="100vw"
+                    className="m-0 h-auto w-full object-cover"
+                    style={{
+                      objectPosition: 'center center',
+                    }}
+                  />
+                </a>
+              </div>
+
               <div>
                 <div ta-ad-container=""></div>
               </div>
@@ -564,8 +586,32 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
 
                 <DoctorPractice clinicSlug={clinicSlug} />
 
-                <div>
-                  <LazyAdsSquare />
+                <div className="flex flex-col items-center justify-center gap-2 text-center">
+                  <a
+                    href="https://dub.sh/loreal-skincare"
+                    className="hover:!border-b-transparent"
+                    target="_blank">
+                    <ImageKit
+                      src="loreal-skin-care.avif"
+                      directory="images"
+                      alt="Darlie toothpaste"
+                      width={600}
+                      height={600}
+                      priority
+                      quality={85}
+                      sizes="100vw"
+                      className="mb-0 h-auto w-full object-cover"
+                      style={{
+                        objectPosition: 'center center',
+                      }}
+                    />
+                  </a>
+                  <a
+                    href="https://dub.sh/watsons-promo"
+                    target="_blank"
+                    className="text-sm !font-medium text-blue-500 hover:border-0 hover:text-blue-400 hover:no-underline dark:text-blue-300 dark:hover:text-blue-400">
+                    Browse Watsons Promotions
+                  </a>
                 </div>
 
                 {parsedClinic.services && (
