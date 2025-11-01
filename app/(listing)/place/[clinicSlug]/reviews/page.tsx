@@ -10,7 +10,7 @@ import { siteConfig } from '@/config/site';
 
 import { absoluteUrl } from '@/lib/utils';
 
-import { getClinicBySlug, getClinicMetadataBySlug } from '@/helpers/clinics';
+import { getClinicBySlug, getClinicListings, getClinicMetadataBySlug } from '@/helpers/clinics';
 
 import BusinessJsonLd from '@/components/structured-data/business-json-ld';
 import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
@@ -93,6 +93,14 @@ export async function generateMetadata({ params }: ReviewsPageProps): Promise<Me
       ],
     },
   };
+}
+
+export async function generateStaticParams() {
+  const clinics = await getClinicListings();
+
+  return clinics.map((clinic) => ({
+    clinicSlug: clinic.slug,
+  }));
 }
 
 // Force static generation - this ensures the page is generated at build time
