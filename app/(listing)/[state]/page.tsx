@@ -330,6 +330,7 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                             hours={clinic.hours ?? []}
                             specialHours={clinic.special_hours ?? []}
                             openOnPublicHolidays={clinic.open_on_public_holidays ?? false}
+                            isPermanentlyClosed={clinic.is_permanently_closed ?? false}
                           />
                         </React.Fragment>
                       );

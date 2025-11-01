@@ -60,6 +60,7 @@ async function NearbyClinicsContent({
                 hours={Array.isArray(clinic.hours) ? (clinic.hours as Partial<ClinicHours>[]) : []}
                 specialHours={[]}
                 openOnPublicHolidays={clinic.open_on_public_holidays ?? false}
+                isPermanentlyClosed={clinic.is_permanently_closed ?? false}
                 distance={clinic.distance_km ?? 0}
               />
             ))}

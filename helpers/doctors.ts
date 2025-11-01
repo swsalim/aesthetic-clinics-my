@@ -51,6 +51,8 @@ export const DOCTOR_WITH_CLINICS_SELECT = `
       longitude,
       rating,
       review_count,
+      is_permanently_closed,
+      open_on_public_holidays,
       images:clinic_images(id,image_url, imagekit_file_id),
       area:areas(name),
       state:states(name)
@@ -87,6 +89,8 @@ type RawDoctorWithClinics = {
       longitude: number | null;
       rating: number | null;
       review_count: number | null;
+      is_permanently_closed: boolean | null;
+      open_on_public_holidays: boolean | null;
       images: { id: string; image_url: string; imagekit_file_id: string }[] | null;
       area?: { name: string } | null;
       state?: { name: string } | null;

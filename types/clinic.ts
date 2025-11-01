@@ -84,6 +84,8 @@ export interface ClinicDoctor {
         longitude: number | null;
         rating: number | null;
         review_count: number | null;
+        is_permanently_closed: boolean | null;
+        open_on_public_holidays: boolean | null;
         images: { id: string; image_url: string; imagekit_file_id: string }[] | null;
         area?: { name: string } | null;
         state?: { name: string } | null;

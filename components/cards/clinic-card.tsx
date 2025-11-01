@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import { ClinicHours, ClinicSpecialHours } from '@/types/clinic';
-import { AwardIcon, ClockIcon, MapPinIcon, PhoneIcon } from 'lucide-react';
+import { AwardIcon, ClockIcon, MapPinIcon, MapPinXInsideIcon, PhoneIcon } from 'lucide-react';
 
 import { ClinicStatus } from '@/components/clinic-status';
 import { ImageKit } from '@/components/image/image-kit';
@@ -25,6 +25,7 @@ interface ClinicCardProps {
   hours: Partial<ClinicHours>[];
   specialHours: Partial<ClinicSpecialHours>[];
   openOnPublicHolidays: boolean;
+  isPermanentlyClosed: boolean;
   distance?: number;
 }
 
@@ -42,6 +43,7 @@ export function ClinicCard({
   hours,
   specialHours,
   openOnPublicHolidays,
+  isPermanentlyClosed,
   distance,
 }: ClinicCardProps) {
   return (
@@ -70,14 +72,24 @@ export function ClinicCard({
                 Featured
               </Badge>
             )}
-            {hours.length === 7 && hours.every((hour) => hour.open_time && hour.close_time) && (
-              <Badge variant="blue">
-                <ClockIcon className="me-1 h-4 w-4" aria-hidden="true" />
-                Open everyday
+            {!isPermanentlyClosed &&
+              hours.length === 7 &&
+              hours.every((hour) => hour.open_time && hour.close_time) && (
+                <Badge variant="blue">
+                  <ClockIcon className="me-1 h-4 w-4" aria-hidden="true" />
+                  Open everyday
+                </Badge>
+              )}
+            {!isPermanentlyClosed && <ClinicStatus hours={hours} specialHours={specialHours} />}
+            {!isPermanentlyClosed && openOnPublicHolidays && (
+              <Badge variant="gray">Open on public holidays</Badge>
+            )}
+            {isPermanentlyClosed && (
+              <Badge variant="red">
+                <MapPinXInsideIcon className="me-1 h-4 w-4" aria-hidden="true" />
+                Closed permanently
               </Badge>
             )}
-            <ClinicStatus hours={hours} specialHours={specialHours} />
-            {openOnPublicHolidays && <Badge variant="gray">Open on public holidays</Badge>}
           </div>
           <div className="absolute bottom-2 right-2 flex flex-wrap justify-end gap-2">
             {distance && distance > 0 && (

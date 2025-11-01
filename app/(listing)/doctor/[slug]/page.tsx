@@ -293,7 +293,8 @@ export default async function DentistPage({ params }: DentistPageProps) {
                         rating={clinic.rating}
                         hours={[]}
                         specialHours={[]}
-                        openOnPublicHolidays={false}
+                        openOnPublicHolidays={clinic?.open_on_public_holidays ?? false}
+                        isPermanentlyClosed={clinic?.is_permanently_closed ?? false}
                       />
                     ))}
                   </div>

@@ -12,6 +12,7 @@ import {
   InstagramIcon,
   MailIcon,
   MapPinIcon,
+  MapPinXInsideIcon,
   YoutubeIcon,
 } from 'lucide-react';
 
@@ -347,15 +348,25 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                         Featured
                       </Badge>
                     )}
-                    {parsedClinic.hours &&
+
+                    {!parsedClinic.is_permanently_closed &&
+                      parsedClinic.hours &&
                       parsedClinic.hours.length === 7 &&
                       parsedClinic.hours.every((hour) => hour.open_time && hour.close_time) && (
                         <Badge variant="blue">Open everyday</Badge>
                       )}
-                    <ClinicStatus
-                      hours={parsedClinic.hours ?? []}
-                      specialHours={parsedClinic.special_hours ?? []}
-                    />
+                    {!parsedClinic.is_permanently_closed && (
+                      <ClinicStatus
+                        hours={parsedClinic.hours ?? []}
+                        specialHours={parsedClinic.special_hours ?? []}
+                      />
+                    )}
+                    {parsedClinic.is_permanently_closed && (
+                      <Badge variant="red">
+                        <MapPinXInsideIcon className="me-1 h-4 w-4" aria-hidden="true" />
+                        Closed permanently
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </div>
