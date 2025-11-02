@@ -40,7 +40,8 @@ export async function generateMetadata({
   const { page } = await searchParams;
 
   const limit = 20;
-  const currentPage = page ? +page : 1;
+  const parsedPage = page ? Number(page) : 1;
+  const currentPage = isNaN(parsedPage) || parsedPage < 1 ? 1 : Math.floor(parsedPage);
   const { from, to } = getPagination(currentPage, limit);
   const stateData = await getStateBySlug(state, from, to);
 
@@ -121,7 +122,8 @@ export default async function DentistsByStatePage({
   const { page } = await searchParams;
 
   const limit = 20;
-  const currentPage = page ? +page : 1;
+  const parsedPage = page ? Number(page) : 1;
+  const currentPage = isNaN(parsedPage) || parsedPage < 1 ? 1 : Math.floor(parsedPage);
   const { from, to } = getPagination(currentPage, limit);
 
   // Fetch state metadata and doctors data in parallel

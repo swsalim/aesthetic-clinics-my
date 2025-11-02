@@ -92,7 +92,8 @@ export default async function DentistsPage({ searchParams }: DentistsPageProps) 
   const { page } = await searchParams;
 
   const limit = 20;
-  const currentPage = page ? +page : 1;
+  const parsedPage = page ? Number(page) : 1;
+  const currentPage = isNaN(parsedPage) || parsedPage < 1 ? 1 : Math.floor(parsedPage);
   const { from } = getPagination(currentPage, limit);
 
   // Fetch doctors with pagination

@@ -176,11 +176,14 @@ interface PaginationResult {
 }
 
 export const getPagination = (page?: number, size?: number): PaginationResult => {
-  const limit = size ? +size : 3;
-  const from = page ? (page - 1) * limit : 0;
-  const to = page ? from + limit - 1 : limit - 1;
+  const limit = size && size > 0 ? +size : 3;
+  // Ensure page is a valid positive integer, default to 1 if invalid
+  const validPage = page && page > 0 ? Math.floor(page) : 1;
+  const from = (validPage - 1) * limit;
+  const to = from + limit - 1;
 
-  return { from, to };
+  // Extra safety check: ensure from and to are never negative
+  return { from: Math.max(0, from), to: Math.max(0, to) };
 };
 
 /**
