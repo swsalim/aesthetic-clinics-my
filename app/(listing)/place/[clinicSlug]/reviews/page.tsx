@@ -10,7 +10,7 @@ import { siteConfig } from '@/config/site';
 
 import { absoluteUrl } from '@/lib/utils';
 
-import { getClinicBySlug, getClinicListings, getClinicMetadataBySlug } from '@/helpers/clinics';
+import { getClinicBySlug, getClinicListings } from '@/helpers/clinics';
 
 import BusinessJsonLd from '@/components/structured-data/business-json-ld';
 import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
@@ -48,7 +48,7 @@ const formatOpeningHoursForJsonLd = (hours: Partial<ClinicHours>[] | null) => {
 export async function generateMetadata({ params }: ReviewsPageProps): Promise<Metadata> {
   const { clinicSlug } = await params;
 
-  const clinic = await getClinicMetadataBySlug(clinicSlug);
+  const clinic = await getClinicBySlug(clinicSlug);
 
   if (!clinic) {
     notFound();
