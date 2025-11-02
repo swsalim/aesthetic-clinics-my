@@ -8,7 +8,7 @@ import { siteConfig } from '@/config/site';
 
 import { absoluteUrl, cn } from '@/lib/utils';
 
-import { getDoctorBySlug, getDoctorListings, getDoctorMetadataBySlug } from '@/helpers/doctors';
+import { getDoctorBySlug, getDoctorListings } from '@/helpers/doctors';
 
 import { LazyAdsLeaderboard } from '@/components/ads/lazy-ads-leaderboard';
 import { LazyAdsSquare } from '@/components/ads/lazy-ads-square';
@@ -29,7 +29,7 @@ interface DentistPageProps {
 
 export async function generateMetadata({ params }: DentistPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const doctor = await getDoctorMetadataBySlug(slug);
+  const doctor = await getDoctorBySlug(slug);
 
   if (!doctor) {
     return {
