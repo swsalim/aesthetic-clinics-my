@@ -112,95 +112,70 @@ function transformDoctorsData(doctorsData: RawDoctorWithClinics[]): ClinicDoctor
   return doctorsData.map(transformDoctorData);
 }
 
-export const getDoctorMetadataBySlug = unstable_cache(
-  async (slug: string, status: string = 'approved') => {
-    const supabase = createAdminClient();
+export const getDoctorListings = async (status: string = 'approved') => {
+  const supabase = createAdminClient();
 
-    const { data: doctorData } = (await supabase
-      .from('clinic_doctors')
-      .select(DOCTOR_WITH_CLINICS_SELECT)
-      .match({ slug, is_active: true, status })
-      .single()) as {
-      data: RawDoctorWithClinics;
-    };
-
-    if (!doctorData) {
-      return null;
-    }
-
-    return transformDoctorData(doctorData);
-  },
-  ['doctor-metadata-by-slug'],
-  {
-    revalidate: 3600, // Cache for 1 hour
-    tags: ['doctors'],
-  },
-);
-
-export const getDoctorListings = unstable_cache(
-  async (status: string = 'approved') => {
-    const supabase = createAdminClient();
-
-    const { data: doctorData } = (await supabase
-      .from('clinic_doctors')
-      .select(
-        `
+  const { data: doctorData } = (await supabase
+    .from('clinic_doctors')
+    .select(
+      `
         id,
         name,
         slug,
         is_active,
         status
       `,
-      )
-      .match({ is_active: true, status })) as {
-      data: {
-        id: string;
-        name: string;
-        slug: string;
-        is_active: boolean | null;
-        status: string | null;
-      }[];
-    };
+    )
+    .match({ is_active: true, status })) as {
+    data: {
+      id: string;
+      name: string;
+      slug: string;
+      is_active: boolean | null;
+      status: string | null;
+    }[];
+  };
 
-    return doctorData ?? [];
-  },
-  ['doctor-listings'],
-  {
-    revalidate: 3600, // Cache for 1 hour
-    tags: ['doctors'],
-  },
-);
+  return doctorData ?? [];
+};
 
 /**
  * Fetches a doctor by its slug with all related data using admin client for static generation
  */
-export const getDoctorBySlug = unstable_cache(
-  async (slug: string, status: string = 'approved'): Promise<ClinicDoctor | null> => {
-    const supabase = createAdminClient();
+export const getDoctorBySlug = async (
+  slug: string,
+  status: string = 'approved',
+): Promise<ClinicDoctor | null> => {
+  const getCachedDoctor = unstable_cache(
+    async () => {
+      const supabase = createAdminClient();
 
-    const { data, error } = await supabase
-      .from('clinic_doctors')
-      .select(DOCTOR_WITH_CLINICS_SELECT)
-      .match({ slug, is_active: true, status })
-      .single();
+      const { data, error } = await supabase
+        .from('clinic_doctors')
+        .select(DOCTOR_WITH_CLINICS_SELECT)
+        .match({ slug, is_active: true, status })
+        .single();
 
-    if (error) {
-      console.error('Error fetching doctor for static generation:', error);
-      return null;
-    }
+      if (error) {
+        console.error('Error fetching doctor for static generation:', error);
+        return null;
+      }
 
-    if (!data) {
-      return null;
-    }
+      if (!data) {
+        return null;
+      }
 
-    return transformDoctorData(data as unknown as RawDoctorWithClinics);
-  },
-  ['doctor-by-slug'],
-  {
-    revalidate: 3600, // Cache for 1 hour
-    tags: ['doctors'],
-  },
-);
+      return transformDoctorData(data as unknown as RawDoctorWithClinics);
+    },
+    [`doctor-${slug}-${status}`],
+    {
+      revalidate: 3600,
+      tags: ['doctors', `doctor-${slug}`],
+    },
+  );
+
+  return getCachedDoctor();
+};
 
 /**
  * Fetches doctors with optional filters
@@ -213,36 +188,56 @@ export async function getDoctors(
     offset?: number;
   } | null = null,
 ) {
-  const supabase = await createServerClient();
-  let query = supabase
-    .from('clinic_doctors')
-    .select(DOCTOR_WITH_CLINICS_SELECT, { count: 'exact' })
-    // .eq('status', 'approved')
-    .order('modified_at', { ascending: false });
+  // Create a stable cache key based on filter values
+  const cacheKey = [
+    'doctors',
+    filters?.specialty || 'all',
+    filters?.isFeatured !== undefined ? `featured-${filters.isFeatured}` : 'all',
+    `limit-${filters?.limit || 'none'}`,
+    `offset-${filters?.offset || 0}`,
+  ].join('-');
 
-  if (filters?.specialty) {
-    query = query.eq('specialty', filters.specialty);
-  }
+  const getCachedDoctors = unstable_cache(
+    async () => {
+      const supabase = createAdminClient();
+      let query = supabase
+        .from('clinic_doctors')
+        .select(DOCTOR_WITH_CLINICS_SELECT, { count: 'exact' })
+        // .eq('status', 'approved')
+        .order('modified_at', { ascending: false });
 
-  if (filters?.isFeatured !== undefined) {
-    query = query.eq('is_featured', filters.isFeatured);
-  }
+      if (filters?.specialty) {
+        query = query.eq('specialty', filters.specialty);
+      }
 
-  if (filters?.limit) {
-    query = query.limit(filters.limit);
-  }
+      if (filters?.isFeatured !== undefined) {
+        query = query.eq('is_featured', filters.isFeatured);
+      }
 
-  if (filters?.offset) {
-    query = query.range(filters.offset, filters.offset + (filters.limit || 10) - 1);
-  }
+      if (filters?.limit) {
+        query = query.limit(filters.limit);
+      }
 
-  const { data, error, count } = await query;
+      if (filters?.offset) {
+        query = query.range(filters.offset, filters.offset + (filters.limit || 10) - 1);
+      }
 
-  if (error) throw error;
+      const { data, error, count } = await query;
 
-  const doctors = transformDoctorsData(data || []);
+      if (error) throw error;
 
-  return { data: doctors, count };
+      const doctors = transformDoctorsData(data as unknown as RawDoctorWithClinics[]);
+
+      return { data: doctors, count };
+    },
+    [cacheKey],
+    {
+      revalidate: 3600,
+      tags: ['doctors', ...(filters?.specialty ? [`doctors-specialty-${filters.specialty}`] : [])],
+    },
+  );
+
+  return getCachedDoctors();
 }
 
 /**
@@ -313,60 +308,95 @@ export async function getDoctorsByClinicSlug(
   clinicSlug: string,
   status: string = 'approved',
 ): Promise<ClinicDoctor[]> {
-  const supabase = await createServerClient();
+  // Capture parameters immediately to avoid closure issues in concurrent requests
+  const slug = clinicSlug;
+  const statusParam = status;
 
-  const { data, error } = await supabase.rpc('get_doctors_by_clinic_slug', {
-    clinic_slug_param: clinicSlug,
-    status_param: status,
-  });
+  return unstable_cache(
+    async () => {
+      const supabase = createAdminClient();
 
-  if (error) {
-    console.error('Error fetching doctors by clinic slug:', error);
-    return [];
-  }
+      const { data, error } = await supabase.rpc('get_doctors_by_clinic_slug', {
+        clinic_slug_param: slug,
+        status_param: statusParam,
+      });
 
-  if (!data) {
-    return [];
-  }
+      if (error) {
+        console.error('Error fetching doctors by clinic slug:', error);
+        return [];
+      }
 
-  // The RPC function returns JSON, so we need to parse it
-  const doctorsData = data as RawDoctorWithClinics[];
-  return transformDoctorsData(doctorsData);
+      if (!data) {
+        return [];
+      }
+
+      // The RPC function returns JSON, so we need to parse it
+      const doctorsData = data as RawDoctorWithClinics[];
+      return transformDoctorsData(doctorsData);
+    },
+    [`doctors-clinic-${slug}-${statusParam}`],
+    {
+      revalidate: 3600,
+      tags: ['doctors', `doctors-clinic-${slug}`],
+    },
+  )();
 }
 
 /**
  * Fetches doctors by state with pagination
  */
-export const getDoctorsByState = unstable_cache(
-  async (
-    stateSlug: string,
-    limit: number = 20,
-    offset: number = 0,
-    status: string = 'approved',
-  ) => {
-    const supabase = createAdminClient();
+export const getDoctorsByState = async (
+  stateSlug: string,
+  limit: number = 20,
+  offset: number = 0,
+  status: string = 'approved',
+) => {
+  // Capture parameters immediately to avoid closure issues in concurrent requests
+  const slug = stateSlug;
+  const limitCount = limit;
+  const offsetCount = offset;
+  const statusParam = status;
 
-    const { data: result } = await supabase.rpc('get_ranged_doctor_by_state_slug', {
-      state_slug_param: stateSlug,
-      from_index_param: offset,
-      to_index_param: offset + limit - 1,
-      status_param: status,
-    });
+  // Validate inputs
+  if (!slug || typeof slug !== 'string') {
+    console.error('Invalid stateSlug provided to getDoctorsByState:', stateSlug);
+    return { data: [], count: 0 };
+  }
 
-    if (!result) {
-      return { data: [], count: 0 };
-    }
+  return unstable_cache(
+    async () => {
+      const supabase = createAdminClient();
 
-    // Type assertion for the RPC result structure
-    const typedResult = result as { data: RawDoctorWithClinics[]; count: number };
+      const { data: result, error } = await supabase.rpc('get_ranged_doctor_by_state_slug', {
+        state_slug_param: slug,
+        from_index_param: offsetCount,
+        to_index_param: offsetCount + limitCount - 1,
+        status_param: statusParam,
+      });
 
-    const doctors = transformDoctorsData(typedResult.data || []);
+      if (error) {
+        console.error(
+          `Error fetching doctors by state "${slug}" (limit: ${limitCount}, offset: ${offsetCount}):`,
+          error,
+        );
+        return { data: [], count: 0 };
+      }
 
-    return { data: doctors, count: typedResult.count || 0 };
-  },
-  ['doctors-by-state'],
-  {
-    revalidate: 3600, // Cache for 1 hour
-    tags: ['doctors'],
-  },
-);
+      if (!result) {
+        return { data: [], count: 0 };
+      }
+
+      // Type assertion for the RPC result structure
+      const typedResult = result as { data: RawDoctorWithClinics[]; count: number };
+
+      const doctors = transformDoctorsData(typedResult.data || []);
+
+      return { data: doctors, count: typedResult.count || 0 };
+    },
+    [`doctors-state-${slug}-${limitCount}-${offsetCount}-${statusParam}`],
+    {
+      revalidate: 3600,
+      tags: ['doctors', `doctors-state-${slug}`],
+    },
+  )();
+};

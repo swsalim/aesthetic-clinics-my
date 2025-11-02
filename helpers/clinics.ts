@@ -30,7 +30,9 @@ export const getRecentClinics = unstable_cache(
         postal_code,
         rating,
         images:clinic_images(image_url, imagekit_file_id),
+        is_permanently_closed,
         open_on_public_holidays,
+        is_featured,
         hours:clinic_hours(*),
         special_hours:clinic_special_hours(*),
         area:areas!inner(name),
@@ -47,49 +49,8 @@ export const getRecentClinics = unstable_cache(
   },
   ['recent-clinics'],
   {
-    revalidate: 600, // Cache for 10 minutes
+    revalidate: 3600,
     tags: ['clinics'],
-  },
-);
-
-export const getClinicMetadataBySlug = unstable_cache(
-  async (slug: string, status: string = 'approved') => {
-    const supabase = createAdminClient();
-
-    const { data: clinicData } = (await supabase
-      .from('clinics')
-      .select(
-        `
-        id,
-        name,
-        slug,
-        description,
-        area:areas(name),
-        state:states(name)
-      `,
-      )
-      .match({ slug, is_active: true, status })
-      .single()) as {
-      data: {
-        id: string;
-        name: string;
-        slug: string;
-        description: string;
-        area: {
-          name: string;
-        };
-        state: {
-          name: string;
-        };
-      };
-    };
-
-    return clinicData ?? null;
-  },
-  ['clinic-metadata'],
-  {
-    revalidate: 3600, // Cache for 1 hour
-    tags: ['clinics', 'clinic-metadata'],
   },
 );
 
@@ -117,7 +78,7 @@ export async function getClinicListings(status: string = 'approved') {
 }
 
 /**
- * Fetches a clinic by its slug with all related data using admin client for static generation
+ * Fetches a clinic by its slug with all related data
  */
 export async function getClinicBySlug(
   slug: string,
@@ -139,164 +100,119 @@ export async function getClinicBySlug(
   return data as unknown as ClinicDetails;
 }
 
-export async function getClinicByServiceMetadataId(id: string) {
-  const supabase = await createAdminClient();
-
-  // TODO: get approved clinics
-  const { data: clinicIds } = await supabase
-    .from('clinic_service_relations')
-    .select('clinic_id')
-    .eq('service_id', id);
-
-  if (!clinicIds || clinicIds.length === 0) {
-    return [];
-  }
-
-  return clinicIds.length;
-}
-
 export async function getClinicByServiceId(
   id: string,
   from: number,
   to: number,
   status: string = 'approved',
-) {
-  const supabase = await createAdminClient();
+): Promise<{ count: number; clinics: Partial<Clinic>[] | null }> {
+  // Capture parameters immediately to avoid closure issues in concurrent requests
+  const serviceId = id;
+  const fromIndex = from;
+  const toIndex = to;
+  const statusParam = status;
 
-  // First get clinic IDs that have this service
-  const { data: clinicIds } = await supabase
-    .from('clinic_service_relations')
-    .select('clinic_id')
-    .eq('service_id', id)
-    .range(from, to);
-
-  if (!clinicIds || clinicIds.length === 0) {
-    return [];
+  // Validate inputs
+  if (!serviceId || typeof serviceId !== 'string') {
+    console.error('Invalid service id provided to getClinicByServiceId:', id);
+    return { count: 0, clinics: [] };
   }
 
-  const clinicIdList = clinicIds.map((item) => item.clinic_id);
+  return unstable_cache(
+    async () => {
+      const supabase = await createAdminClient();
 
-  // Then get full clinic details for those clinics only
-  const { data } = await supabase
-    .from('clinics')
-    .select(
-      `
-      id,
-      name,
-      slug,
-      postal_code,
-      address,
-      neighborhood,
-      phone,
-      latitude,
-      longitude,
-      rating,
-      review_count,
-      images:clinic_images(image_url, imagekit_file_id),
-      is_permanently_closed,
-      open_on_public_holidays,
-      is_active,
-      is_featured,
-      modified_at,
-      area:areas(id, name, slug),
-      state:states(id, name, slug),
-      hours:clinic_hours(day_of_week, open_time, close_time),
-      special_hours:clinic_special_hours(date, is_closed, open_time, close_time),
-      services:clinic_service_relations(service:clinic_services(id, name, slug))
-      `,
-    )
-    .in('id', clinicIdList)
-    .match({ is_active: true, status })
-    .order('modified_at', { ascending: false });
+      const { data, error } = await supabase.rpc('get_clinics_by_service_id', {
+        service_id_param: serviceId,
+        from_index: fromIndex,
+        to_index: toIndex,
+        status_param: statusParam,
+      });
 
-  return data || [];
-}
+      if (error) {
+        console.error(
+          `Error fetching clinics by service "${serviceId}" (from: ${fromIndex}, to: ${toIndex}):`,
+          error,
+        );
+        return { count: 0, clinics: [] };
+      }
 
-/**
- * Fetches clinics with optional filters
- */
-export async function getClinics(filters: {
-  stateId?: string;
-  areaId?: string;
-  categoryId?: string;
-  isFeatured?: boolean;
-  limit?: number;
-  offset?: number;
-}) {
-  const supabase = await createServerClient();
-  let query = supabase.from('clinics').select(
-    `
-      *,
-      area:areas(*),
-      state:states(*),
-      categories:clinic_category_relations(
-        category:clinic_categories(*)
-      )
-    `,
-    { count: 'exact' },
-  );
+      if (!data) {
+        return { count: 0, clinics: [] };
+      }
 
-  if (filters.stateId) {
-    query = query.eq('state_id', filters.stateId);
-  }
-
-  if (filters.areaId) {
-    query = query.eq('area_id', filters.areaId);
-  }
-
-  if (filters.categoryId) {
-    query = query.eq('clinic_category_relations.category_id', filters.categoryId);
-  }
-
-  if (filters.isFeatured !== undefined) {
-    query = query.eq('is_featured', filters.isFeatured);
-  }
-
-  if (filters.limit) {
-    query = query.limit(filters.limit);
-  }
-
-  if (filters.offset) {
-    query = query.range(filters.offset, filters.offset + (filters.limit || 10) - 1);
-  }
-
-  const { data, error, count } = await query;
-  if (error) throw error;
-
-  return { data, count };
+      return {
+        count: Number((data as unknown as { count: number })?.count || 0),
+        clinics: (data as unknown as { clinics: Partial<Clinic>[] })?.clinics || [],
+      };
+    },
+    [`clinics-service-${serviceId}-${fromIndex}-${toIndex}-${statusParam}`],
+    {
+      revalidate: 3600,
+      tags: ['clinics', `service-${serviceId}`],
+    },
+  )();
 }
 
 /**
  * Fetches clinics within a radius of a given location
  */
-export const getClinicsNearLocation = unstable_cache(
-  async (latitude: number, longitude: number, radiusInKm: number, limit: number = 5) => {
-    const supabase = await createAdminClient();
+export const getClinicsNearLocation = async (
+  latitude: number,
+  longitude: number,
+  radiusInKm: number,
+  limit: number = 5,
+) => {
+  // Capture parameters immediately to avoid closure issues in concurrent requests
+  const lat = latitude;
+  const lng = longitude;
+  const radius = radiusInKm;
+  const limitCount = limit;
 
-    const { data, error } = await supabase.rpc('get_nearby_clinics', {
-      clinic_latitude: latitude,
-      clinic_longitude: longitude,
-      radius_km: radiusInKm,
-      result_limit: limit,
+  // Validate inputs
+  if (typeof lat !== 'number' || typeof lng !== 'number' || isNaN(lat) || isNaN(lng)) {
+    console.error('Invalid coordinates provided to getClinicsNearLocation:', {
+      latitude,
+      longitude,
     });
+    return [];
+  }
 
-    if (error) {
-      console.error('Error fetching nearest clinics:', error);
-      return [];
-    }
+  // Create a unique cache key based on all parameters
+  const cacheKey = `nearby-clinics-${lat.toFixed(4)}-${lng.toFixed(4)}-${radius}-${limitCount}`;
 
-    if (!data || data.length === 0) {
-      return [];
-    }
+  return unstable_cache(
+    async () => {
+      const supabase = await createAdminClient();
 
-    return data;
-  },
-  ['nearby-clinics'],
-  {
-    revalidate: 600, // Cache for 10 minutes
-    tags: ['clinics'],
-  },
-);
+      const { data, error } = await supabase.rpc('get_nearby_clinics', {
+        clinic_latitude: lat,
+        clinic_longitude: lng,
+        radius_km: radius,
+        result_limit: limitCount,
+      });
+
+      if (error) {
+        console.error(
+          `Error fetching nearest clinics (lat: ${lat}, lng: ${lng}, radius: ${radius}km):`,
+          error,
+        );
+        return [];
+      }
+
+      if (!data || data.length === 0) {
+        return [];
+      }
+
+      return data;
+    },
+    [cacheKey],
+    {
+      revalidate: 600, // Cache for 10 minutes
+      tags: ['clinics', 'nearby-clinics'],
+    },
+  )();
+};
 
 /**
  * Fetches clinic reviews with pagination

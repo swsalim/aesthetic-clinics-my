@@ -12,7 +12,7 @@ import { absoluteUrl, getPagination } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
 import { getDoctorsByState } from '@/helpers/doctors';
-import { getStateListings, getStateMetadataBySlug } from '@/helpers/states';
+import { getStateBySlug, getStateListings } from '@/helpers/states';
 
 import { LazyAdsArticle } from '@/components/ads/lazy-ads-article';
 import { DoctorCard } from '@/components/cards/doctor-card';
@@ -39,7 +39,10 @@ export async function generateMetadata({
   const { state } = await params;
   const { page } = await searchParams;
 
-  const stateData = await getStateMetadataBySlug(state);
+  const limit = 20;
+  const currentPage = page ? +page : 1;
+  const { from, to } = getPagination(currentPage, limit);
+  const stateData = await getStateBySlug(state, from, to);
 
   if (!stateData) {
     notFound();
@@ -119,11 +122,11 @@ export default async function DentistsByStatePage({
 
   const limit = 20;
   const currentPage = page ? +page : 1;
-  const { from } = getPagination(currentPage, limit);
+  const { from, to } = getPagination(currentPage, limit);
 
   // Fetch state metadata and doctors data in parallel
   const [stateData, doctorsResult] = await Promise.all([
-    getStateMetadataBySlug(state),
+    getStateBySlug(state, from, to),
     getDoctorsByState(state, limit, from),
   ]);
 

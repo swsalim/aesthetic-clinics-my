@@ -11,86 +11,74 @@ interface AreaData {
   image: string;
   state: Partial<ClinicState>;
   clinics: Partial<Clinic>[];
+  total_clinics: number;
 }
 
-export const getAreaMetadataBySlug = unstable_cache(
-  async (areaSlug: string) => {
-    const supabase = createAdminClient();
+export const getAreaListings = async () => {
+  const supabase = createAdminClient();
 
-    const { data: area } = await supabase.rpc('get_area_metadata_by_slug', {
-      area_slug: areaSlug,
-    });
-
-    return area as AreaData | null;
-  },
-  ['area-metadata-by-slug'],
-  {
-    revalidate: 3600, // Cache for 1 hour
-    tags: ['areas'],
-  },
-);
-
-export const getAreasForBrowse = unstable_cache(
-  async () => {
-    const supabase = createAdminClient();
-
-    const { data: areasData } = await supabase
-      .from('areas')
-      .select('id, name, slug, state_id', { count: 'exact' });
-
-    return areasData || [];
-  },
-  ['areas-for-browse'],
-  {
-    revalidate: 2592000, // Cache for 30 days
-    tags: ['areas'],
-  },
-);
-
-export const getAreaListings =
-  async () => {
-    const supabase = createAdminClient();
-
-    const { data: areaData } = (await supabase.from('areas').select(
-      `
+  const { data: areaData } = (await supabase.from('areas').select(
+    `
         id,
         name,
         slug,
         state:states(name, slug)
       `,
-    )) as {
-      data: {
-        id: string;
+  )) as {
+    data: {
+      id: string;
+      name: string;
+      slug: string;
+      state: {
         name: string;
         slug: string;
-        state: {
-          name: string;
-          slug: string;
-        };
-      }[];
-    };
+      };
+    }[];
+  };
 
-    return areaData ?? [];
+  return areaData ?? [];
+};
+
+export const getAreaBySlug = async (
+  areaSlug: string,
+  from: number,
+  to: number,
+): Promise<AreaData | null> => {
+  // Capture parameters immediately to avoid closure issues in concurrent requests
+  const slug = areaSlug;
+  const fromIndex = from;
+  const toIndex = to;
+
+  // Validate inputs
+  if (!slug || typeof slug !== 'string') {
+    console.error('Invalid areaSlug provided to getAreaBySlug:', areaSlug);
+    return null;
   }
 
-/**
- * Fetches an area by its slug with all related data using admin client for static generation
- */
-export const getAreaBySlug = unstable_cache(
-  async (areaSlug: string, from: number, to: number) => {
-    const supabase = createAdminClient();
+  return unstable_cache(
+    async () => {
+      const supabase = createAdminClient();
 
-    const { data: area } = await supabase.rpc('get_ranged_area_metadata_by_slug', {
-      area_slug: areaSlug,
-      from_index: from,
-      to_index: to,
-    });
+      const { data: area, error } = await supabase.rpc('get_ranged_area_metadata_by_slug', {
+        area_slug: slug,
+        from_index: fromIndex,
+        to_index: toIndex,
+      });
 
-    return area as AreaData | null;
-  },
-  ['area-by-slug'],
-  {
-    revalidate: 3600, // Cache for 1 hour
-    tags: ['areas'],
-  },
-);
+      if (error) {
+        console.error(
+          `Error fetching area by slug "${slug}" (from: ${fromIndex}, to: ${toIndex}):`,
+          error,
+        );
+        return null;
+      }
+
+      return area as AreaData | null;
+    },
+    [`area-${slug}-${fromIndex}-${toIndex}`],
+    {
+      revalidate: 3600,
+      tags: ['areas', `area-${slug}`],
+    },
+  )();
+};

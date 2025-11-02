@@ -20,7 +20,7 @@ import { siteConfig } from '@/config/site';
 
 import { absoluteUrl, cn } from '@/lib/utils';
 
-import { getClinicBySlug, getClinicListings, getClinicMetadataBySlug } from '@/helpers/clinics';
+import { getClinicBySlug, getClinicListings } from '@/helpers/clinics';
 import { getServiceIcon } from '@/helpers/services';
 
 import { LazyAdsLeaderboard } from '@/components/ads/lazy-ads-leaderboard';
@@ -179,8 +179,7 @@ const renderOpeningHours = (parsedClinic: ClinicDetails) => {
 export async function generateMetadata({ params }: ClinicPageProps): Promise<Metadata> {
   const { clinicSlug } = await params;
 
-  // Use getClinicMetadataBySlug for build-time metadata generation
-  const clinic = await getClinicMetadataBySlug(clinicSlug);
+  const clinic = await getClinicBySlug(clinicSlug);
 
   if (!clinic) {
     notFound();
