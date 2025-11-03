@@ -68,7 +68,7 @@ export async function GET() {
 
   // Add static pages
   // const staticPages = ['/', '/browse', '/dentists', '/submit'];
-  const staticPages = ['/', '/browse', '/about', '/doctors'];
+  const staticPages = ['/', '/browse', '/about', '/doctors', '/advertise-with-us'];
 
   return getServerSideSitemap([
     ...fields,

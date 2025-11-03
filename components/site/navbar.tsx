@@ -6,6 +6,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { StoreIcon } from 'lucide-react';
+
 // import { PlusIcon } from 'lucide-react';
 import useScroll from '@/lib/hooks/use-scroll';
 import { cn } from '@/lib/utils';
@@ -103,11 +105,18 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-10 w-full border-b bg-white/50 backdrop-blur-md transition-all duration-75',
-        scrolled
-          ? 'dark:border-brand-600 border-gray-200 dark:bg-gray-900/50'
-          : 'border-transparent',
+        'sticky top-0 z-10 w-full border-b bg-white/50 backdrop-blur-md transition-all duration-75 dark:bg-white',
+        scrolled ? 'dark:border-brand-600 border-gray-200 dark:bg-white/50' : 'border-transparent',
       )}>
+      <div className="flex items-center justify-center gap-x-1 bg-blue-500 px-4 py-3 text-white">
+        <StoreIcon className="h-4 w-4" />
+        Own an aesthetic clinic? Get{' '}
+        <Link
+          href="/advertise-with-us"
+          className="border-white font-bold text-white hover:border-white hover:text-white/80">
+          premium visibility.
+        </Link>
+      </div>
       <Container className="flex h-16 items-center justify-between md:h-20">
         <Link href="/" className="flex items-center gap-x-2 text-xl hover:border-transparent">
           <Logo className="h-10 w-auto fill-blue-500" />
