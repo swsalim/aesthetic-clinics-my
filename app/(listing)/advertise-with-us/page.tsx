@@ -26,7 +26,7 @@ const seo = {
   company: 'AestheticClinics.my',
 };
 
-const ogImage = `/api/og?title=${seo.title}`;
+const ogImage = 'https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/images/og-advertise.png';
 
 export const metadata = {
   title: seo.title,

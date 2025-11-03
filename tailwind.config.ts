@@ -36,6 +36,8 @@ export default {
       green: colors.green,
       yellow: colors.yellow,
       gray: colors.stone,
+      amber: colors.amber,
+      cyan: colors.cyan,
     },
     fontFamily: {
       sans: ['var(--font-sans)', ...defaultTheme.fontFamily.sans],
