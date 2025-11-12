@@ -61,10 +61,8 @@ export async function generateMetadata({ params, searchParams }: AreaPageProps):
     notFound();
   }
 
-  const currentDate = new Date();
-  const currentMonth = currentDate.toLocaleString('en-US', { month: 'long' });
-  const currentYear = currentDate.getFullYear();
-  const title = `Top ${areaData.total_clinics} Aesthetic Clinics in ${areaData.name}, ${areaData.state.name} [${currentMonth} ${currentYear}]`;
+  const LAST_UPDATED = 'November 2025';
+  const title = `Top ${areaData.total_clinics} Aesthetic Clinics in ${areaData.name}, ${areaData.state.name} [${LAST_UPDATED}]`;
   const description = `Find trusted aesthetic clinics in ${areaData.name}, ${areaData.state.name}.Read verified reviews, check services and contact details to book your next beauty treatment nearby.`;
   const url = !page
     ? absoluteUrl(`/${state}/${area}`)
@@ -125,9 +123,6 @@ export async function generateStaticParams() {
     area: area.slug,
   }));
 }
-
-// Force static generation - this ensures the page is generated at build time
-export const revalidate = 3600; // Revalidate every hour (3600 seconds)
 
 export default async function AreaPage({ params, searchParams }: AreaPageProps) {
   const { state, area } = await params;

@@ -169,7 +169,7 @@ export const getDoctorBySlug = async (
     },
     [`doctor-${slug}-${status}`],
     {
-      revalidate: 3600,
+      revalidate: 1_209_600, // Cache for 2 weeks
       tags: ['doctors', `doctor-${slug}`],
     },
   );
@@ -232,7 +232,7 @@ export async function getDoctors(
     },
     [cacheKey],
     {
-      revalidate: 3600,
+      revalidate: 1_209_600, // Cache for 2 weeks
       tags: ['doctors', ...(filters?.specialty ? [`doctors-specialty-${filters.specialty}`] : [])],
     },
   );
@@ -336,7 +336,7 @@ export async function getDoctorsByClinicSlug(
     },
     [`doctors-clinic-${slug}-${statusParam}`],
     {
-      revalidate: 3600,
+      revalidate: 1_209_600, // Cache for 2 weeks
       tags: ['doctors', `doctors-clinic-${slug}`],
     },
   )();
@@ -395,7 +395,7 @@ export const getDoctorsByState = async (
     },
     [`doctors-state-${slug}-${limitCount}-${offsetCount}-${statusParam}`],
     {
-      revalidate: 3600,
+      revalidate: 1_209_600, // Cache for 2 weeks
       tags: ['doctors', `doctors-state-${slug}`],
     },
   )();

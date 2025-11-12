@@ -77,7 +77,7 @@ export const getAreaBySlug = async (
     },
     [`area-${slug}-${fromIndex}-${toIndex}`],
     {
-      revalidate: 3600,
+      revalidate: 1_209_600, // Cache for 2 weeks
       tags: ['areas', `area-${slug}`],
     },
   )();

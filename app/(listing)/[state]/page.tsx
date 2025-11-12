@@ -55,10 +55,8 @@ export async function generateMetadata({
     notFound();
   }
 
-  const currentDate = new Date();
-  const currentMonth = currentDate.toLocaleString('en-US', { month: 'long' });
-  const currentYear = currentDate.getFullYear();
-  const title = `Best ${stateData.total_clinics} Aesthetic Clinics in ${stateData.name} [${currentMonth} ${currentYear}]`;
+  const LAST_UPDATED = 'November 2025';
+  const title = `Best ${stateData.total_clinics} Aesthetic Clinics in ${stateData.name} [${LAST_UPDATED}]`;
   const description = `Explore ${stateData.name}'s best aesthetic clinics. View ratings, services, and treatment options to find the right clinic for your skincare or cosmetic goals.`;
   const url = !page
     ? absoluteUrl(`/${state}`)
@@ -118,9 +116,6 @@ export async function generateStaticParams() {
     state: state.slug,
   }));
 }
-
-// Force static generation - this ensures the page is generated at build time
-export const revalidate = 3600; // Revalidate every hour (3600 seconds)
 
 export default async function StatePage({ params, searchParams }: StatePageProps) {
   const { state } = await params;

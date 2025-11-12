@@ -116,8 +116,8 @@ const features = [
     description:
       'Clinics choosing premium placements consistently receive more enquiries and bookings compared to standard listings.',
     icon: (
-      <div className="bg-cyan-100 inline-block rounded-full p-4">
-        <SproutIcon className="text-cyan-600 h-6 w-6" />
+      <div className="inline-block rounded-full bg-cyan-100 p-4">
+        <SproutIcon className="h-6 w-6 text-cyan-600" />
       </div>
     ),
   },
@@ -215,7 +215,6 @@ export default async function AdvertisePage() {
       <WebPageJsonLd
         description={seo.description}
         id={seo.url}
-        lastReviewed={new Date().toISOString()}
         reviewedBy={process.env.NEXT_PUBLIC_SCHEMA_REVIEWER}
       />
 

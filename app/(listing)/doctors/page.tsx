@@ -33,11 +33,7 @@ export async function generateMetadata({ searchParams }: DentistsPageProps): Pro
 
   const totalDoctors = doctorsResult.count || 0;
 
-  const currentDate = new Date();
-  const currentMonth = currentDate.toLocaleString('en-US', { month: 'long' });
-  const currentYear = currentDate.getFullYear();
-
-  const title = `Browse Top ${totalDoctors} Aesthetic Doctors in Malaysia [${currentMonth} ${currentYear}]`;
+  const title = `Browse Top ${totalDoctors} Aesthetic Doctors in Malaysia`;
   const description =
     'Find aesthetic doctors across Malaysia. Browse by state, city, or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details.';
   const url = !page
@@ -179,7 +175,6 @@ export default async function DentistsPage({ searchParams }: DentistsPageProps) 
       <WebPageJsonLd
         description="Discover aesthetic doctors across Malaysia. Browse by state, city, or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details."
         id="/doctors"
-        lastReviewed={new Date().toISOString()}
         reviewedBy={process.env.NEXT_PUBLIC_SCHEMA_REVIEWER}
       />
       <BreadcrumbJsonLd itemListElements={JSONLDbreadcrumbs} />

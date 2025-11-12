@@ -3,14 +3,14 @@ import JsonLd from './json-ld';
 interface WebPageJsonLdProps {
   id: string;
   description: string;
-  lastReviewed: string;
+  lastReviewed?: string | undefined;
   reviewedBy: string | undefined;
 }
 
 export default function WebPageJsonLd({
   id,
   description,
-  lastReviewed = new Date().toISOString(),
+  lastReviewed,
   reviewedBy = 'Aesthetic Clinics Malaysia',
 }: WebPageJsonLdProps) {
   return (
@@ -20,7 +20,7 @@ export default function WebPageJsonLd({
         '@type': 'WebPage',
         '@id': id,
         description,
-        lastReviewed,
+        ...(lastReviewed && { lastReviewed }),
         reviewedBy: {
           '@type': 'Person',
           name: reviewedBy,

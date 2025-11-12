@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { ClinicHours, ClinicReview } from '@/types/clinic';
-import { formatDistanceToNow } from 'date-fns';
 import { ArrowRightIcon } from 'lucide-react';
 
 import { siteConfig } from '@/config/site';
@@ -12,6 +11,7 @@ import { absoluteUrl } from '@/lib/utils';
 
 import { getClinicBySlug, getClinicListings } from '@/helpers/clinics';
 
+import { RelativeTime } from '@/components/listing/relative-time';
 import BusinessJsonLd from '@/components/structured-data/business-json-ld';
 import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
 import Breadcrumb from '@/components/ui/breadcrumb';
@@ -103,9 +103,6 @@ export async function generateStaticParams() {
   }));
 }
 
-// Force static generation - this ensures the page is generated at build time
-export const revalidate = 3600; // Revalidate every hour (3600 seconds)
-
 export default async function ReviewsPage({ params }: ReviewsPageProps) {
   const { clinicSlug } = await params;
 
@@ -180,8 +177,12 @@ export default async function ReviewsPage({ params }: ReviewsPageProps) {
                       <div className="flex flex-col">
                         <span className="font-medium">{review.author_name}</span>
                         <span className="text-sm text-gray-500 dark:text-gray-400">
-                          {review.review_time &&
-                            formatDistanceToNow(new Date(review.review_time), { addSuffix: true })}
+                          {review.review_time && (
+                            <RelativeTime
+                              date={review.review_time}
+                              className="text-sm text-gray-500 dark:text-gray-400"
+                            />
+                          )}
                         </span>
                       </div>
                     </div>

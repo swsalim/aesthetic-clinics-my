@@ -49,7 +49,7 @@ export const getRecentClinics = unstable_cache(
   },
   ['recent-clinics'],
   {
-    revalidate: 3600,
+    revalidate: 1_209_600, // Cache for 2 weeks
     tags: ['clinics'],
   },
 );
@@ -148,7 +148,7 @@ export async function getClinicByServiceId(
     },
     [`clinics-service-${serviceId}-${fromIndex}-${toIndex}-${statusParam}`],
     {
-      revalidate: 3600,
+      revalidate: 1_209_600, // Cache for 2 weeks
       tags: ['clinics', `service-${serviceId}`],
     },
   )();
@@ -208,7 +208,7 @@ export const getClinicsNearLocation = async (
     },
     [cacheKey],
     {
-      revalidate: 600, // Cache for 10 minutes
+      revalidate: 1_209_600, // Cache for 2 weeks
       tags: ['clinics', 'nearby-clinics'],
     },
   )();
@@ -234,7 +234,7 @@ export const getClinicReviews = unstable_cache(
   },
   ['clinic-reviews'],
   {
-    revalidate: 600, // Cache for 10 minutes
+    revalidate: 1_209_600, // Cache for 2 weeks
     tags: ['reviews', 'clinics'],
   },
 );

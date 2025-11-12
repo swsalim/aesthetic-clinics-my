@@ -67,7 +67,7 @@ export const getStateBySlug = async (
     },
     [`state-by-slug-${slug}-${fromIndex}-${toIndex}`],
     {
-      revalidate: 3600,
+      revalidate: 1_209_600, // Cache for 2 weeks
       tags: ['states', `state-${slug}`],
     },
   )();

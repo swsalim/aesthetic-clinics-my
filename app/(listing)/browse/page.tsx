@@ -31,7 +31,7 @@ const getBrowseData = unstable_cache(
   },
   ['browse-data'],
   {
-    revalidate: 1800, // Cache for 30 minutes
+    revalidate: 1_209_600, // Cache for 2 weeks
     tags: ['browse-data', 'states', 'areas'],
   },
 );
