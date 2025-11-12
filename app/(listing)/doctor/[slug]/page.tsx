@@ -139,7 +139,7 @@ export default async function DentistPage({ params }: DentistPageProps) {
         <BusinessJsonLd
           name={primaryClinic?.name}
           url={`${process.env.NEXT_PUBLIC_BASE_URL}/doctor/${slug}`}
-          image={(doctorWithClinics.images?.[0] as unknown as ClinicImage).image_url || ''}
+          image={(doctorWithClinics.images?.[0] as unknown as ClinicImage)?.image_url ?? ''}
           email={primaryClinic?.email || null}
           phone={primaryClinic?.phone || null}
           location={{
@@ -161,7 +161,7 @@ export default async function DentistPage({ params }: DentistPageProps) {
       <DentistJsonLd
         name={doctor.name}
         url={absoluteUrl(`/doctor/${doctor.slug}`)}
-        photo={(doctor.images?.[0] as unknown as ClinicImage).image_url || ''}
+        photo={(doctor.images?.[0] as unknown as ClinicImage)?.image_url ?? ''}
         phone={primaryClinic?.phone || null}
         specialty="Aesthetics"
         email={primaryClinic?.email || 'support@aestheticclinics.my'}
