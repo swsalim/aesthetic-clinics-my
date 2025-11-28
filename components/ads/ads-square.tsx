@@ -26,7 +26,7 @@ export default function AdsSquare() {
             textAlign: 'center',
           }}
           data-ad-client="ca-pub-3799479098488751"
-          data-ad-slot="2506925447"
+          data-ad-slot="8411804064"
           data-ad-format="auto"
           data-full-width-responsive="true"
         />

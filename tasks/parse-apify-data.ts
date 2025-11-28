@@ -26,7 +26,13 @@ interface ProcessingOptions {
   maxConcurrent?: number;
   retryAttempts?: number;
   retryDelay?: number;
-  model?: 'gpt-4' | 'gpt-4-1106-preview' | 'gpt-3.5-turbo-1106';
+  model?:
+    | 'gpt-4'
+    | 'gpt-4-1106-preview'
+    | 'gpt-3.5-turbo-1106'
+    | 'gpt-5'
+    | 'gpt-5-mini'
+    | 'gpt-5-nano';
   temperature?: number;
 }
 
@@ -58,7 +64,7 @@ const DEFAULT_OPTIONS: Required<ProcessingOptions> = {
   maxConcurrent: 3,
   retryAttempts: 3,
   retryDelay: 1000,
-  model: 'gpt-4-1106-preview',
+  model: 'gpt-5-mini',
   temperature: 0.7,
 };
 

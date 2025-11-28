@@ -29,7 +29,7 @@ export default function AdsArticle() {
           data-ad-layout="in-article"
           data-ad-format="fluid"
           data-ad-client="ca-pub-3799479098488751"
-          data-ad-slot="9256166620"
+          data-ad-slot="1923127772"
         />
       </div>
     </aside>

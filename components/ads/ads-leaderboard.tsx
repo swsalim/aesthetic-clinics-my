@@ -27,7 +27,7 @@ export default function AdsLeaderboard() {
             textAlign: 'center',
           }}
           data-ad-client="ca-pub-3799479098488751"
-          data-ad-slot="1957133245"
+          data-ad-slot="4134465948"
           data-ad-format="auto"
           data-full-width-responsive="true"
         />
