@@ -79,7 +79,7 @@
     "lucide-react": "^0.488.0",
     "mapbox-gl": "^2.15.0",
     "motion": "^12.7.3",
-    "next": "^15.5.7",
+    "next": "^15.5.9",
     "node-fetch": "^3.3.2",
     "openai": "^4.95.1",
     "openai-edge": "^1.2.3",
