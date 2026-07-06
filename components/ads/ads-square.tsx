@@ -18,9 +18,9 @@ export default function AdsSquare() {
 
   return (
     <aside className="my-4 block w-full before:block before:text-center before:text-[10px] before:font-medium before:uppercase before:leading-4 before:text-gray-500 before:content-['Advertisement'] md:my-8">
-      <div className="relative mx-auto min-h-[250px] w-full bg-gray-50 text-center">
+      <div className="relative mx-auto min-h-[250px] w-full bg-gray-100 text-center">
         <ins
-          className="adsbygoogle relative mx-auto min-h-[250px] w-full bg-gray-50 text-center"
+          className="adsbygoogle relative mx-auto min-h-[250px] w-full bg-gray-100 text-center"
           style={{
             display: 'block',
             textAlign: 'center',

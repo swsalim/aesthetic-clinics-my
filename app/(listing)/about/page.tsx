@@ -56,7 +56,7 @@ export default async function BrowsePage() {
   return (
     <>
       <Wrapper className="pt-0 md:pt-0">
-        <PageHeading title="About Us">
+        <PageHeading label="About" title={config.title}>
           <p>
             AestheticClinics.my is dedicated to helping Malaysians discover trusted, high-quality
             aesthetic and cosmetic clinics across the country. Our goal is simple: to make it easy

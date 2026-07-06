@@ -184,7 +184,7 @@ export default async function DentistsPage({ searchParams }: DentistsPageProps) 
         dangerouslySetInnerHTML={addListItemsJsonLd()}
       />
       <Wrapper className="pt-0 md:pt-0">
-        <PageHeading title="Browse LCP-Certified Aesthetic Doctors in Malaysia">
+        <PageHeading label="Doctors" title="Browse LCP-certified aesthetic doctors in Malaysia">
           <p className="text-balance">
             Browse aesthetic doctors by{' '}
             <Link

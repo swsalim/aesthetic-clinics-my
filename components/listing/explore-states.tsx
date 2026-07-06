@@ -1,159 +1,120 @@
 import { unstable_cache } from 'next/cache';
 import Link from 'next/link';
 
+import { ArrowRightIcon } from 'lucide-react';
 import pluralize from 'pluralize';
 
 import { createAdminClient } from '@/lib/supabase';
-import { cn } from '@/lib/utils';
 
 import Container from '@/components/ui/container';
 import { Wrapper } from '@/components/ui/wrapper';
 
 import { ImageKit } from '../image/image-kit';
 
-const getPopularStatesWithRandomization = unstable_cache(
-  async () => {
+type PopularState = {
+  id: string;
+  name: string;
+  slug: string;
+  image: string | null;
+  clinicCount: number;
+};
+
+const getPopularStates = unstable_cache(
+  async (): Promise<PopularState[]> => {
     const supabase = createAdminClient();
 
-    // First get all states
-    const { data: allStates, error: statesError } = await supabase
+    const { data: statesData, error: statesError } = await supabase
       .from('states')
-      .select('id, name, slug, image');
+      .select('id, name, slug, image, clinics(count)')
+      .eq('clinics.status', 'approved')
+      .eq('clinics.is_active', true);
 
     if (statesError) {
       console.error('Error fetching states:', statesError);
       return [];
     }
 
-    if (!allStates || allStates.length === 0) {
-      return [];
-    }
-
-    // Then get clinic counts for each state
-    const statesWithCounts = await Promise.all(
-      allStates.map(async (state) => {
-        const { count, error: countError } = await supabase
-          .from('clinics')
-          .select('*', { count: 'exact', head: true })
-          .eq('state_id', state.id)
-          .eq('status', 'approved')
-          .eq('is_active', true);
-
-        if (countError) {
-          console.error(`Error fetching clinic count for ${state.name}:`, countError);
-        }
-
-        return {
-          ...state,
-          clinics: [{ count: count || 0 }],
-        };
-      }),
-    );
-
-    const filteredStates = statesWithCounts
-      .filter((state) => state.clinics[0].count > 0)
-      .sort((a, b) => b.clinics[0].count - a.clinics[0].count)
+    return (statesData || [])
+      .map((state) => ({
+        id: state.id,
+        name: state.name,
+        slug: state.slug,
+        image: state.image,
+        clinicCount: state.clinics?.[0]?.count ?? 0,
+      }))
+      .filter((state) => state.clinicCount > 0)
+      .sort((a, b) => b.clinicCount - a.clinicCount)
       .slice(0, 8);
-
-    return filteredStates;
   },
-  ['popular-states-randomized'],
+  ['popular-states'],
   {
-    revalidate: 1_209_600, // Cache for 2 weeks
-    tags: ['states'],
+    revalidate: 1_209_600,
+    tags: ['states', 'clinics'],
   },
 );
 
-export async function ExploreStates() {
-  const states = await getPopularStatesWithRandomization();
+function formatCount(value: number) {
+  return value.toLocaleString('en-MY');
+}
 
-  // Show loading state if no states are provided
-  if (!states || states.length === 0) {
-    return (
-      <Wrapper className="bg-gray-50 dark:bg-gray-950/30">
-        <Container>
-          <div className="mb-10 flex flex-col gap-2 text-center md:mb-12">
-            <h2 className="text-balance text-3xl font-black">
-              Top States for Aesthetic Clinics in Malaysia
-            </h2>
-            <p className="text-lg font-medium text-gray-500 dark:text-gray-300">
-              Looking for aesthetic care? Start by exploring the most popular states below,
-              featuring top-rated clinics.
-            </p>
-          </div>
-          <div className="py-8 text-center">
-            <p className="text-gray-500">Loading states...</p>
-          </div>
-        </Container>
-      </Wrapper>
-    );
+export async function ExploreStates() {
+  const states = await getPopularStates();
+
+  if (states.length === 0) {
+    return null;
   }
 
   return (
-    <Wrapper className="bg-gray-50 dark:bg-gray-950/30">
-      <Container>
-        <div className="mb-10 flex flex-col gap-2 text-center md:mb-12">
-          <h2 className="text-balance text-3xl font-black">
-            Top States for Aesthetic Clinics in Malaysia
-          </h2>
-          <p className="text-lg font-medium text-gray-500 dark:text-gray-300">
-            Looking for aesthetic care? Start by exploring the most popular states below, featuring
-            top-rated clinics.
-          </p>
+    <Wrapper className="border-t border-gray-200 dark:border-gray-800">
+      <Container className="min-w-0">
+        <div className="mb-8 flex min-w-0 flex-col gap-3 md:mb-10 md:flex-row md:items-end md:justify-between">
+          <div className="min-w-0 max-w-2xl">
+            <h2 className="font-display text-balance text-2xl font-bold text-gray-900 md:text-3xl dark:text-gray-50">
+              Browse by state
+            </h2>
+            <p className="mt-2 text-base text-gray-600 dark:text-gray-300">
+              States with the most listed clinics — open one to compare practices in your area.
+            </p>
+          </div>
+          <Link
+            href="/browse"
+            prefetch={false}
+            className="inline-flex shrink-0 items-center gap-1.5 self-start text-sm font-semibold text-blue-600 no-underline transition hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 md:self-auto dark:text-blue-400 dark:hover:text-blue-300 dark:focus-visible:outline-blue-400">
+            Browse all locations
+            <ArrowRightIcon className="size-4" aria-hidden="true" />
+          </Link>
         </div>
-        <div className="lg:grid-cols- grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-8 lg:grid-cols-6">
-          {states.map((state, index) => (
-            <div
-              key={state.id}
-              className={cn(
-                'overflow-hidden',
-                (index === 0 || index === 6) && 'lg:col-span-3 lg:row-span-2',
-                index === 2 && 'lg:col-span-2',
-                index === 3 && 'lg:col-span-3',
-                index === 5 && 'lg:col-span-2',
-                index === 7 && 'lg:col-span-3',
-                index === 8 && 'lg:col-span-2',
-              )}>
+
+        <ul className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {states.map((state) => (
+            <li key={state.id} className="min-w-0">
               <Link
                 href={`/${state.slug}`}
-                className="relative overflow-hidden rounded-lg text-blue-300">
-                <div
-                  className={cn(
-                    'group relative h-56 w-full overflow-hidden rounded-lg transition md:h-52 lg:h-56',
-                    (index === 0 || index === 6) && 'lg:h-full lg:max-h-[480px]',
-                  )}>
-                  {state.image && (
-                    <ImageKit
-                      src={state.image}
-                      alt={state.name}
-                      width={600}
-                      height={600}
-                      sizes="(max-width: 600px) 100vw, 350px"
-                      className="h-full w-full object-cover transition group-hover:scale-105"
-                    />
-                  )}
-                  {!state.image && (
-                    <ImageKit
-                      src="placeholder-location.jpg"
-                      alt={state.name}
-                      width={600}
-                      height={600}
-                      sizes="(max-width: 600px) 100vw, 350px"
-                      className="h-full w-full object-cover transition group-hover:scale-105"
-                    />
-                  )}
-                </div>
-                <div className="absolute -bottom-1 left-0 right-0 h-4/5 rounded-b-lg bg-gradient-to-t from-gray-900/100 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
-                  <h3 className="text-lg font-semibold">{state.name}</h3>
-                  <p className="text-base font-medium text-gray-100 dark:text-gray-100">
-                    {state.clinics?.[0].count} {pluralize('clinic', state.clinics?.[0].count)}
-                  </p>
+                prefetch={false}
+                className="group block min-w-0 overflow-hidden rounded-xl border border-gray-200 bg-white no-underline transition hover:border-blue-200 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:border-gray-700 dark:bg-gray-900/40 dark:hover:border-blue-700">
+                <div className="relative aspect-[16/9] overflow-hidden">
+                  <ImageKit
+                    src={state.image || 'placeholder-location.jpg'}
+                    alt={state.name}
+                    width={480}
+                    height={270}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/85 via-gray-900/25 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <h3 className="font-display truncate text-base font-bold capitalize text-white md:text-lg">
+                      {state.name}
+                    </h3>
+                    <p className="mt-0.5 text-sm font-medium text-gray-200">
+                      {formatCount(state.clinicCount)} {pluralize('clinic', state.clinicCount)}
+                    </p>
+                  </div>
                 </div>
               </Link>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </Container>
     </Wrapper>
   );

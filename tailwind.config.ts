@@ -40,7 +40,8 @@ export default {
       cyan: colors.cyan,
     },
     fontFamily: {
-      sans: ['var(--font-sans)', ...defaultTheme.fontFamily.sans],
+      figtree: ['var(--font-figtree)', ...defaultTheme.fontFamily.sans],
+      display: ['var(--font-display)', ...defaultTheme.fontFamily.serif],
     },
     extend: {
       colors: {

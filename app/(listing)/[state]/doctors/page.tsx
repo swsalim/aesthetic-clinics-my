@@ -216,7 +216,7 @@ export default async function DentistsByStatePage({
       </Wrapper>
 
       <Wrapper className="pt-0 md:pt-0">
-        <PageHeading title={title}>
+        <PageHeading label={stateData.name} title={title}>
           <p>
             Discover {totalDoctors} aesthetic doctors in {stateData.name}. Browse by city or clinic
             to find a aesthetic doctor near you.
