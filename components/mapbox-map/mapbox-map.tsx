@@ -115,13 +115,13 @@ export default function MapboxMap({
   return (
     <div className="relative h-72 w-full overflow-hidden rounded-lg border border-gray-200">
       {!mapLoaded && !mapError && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gray-100">
+        <div className="z-1 absolute inset-0 flex items-center justify-center bg-gray-100">
           <div className="animate-pulse">Loading map...</div>
         </div>
       )}
 
       {mapError && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gray-100">
+        <div className="z-1 absolute inset-0 flex items-center justify-center bg-gray-100">
           <p className="text-red-500">{mapError}</p>
         </div>
       )}

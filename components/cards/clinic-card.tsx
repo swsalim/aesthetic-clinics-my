@@ -10,6 +10,7 @@ import { ImageKit } from '@/components/image/image-kit';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StarRating } from '@/components/ui/star-rating';
+import { cn } from '@/lib/utils';
 
 interface ClinicCardProps {
   slug: string;
@@ -27,6 +28,7 @@ interface ClinicCardProps {
   openOnPublicHolidays: boolean;
   isPermanentlyClosed: boolean;
   distance?: number;
+  isPlaceholder?: boolean;
 }
 
 export function ClinicCard({
@@ -45,13 +47,12 @@ export function ClinicCard({
   openOnPublicHolidays,
   isPermanentlyClosed,
   distance,
+  isPlaceholder,
 }: ClinicCardProps) {
-  return (
-    <Link
-      href={`/place/${slug}`}
-      className="block transition-transform hover:scale-[1.02] hover:border-none"
-      prefetch={false}>
-      <Card className="h-full overflow-hidden rounded-2xl" role="article">
+  const card = (
+    <Card
+      className={cn('h-full overflow-hidden rounded-2xl', isPlaceholder && 'ring-2 ring-blue-200 dark:ring-blue-800')}
+      role="article">
         <CardHeader className="relative h-48 overflow-hidden p-0">
           {image && (
             <ImageKit
@@ -66,6 +67,9 @@ export function ClinicCard({
             />
           )}
           <div className="absolute right-2 top-2 flex flex-wrap justify-end gap-2">
+            {isPlaceholder && (
+              <Badge variant="gray">Sample</Badge>
+            )}
             {isFeatured && (
               <Badge variant="brand">
                 <AwardIcon className="me-1 h-4 w-4" aria-hidden="true" />
@@ -118,6 +122,18 @@ export function ClinicCard({
           </div>
         </CardContent>
       </Card>
+  );
+
+  if (isPlaceholder) {
+    return <div className="block">{card}</div>;
+  }
+
+  return (
+    <Link
+      href={`/place/${slug}`}
+      className="block transition-transform hover:scale-[1.02] hover:border-none"
+      prefetch={false}>
+      {card}
     </Link>
   );
 }

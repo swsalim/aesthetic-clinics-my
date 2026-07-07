@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -17,6 +18,7 @@ import { getStateBySlug, getStateListings } from '@/helpers/states';
 import { LazyAdsArticle } from '@/components/ads/lazy-ads-article';
 import { ClinicCard } from '@/components/cards/clinic-card';
 import { ImageKit } from '@/components/image/image-kit';
+// import { getVelvetSkinClinicCardPlaceholder } from '@/components/listing/featured-clinic-spotlight';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import CollectionPageJsonLd from '@/components/structured-data/collection-page-json-ld';
 import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
@@ -283,6 +285,15 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                   className={cn(
                     'grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8 lg:grid-cols-4',
                   )}>
+                  {/* {currentPage === 1 && (
+                    <ClinicCard
+                      key="featured-placeholder-velvet-skin-clinic"
+                      {...getVelvetSkinClinicCardPlaceholder(
+                        stateData.name,
+                        stateData.areas?.[0]?.name,
+                      )}
+                    />
+                  )} */}
                   {stateData.clinics
                     ?.sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0))
                     .map((clinic, index) => {
@@ -291,13 +302,12 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                           {index === 5 && (
                             <div className="flex flex-col items-center justify-center gap-2 text-center">
                               <a
-                                href="https://dub.sh/loreal-skincare"
+                                href="https://invl.me/clnm6di"
                                 target="_blank"
                                 className="hover:!border-b-transparent">
-                                <ImageKit
-                                  src="loreal-skin-care.avif"
-                                  directory="images"
-                                  alt="Darlie toothpaste"
+                                <Image
+                                  src="/images/banner-total-image-2.jpg"
+                                  alt="Total Image Whita Glo"
                                   width={600}
                                   height={600}
                                   priority
@@ -308,12 +318,6 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                                     objectPosition: 'center center',
                                   }}
                                 />
-                              </a>
-                              <a
-                                href="https://dub.sh/watsons-promo"
-                                target="_blank"
-                                className="text-sm !font-medium text-blue-500 hover:border-0 hover:text-blue-400 hover:no-underline dark:text-blue-300 dark:hover:text-blue-400">
-                                Browse Watsons Promotions
                               </a>
                             </div>
                           )}

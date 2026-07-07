@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -239,13 +240,12 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
         <Container>
           <div className="mx-auto mb-10 max-w-2xl">
             <a
-              href="https://dub.sh/watsons-monthly"
+              href="https://invl.me/clnm6di"
               className="hover:!border-b-transparent"
               target="_blank">
-              <ImageKit
-                src="watson-cruise.avif"
-                directory="images"
-                alt="Watsons Club - Shop to Sail Pianoland Cruise"
+              <Image
+                src="/images/banner-total-image-1.jpg"
+                alt="Total Image Whita Glo"
                 width={600}
                 height={600}
                 priority
@@ -283,13 +283,12 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
                           {index === 5 && (
                             <div className="flex flex-col items-center justify-center gap-2 text-center">
                               <a
-                                href="https://dub.sh/loreal-skincare"
+                                href="https://invl.me/clnm6di"
                                 target="_blank"
                                 className="hover:!border-b-transparent">
-                                <ImageKit
-                                  src="loreal-skin-care.avif"
-                                  directory="images"
-                                  alt="Darlie toothpaste"
+                                <Image
+                                  src="/images/banner-total-image-2.jpg"
+                                  alt="Total Image Whita Glo"
                                   width={600}
                                   height={600}
                                   priority
@@ -300,12 +299,6 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
                                     objectPosition: 'center center',
                                   }}
                                 />
-                              </a>
-                              <a
-                                href="https://dub.sh/watsons-promo"
-                                target="_blank"
-                                className="text-sm !font-medium text-blue-500 hover:border-0 hover:text-blue-400 hover:no-underline dark:text-blue-300 dark:hover:text-blue-400">
-                                Browse Watsons Promotions
                               </a>
                             </div>
                           )}
