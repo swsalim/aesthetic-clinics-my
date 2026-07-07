@@ -41,7 +41,7 @@ const plans: Plan[] = [
     stage: '01',
     tagline: 'Get found',
     name: 'Featured',
-    description: 'Perfect for clinics looking to increase visibility in local search results.',
+    description: 'Perfect for clinics that want stronger local placement in search results.',
     monthlyPrice: 59,
     yearlyPrice: 565,
     badge: 'Most popular',
@@ -52,7 +52,7 @@ const plans: Plan[] = [
       { text: 'Ad-free clinic profile' },
       { text: 'Do-follow backlink to your website' },
       { text: '1 promotional image' },
-      { text: 'Up to 8× more visibility than free listings' },
+      { text: 'Priority listing placement above free listings' },
     ],
   },
   {
@@ -70,14 +70,13 @@ const plans: Plan[] = [
         note: 'Clinics are rotated fairly to ensure balanced homepage exposure.',
       },
       { text: 'Increased exposure across AestheticClinics.my' },
-      { text: 'Priority over Featured listings' },
     ],
   },
   {
     stage: '03',
-    tagline: 'Become one of the most visible clinics on the platform',
+    tagline: 'Lead premium homepage placements',
     name: 'Featured Partner',
-    description: 'Maximum visibility for clinics that want to stand out.',
+    description: 'For clinics that want top-tier placement across premium slots.',
     monthlyPrice: 149,
     yearlyPrice: 1430,
     features: [
@@ -87,8 +86,6 @@ const plans: Plan[] = [
         note: 'Hero placements rotate among Featured Partners to provide fair exposure.',
       },
       { text: 'Featured Partner badge' },
-      { text: 'Highest priority across featured listings' },
-      { text: 'Priority consideration for future premium placements and campaigns' },
     ],
   },
 ];
@@ -135,12 +132,6 @@ const comparisonRows = [
     featured: 'dash' as const,
     plus: 'dash' as const,
     partner: 'check' as const,
-  },
-  {
-    feature: 'Visibility',
-    featured: 'Up to 8×',
-    plus: 'Higher',
-    partner: 'Maximum',
   },
 ];
 
@@ -208,8 +199,8 @@ export function PricingPlan() {
             Simple, transparent pricing
           </h2>
           <p className="mt-3 max-w-xl text-base text-gray-600 dark:text-gray-300">
-            Each plan adds a clear, tangible benefit — from local search visibility to homepage
-            spotlight placement.
+            Each plan adds a clear, tangible benefit — from local placement to homepage spotlight
+            placement.
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">

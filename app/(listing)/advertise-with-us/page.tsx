@@ -22,7 +22,7 @@ import { Wrapper } from '@/components/ui/wrapper';
 const seo = {
   title: 'Grow Your Aesthetic Clinic with Us - Get More Patients',
   description:
-    "Join Malaysia's trusted aesthetic clinic directory. Get featured listings to grow your practice with targeted online visibility.",
+    "Join Malaysia's trusted aesthetic clinic directory. Get featured listings to grow your practice with premium placement options.",
   url: '/advertise-with-us',
   creator: '@swsalim',
   company: 'AestheticClinics.my',
