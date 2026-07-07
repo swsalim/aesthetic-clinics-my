@@ -113,12 +113,12 @@ export function PricingPlan() {
               )}
               <div className="mb-6 flex flex-col gap-2">
                 <h2 className="mb-0 mt-0 !text-xl !font-bold">{plan.name}</h2>
-                <p className="mb-0 text-2xl font-semibold text-blue-600">
+                <p className="mb-0 text-2xl font-semibold text-blue-600 dark:text-blue-400">
                   RM{plan.price}
                   {type === 'monthly' ? (
-                    <span className="text-base text-gray-500 dark:text-gray-400">/month</span>
+                    <span className="text-base text-gray-500 dark:text-gray-300">/month</span>
                   ) : (
-                    <span className="text-base text-gray-500 dark:text-gray-400">/year</span>
+                    <span className="text-base text-gray-500 dark:text-gray-300">/year</span>
                   )}
                 </p>
                 {type === 'yearly' && (
@@ -133,7 +133,7 @@ export function PricingPlan() {
                 {plan.features.map((feature) => (
                   <li
                     key={feature}
-                    className="flex items-start gap-2 text-gray-700 dark:text-gray-400">
+                    className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
                     <Check className="mt-0.5 h-5 w-5 text-green-500" />
                     <span dangerouslySetInnerHTML={{ __html: feature }} />
                   </li>

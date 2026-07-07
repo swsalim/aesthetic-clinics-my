@@ -7,13 +7,11 @@ import {
   SproutIcon,
 } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
-
 import { PricingPlan } from '@/components/listing/pricing-plan';
 import PageHeading from '@/components/page-heading';
 import WebPageJsonLd from '@/components/structured-data/web-page-json-ld';
 import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
-import { buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import Container from '@/components/ui/container';
 import { Wrapper } from '@/components/ui/wrapper';
 
@@ -64,7 +62,7 @@ const features = [
     description:
       'Appear in top search results for <strong>“aesthetic clinic near me”</strong>—connect with high-intent patients searching for care now.',
     icon: (
-      <div className="inline-block rounded-full bg-blue-100 p-4 dark:bg-blue-950/60">
+      <div className="dark:bg-blue-950/60 inline-block rounded-full bg-blue-100 p-4">
         <MapPinIcon className="h-6 w-6 text-blue-500" />
       </div>
     ),
@@ -95,7 +93,7 @@ const features = [
     description:
       'Enjoy <strong>cost-effective packages</strong> and <strong>flexible upgrades</strong> that deliver lasting results—just one new patient can cover your ad spend.​',
     icon: (
-      <div className="inline-block rounded-full bg-orange-100 p-4 dark:bg-orange-950/40">
+      <div className="bg-orange-100 dark:bg-orange-950/40 inline-block rounded-full p-4">
         <HandCoinsIcon className="text-orange-600 h-6 w-6" />
       </div>
     ),
@@ -165,21 +163,23 @@ function AdvertiseWhyUs() {
 
 function AdvertiseFooter() {
   return (
-    <div className="not-prose flex flex-col items-center justify-center gap-8 rounded-xl border border-blue-100 bg-blue-50 p-16 text-center shadow-lg dark:border-blue-900/50 dark:bg-blue-950/30 dark:shadow-none">
-      <div className="flex flex-col items-center justify-center gap-2">
-        <h2 className="text-3xl font-bold text-blue-900 dark:text-blue-100">
+    <div className="my-12 flex flex-col items-center justify-center gap-8 rounded-xl border-[1px] border-blue-400 bg-blue-100 px-6 py-8 md:px-8 md:py-12">
+      <div className="not-prose mx-auto flex max-w-4xl flex-col items-center justify-center gap-6 rounded-xl">
+        <h2 className="text-center text-xl font-black text-blue-800 md:text-4xl">
           Ready to Grow Your Clinic’s Reach?
         </h2>
-        <p className="text-blue-700 dark:text-blue-200">
+        <p className="text-center text-lg font-medium text-blue-600">
           We offer a range of advertising options to help you reach more patients. Contact our team
           for a free consultation today.
         </p>
       </div>
-      <a
-        href="mailto:hello@aestheticclinics.my?subject=Advertise With Us Enquiry"
-        className={cn(buttonVariants({ variant: 'primary' }))}>
-        Contact us
-      </a>
+      <Button variant="primary" asChild>
+        <a
+          href="mailto:hello@aestheticclinics.my?subject=Advertise With Us Enquiry"
+          className="!text-white no-underline hover:!border-transparent hover:!text-white dark:!text-white dark:hover:!text-white">
+          Contact us
+        </a>
+      </Button>
     </div>
   );
 }
@@ -218,7 +218,7 @@ export default async function AdvertisePage() {
         </Container>
       </Wrapper>
 
-      <Wrapper size="default" className="">
+      <Wrapper size="default" className="dark:bg-gray-900">
         <Container className="max-w-4xl">
           <AdvertiseFooter />
         </Container>

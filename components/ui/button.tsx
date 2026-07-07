@@ -17,7 +17,7 @@ const buttonVariants = cva(
         outline:
           'border border-gray-300/50 bg-white text-gray-500 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-gray-800/40 dark:hover:text-gray-400 dark:focus:border-gray-700 dark:active:border-gray-700 dark:active:bg-gray-50 dark:active:text-gray-800',
         ghost:
-          'bg-transparent text-gray-700 hover:border-transparent hover:bg-gray-100 hover:text-gray-700 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 dark:text-gray-100 dark:hover:border-transparent dark:hover:bg-gray-800 dark:hover:text-gray-100',
+          'bg-transparent text-gray-700 hover:border-transparent hover:bg-gray-100 hover:text-gray-700 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 dark:text-blue-600 dark:hover:border-transparent dark:hover:bg-blue-200/40 dark:hover:text-blue-800',
         danger:
           'border border-solid border-transparent bg-red-600 text-white hover:bg-red-800 hover:text-white focus:border-red-800 focus:outline-none active:bg-red-800',
       },
