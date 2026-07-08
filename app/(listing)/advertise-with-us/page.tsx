@@ -7,10 +7,10 @@ import {
   ShieldCheckIcon,
   SproutIcon,
 } from 'lucide-react';
-import Image from 'next/image';
 
 import { cn } from '@/lib/utils';
 
+import { ImageKit } from '@/components/image/image-kit';
 import { PricingPlan } from '@/components/listing/pricing-plan';
 import PageHeading from '@/components/page-heading';
 import WebPageJsonLd from '@/components/structured-data/web-page-json-ld';
@@ -148,7 +148,7 @@ function AdvertiseWhyUs() {
       <div className="mx-auto max-w-3xl text-center">
         <h2
           id="why-list-heading"
-          className="font-display text-balance text-3xl font-black text-gray-900 sm:text-4xl dark:text-gray-50">
+          className="text-balance font-display text-3xl font-black text-gray-900 sm:text-4xl dark:text-gray-50">
           Why list your clinic with us?
         </h2>
         <p className="mt-4 text-lg font-medium leading-relaxed text-gray-600">
@@ -182,7 +182,7 @@ function AdvertiseFooter() {
   return (
     <div className="dark:from-blue-950/40 my-12 flex flex-col items-center justify-center gap-6 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-blue-100/50 px-6 py-10 md:px-10 md:py-12 dark:border-blue-800/60 dark:via-gray-900 dark:to-gray-900">
       <div className="not-prose mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
-        <h2 className="font-display text-balance text-2xl font-black text-gray-900 md:text-3xl dark:text-gray-50">
+        <h2 className="text-balance font-display text-2xl font-black text-gray-900 md:text-3xl dark:text-gray-50">
           Not sure which plan fits?
         </h2>
         <p className="text-base font-medium leading-relaxed text-gray-600 md:text-lg dark:text-gray-300">
@@ -207,7 +207,7 @@ function FeaturedListingPreview() {
       <div className="mx-auto max-w-3xl text-center">
         <h2
           id="featured-preview-heading"
-          className="font-display text-balance text-3xl font-black text-gray-900 sm:text-4xl dark:text-gray-50">
+          className="text-balance font-display text-3xl font-black text-gray-900 sm:text-4xl dark:text-gray-50">
           See how featured placements look live
         </h2>
         <p className="mt-4 text-lg font-medium leading-relaxed text-gray-600 dark:text-gray-300">
@@ -218,11 +218,14 @@ function FeaturedListingPreview() {
 
       <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <figure className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900/60">
-          <Image
-            src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/images/sample-homepage-listing.png"
+          <ImageKit
+            src="sample-homepage-listing.png"
+            directory="images"
             alt="Sample homepage featured listing placement"
             width={1587}
             height={1208}
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            quality={85}
             className="h-auto w-full object-cover"
           />
           <figcaption className="border-t border-gray-100 px-4 py-3 text-sm font-medium text-gray-600 dark:border-gray-800 dark:text-gray-300">
@@ -231,11 +234,14 @@ function FeaturedListingPreview() {
         </figure>
 
         <figure className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900/60">
-          <Image
-            src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/images/sample-featured-listing.png"
+          <ImageKit
+            src="sample-featured-listing.png"
+            directory="images"
             alt="Sample featured clinic card in listing page results"
             width={1587}
             height={1208}
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            quality={85}
             className="h-auto w-full object-cover"
           />
           <figcaption className="border-t border-gray-100 px-4 py-3 text-sm font-medium text-gray-600 dark:border-gray-800 dark:text-gray-300">
@@ -283,7 +289,9 @@ export default async function AdvertisePage() {
         </Container>
       </Wrapper>
 
-      <Wrapper size="default" className="border-t border-gray-100 bg-white dark:border-gray-800 dark:bg-gray-950">
+      <Wrapper
+        size="default"
+        className="border-t border-gray-100 bg-white dark:border-gray-800 dark:bg-gray-950">
         <Container className="max-w-6xl">
           <FeaturedListingPreview />
         </Container>
