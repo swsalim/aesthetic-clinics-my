@@ -1,0 +1,829 @@
+[{
+  "title": "Dr. A Clinic (Sunway Geo)",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Skin care clinic",
+  "address": "A-01-07, Sunway Geo Avenue, Jalan Lagoon Selatan, Bandar Sunway, 47500 Subang Jaya, Selangor, Malaysia",
+  "neighborhood": "Bandar Sunway",
+  "street": "A-01-07, Sunway Geo Avenue, Jalan Lagoon Selatan",
+  "city": "Subang Jaya",
+  "postalCode": "47500",
+  "state": "Selangor",
+  "countryCode": "MY",
+  "website": "https://www.draclinic.com.my/",
+  "phone": "+60 18-389 3182",
+  "phoneUnformatted": "+60183893182",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 3.0652126,
+    "lng": 101.6097368
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": "3J85+3V Subang Jaya, Selangor, Malaysia",
+  "menu": null,
+  "servicesLink": "https://draclinic.com.my/services/",
+  "totalScore": 4.8,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJRfM-etpNzDERe87D6nGK2W8",
+  "categories": [
+    "Skin care clinic",
+    "Doctor"
+  ],
+  "fid": "0x31cc4dda7a3ef345:0x6fd98a71eac3ce7b",
+  "cid": "8059625230030851707",
+  "reviewsCount": 370,
+  "reviewsDistribution": {
+    "oneStar": 6,
+    "twoStar": 8,
+    "threeStar": 6,
+    "fourStar": 5,
+    "fiveStar": 345
+  },
+  "imagesCount": 33,
+  "imageCategories": [
+    "All",
+    "By owner",
+    "Street View & 360°"
+  ],
+  "scrapedAt": "2026-07-19T03:15:05.261Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "Monday",
+      "hours": "Closed"
+    },
+    {
+      "day": "Tuesday",
+      "hours": "10 AM to 7 PM"
+    },
+    {
+      "day": "Wednesday",
+      "hours": "10 AM to 7 PM"
+    },
+    {
+      "day": "Thursday",
+      "hours": "10 AM to 7 PM"
+    },
+    {
+      "day": "Friday",
+      "hours": "10 AM to 7 PM"
+    },
+    {
+      "day": "Saturday",
+      "hours": "10 AM to 6 PM"
+    },
+    {
+      "day": "Sunday",
+      "hours": "10 AM to 5 PM"
+    }
+  ],
+  "peopleAlsoSearch": [
+    {
+      "category": "People also search for",
+      "title": "W Clinic (Sunway GEO Avenue)",
+      "reviewsCount": 47,
+      "totalScore": 5
+    },
+    {
+      "category": "People also search for",
+      "title": "X Infinity Clinic (Sunway Geo)",
+      "reviewsCount": 16,
+      "totalScore": 5
+    },
+    {
+      "category": "People also search for",
+      "title": "Stellar Clinic",
+      "reviewsCount": 5,
+      "totalScore": 4.2
+    },
+    {
+      "category": "People also search for",
+      "title": "Gangnam Aesthetic",
+      "reviewsCount": 8,
+      "totalScore": 5
+    },
+    {
+      "category": "People also search for",
+      "title": "Mediskin Klinik",
+      "reviewsCount": 14,
+      "totalScore": 4.7
+    }
+  ],
+  "placesTags": [],
+  "reviewsTags": [
+    {
+      "title": "pico laser",
+      "count": 12
+    },
+    {
+      "title": "no hard sell",
+      "count": 7
+    },
+    {
+      "title": "medical facial",
+      "count": 12
+    },
+    {
+      "title": "welcoming atmosphere",
+      "count": 37
+    },
+    {
+      "title": "acne treatment",
+      "count": 26
+    },
+    {
+      "title": "freckle removal",
+      "count": 3
+    },
+    {
+      "title": "skinbooster treatment",
+      "count": 4
+    },
+    {
+      "title": "botox",
+      "count": 9
+    },
+    {
+      "title": "hifu",
+      "count": 4
+    },
+    {
+      "title": "chin filler",
+      "count": 3
+    }
+  ],
+  "additionalInfo": {
+    "Service options": [
+      {
+        "Onsite services": true
+      }
+    ],
+    "Accessibility": [
+      {
+        "Wheelchair accessible entrance": true
+      },
+      {
+        "Wheelchair accessible parking lot": true
+      }
+    ],
+    "Amenities": [
+      {
+        "Restroom": true
+      }
+    ],
+    "Planning": [
+      {
+        "Appointment required": true
+      },
+      {
+        "Appointments recommended": true
+      }
+    ],
+    "Payments": [
+      {
+        "Credit cards": true
+      },
+      {
+        "Debit cards": true
+      },
+      {
+        "NFC mobile payments": true
+      },
+      {
+        "Credit cards": true
+      }
+    ],
+    "Parking": [
+      {
+        "Free street parking": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "questionsAndAnswers": [],
+  "updatesFromCustomers": {
+    "text": "Nice facial experience here. Clean clinic and friendly staff. Skin felt refreshed after.",
+    "language": "en",
+    "postDate": "4 months ago",
+    "postedBy": {
+      "name": "Tam Kai Ling",
+      "url": "https://www.google.com/maps/contrib/112836312887479912422?hl=en-US",
+      "title": "Local Guide",
+      "totalReviews": 18
+    },
+    "media": [
+      {
+        "link": "https://lh3.googleusercontent.com/grass-cs/ACvplmP22yNXRfF0fB6zAYU0m7SJZZyKVOFgzzxgFr7xvMkOplzjSvNNYrWIiPBEFhFtw8z6ERPOQGxtWiwDF6OiAbmEmdw6ouEWvigVhmqMjcPCqgjDwnlapBooYZbduyfQJbVu_s7cixFBziA=k-no",
+        "postDate": "4 months ago"
+      }
+    ]
+  },
+  "url": "https://www.google.com/maps/search/?api=1&query=Dr.%20A%20Clinic%20(Sunway%20Geo)&query_place_id=ChIJRfM-etpNzDERe87D6nGK2W8",
+  "searchString": "Direct Detail URL: https://www.google.com/maps/place/Dr.+A+Clinic+(Sunway+Geo)/@3.065218,101.6071565,17z/data=!3m1!4b1!4m6!3m5!1s0x31cc4dda7a3ef345:0x6fd98a71eac3ce7b!8m2!3d3.0652126!4d101.6097368!16s%2Fg%2F11lf50b_lm?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D",
+  "language": "en",
+  "inputStartUrl": "https://www.google.com/maps/place/Dr.+A+Clinic+(Sunway+Geo)/@3.065218,101.6071565,17z/data=!3m1!4b1!4m6!3m5!1s0x31cc4dda7a3ef345:0x6fd98a71eac3ce7b!8m2!3d3.0652126!4d101.6097368!16s%2Fg%2F11lf50b_lm?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D",
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmX5vmbBSQBEtnHv4lF3NIq-6IwvyiTovwqqgIXB60JKso3TkQAlDWLjFyS7O5yf8PPk9YFE9j_bGrB5k8JcCu4WfU5rGt7FCRYQl1cqsqd-nHNaRJFdRK8rfFjiVlTyYVNTMqlbg=w408-h271-k-no",
+  "kgmid": "/g/11lf50b_lm",
+  "webResults": [],
+  "tableReservationLinks": [],
+  "tableReservationProviders": [],
+  "bookingLinks": [
+    {
+      "name": "wa.me",
+      "url": "https://wa.me/60183893182"
+    },
+    {
+      "name": "draclinic.com.my",
+      "url": "https://draclinic.com.my/contact/"
+    }
+  ],
+  "restaurantData": {
+    "tableReservationProvider": null
+  },
+  "ownerUpdates": [
+    {
+      "text": "Whether you are looking to refresh your own look or gifting a special man in your life, Dr. A Clinic is here to help. Our LCP-certified doctors utilize advanced, zero-downtime medical technologies engineered specifically for men’s skin anatomy.\n\n🎉 Limited-Time Father's Day Event Savings\nCelebrate Father's Day with up to 50% off* on our 3 targeted clinical solutions. Give him (or yourself) a gift backed by real medical results.\n\n👨🏻 父亲节限时特惠：高达 50% 折扣！\n平均每 4 位男士就有 1 位在 30 岁前出现初老现象（如发际线后移、额头皱纹或下颌线松弛）。Dr. A Clinic 的 LCP 认证专业医生团队专为男士皮肤量身定制医疗级解决方案，助您重塑自信面容。配合父亲节，本月亲临即可享有高达 50% 的特别折扣*！\n\nReady to step into our clinic for a personalized consultation? Contact our branches today to book your session:\n\n- TTDI, Damansara (HQ): +6018-389 3321\n- Sunway Geo, Subang: +6018-389 3182\n\n*Terms & Conditions apply.\n\n",
+      "buttonText": "Book",
+      "buttonLink": "https://wa.me/60183893321",
+      "date": "2026-06-12T07:02:20.000Z",
+      "imageUrl": "https://lh3.googleusercontent.com/geougc/AF1QipMgisQ9-gCkEdzR2OHfwNHabtkr1aretWCgxVCN=h400-no"
+    }
+  ],
+  "imageUrls": [
+    "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmX5vmbBSQBEtnHv4lF3NIq-6IwvyiTovwqqgIXB60JKso3TkQAlDWLjFyS7O5yf8PPk9YFE9j_bGrB5k8JcCu4WfU5rGt7FCRYQl1cqsqd-nHNaRJFdRK8rfFjiVlTyYVNTMqlbg=w1920-h1080-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnmpnVio6v3T6E0MTfmkbywG947-OtxXAy0UoKF6DmmDiE1xuNJxFlDqKjlIqjNL5Dd6pjE3bNP-X31jJuimp42oPcO87L6pCixuUy4i9q6Yoefx2cA352uyqONMr_1sdjQZdFl98XpCP2X=w1920-h1080-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlBwIC0_TIfwNZ3-gpDtE4f-hOSc8_-2uQlaD7_99e2CdOQmyFlqOAXMkrnn3C5shdQQFOeTvD4zNhH0KKHXhrpkgQ4nLXqmoNi8_Y7T3ndIETqEjJn_HkpG3o7i8P2djYWLYF2=w1920-h1080-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWk97HxBU-JuQ2XxxeRRPJXxW2xNJlqL9RQ70FUjskCg3jzHlGpuuBOI8B5sfjA-n6Xh5cchlhFfFE88O98ILf8XtE_tTp_TQy3lIcbQgYmSjBuniHFJF2fjs0lCL9A6_NsYhFw1bC0Nt0nX=w1920-h1080-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnp-KWKUByDmJJ5XGzOBnhCbnat948mA65qpk-e1NXaxnzrhwb-6TE2TN3gsjqpWomMKVxRZ2XDb1xywzujzicYeIpr3-pDtjonEWjOMf5srmcxv9eLWMmjj8jjgDYvo4yTbpWNVbo8jSjJ=w1920-h1080-k-no"
+  ],
+  "reviews": [
+    {
+      "reviewerId": "117875566553169289716",
+      "reviewerUrl": "https://www.google.com/maps/contrib/117875566553169289716?hl=en",
+      "name": "CHEW YI ERNG",
+      "reviewerNumberOfReviews": 9,
+      "isLocalGuide": true,
+      "reviewerPhotoUrl": "https://lh3.googleusercontent.com/a-/ALV-UjW7BFgmaTyeFbv8-CTDULtrV4JraQKFJ7-kRe2yCMW_izFi14kO=s1920-c-rp-mo-ba12-br100",
+      "text": "The doctor was incredibly gentle and made the whole treatment very comfortable. Really appreciate the attentive care and professionalism. thank you, doctor!",
+      "textTranslated": null,
+      "publishAt": "2 months ago",
+      "publishedAtDate": "2026-04-30T08:20:11.012Z",
+      "likesCount": 0,
+      "reviewId": "Ci9DQUlRQUNvZENodHljRjlvT21kSlpVTnhWVWRYZFZSM1YxSTVhMDAxWkRCc1ZGRRAB",
+      "reviewUrl": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21kSlpVTnhWVWRYZFZSM1YxSTVhMDAxWkRCc1ZGRRAB!2m1!1s0x0:0x6fd98a71eac3ce7b!3m1!1s2@1:CAIQACodChtycF9oOmdJZUNxVUdXdVR3V1I5a001ZDBsVFE%7C%7C?hl=en",
+      "reviewOrigin": "Google",
+      "stars": 5,
+      "rating": null,
+      "responseFromOwnerDate": "2026-05-06T07:29:56.000Z",
+      "responseFromOwnerText": "Hi Yi Erng, thank you so much for your positive review and kind words 😊 We are grateful for your praise and look forward to welcoming you in Dr. A Clinic again!",
+      "reviewImageUrls": [],
+      "reviewContext": {},
+      "reviewDetailedRating": {},
+      "visitedIn": null,
+      "originalLanguage": "en",
+      "translatedLanguage": null
+    },
+    {
+      "reviewerId": "117775620313040536906",
+      "reviewerUrl": "https://www.google.com/maps/contrib/117775620313040536906?hl=en",
+      "name": "syazwani ramli",
+      "reviewerNumberOfReviews": 2,
+      "isLocalGuide": false,
+      "reviewerPhotoUrl": "https://lh3.googleusercontent.com/a/ACg8ocJjJCYn9oVEnWSyCVrh2wG-PX0OvA6JIJ9Com5uuS3VroqRVg=s1920-c-rp-mo-br100",
+      "text": "Sangat berpuas hati dengan perkhidmatan body sculpting di sini. Selepas beberapa sesi, memang nampak perubahan yang ketara. Staff juga sangat profesional dan membantu sepanjang rawatan. Highly recommended!",
+      "textTranslated": "Very satisfied with the body sculpting service here. After a few sessions, I really saw a significant change. The staff was also very professional and helpful throughout the treatment. Highly recommended!",
+      "publishAt": "2 months ago",
+      "publishedAtDate": "2026-04-30T07:29:22.314Z",
+      "likesCount": 0,
+      "reviewId": "Ci9DQUlRQUNvZENodHljRjlvT2tOM1oyOWlRakJNVGpKVlNtTktiRWhHVjFaUVIyYxAB",
+      "reviewUrl": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2tOM1oyOWlRakJNVGpKVlNtTktiRWhHVjFaUVIyYxAB!2m1!1s0x0:0x6fd98a71eac3ce7b!3m1!1s2@1:CAIQACodChtycF9oOkN3Z29iQjBMTjJVSmNKbEhGV1ZQR2c%7C%7C?hl=en",
+      "reviewOrigin": "Google",
+      "stars": 5,
+      "rating": null,
+      "responseFromOwnerDate": "2026-05-06T07:19:36.000Z",
+      "responseFromOwnerText": "Terima kasih atas kepercayaan dan sokongan anda! ⭐ So happy mendengar hasil yang positif daripada sesi anda. Jumpa lagi di sesi seterusnya! 😊",
+      "reviewImageUrls": [],
+      "reviewContext": {},
+      "reviewDetailedRating": {},
+      "visitedIn": null,
+      "originalLanguage": "ms",
+      "translatedLanguage": "en"
+    },
+    {
+      "reviewerId": "104041097588422998339",
+      "reviewerUrl": "https://www.google.com/maps/contrib/104041097588422998339?hl=en",
+      "name": "lai teng",
+      "reviewerNumberOfReviews": 6,
+      "isLocalGuide": false,
+      "reviewerPhotoUrl": "https://lh3.googleusercontent.com/a/ACg8ocJOkXJu7_m8FhYLU3_6wr-lDeKQoxUvBQBLuNeaaIk-hlLhVA=s1920-c-rp-mo-br100",
+      "text": "Always check their social media for flash deals—you can get really great prices. I managed to snag a good deal for my Oligio X session, and the service was still consistently 5-star despite the promo. Highly worth it!",
+      "textTranslated": null,
+      "publishAt": "2 months ago",
+      "publishedAtDate": "2026-04-30T04:44:50.706Z",
+      "likesCount": 0,
+      "reviewId": "Ci9DQUlRQUNvZENodHljRjlvT2xGRVJVZFNYMTlQU0ZwU1VuaHlibWRFTW5saGFGRRAB",
+      "reviewUrl": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xGRVJVZFNYMTlQU0ZwU1VuaHlibWRFTW5saGFGRRAB!2m1!1s0x0:0x6fd98a71eac3ce7b!3m1!1s2@1:CAIQACodChtycF9oOlFERUdSX19PSFpSUnhybmdEMnlhaFE%7C%7C?hl=en",
+      "reviewOrigin": "Google",
+      "stars": 5,
+      "rating": null,
+      "responseFromOwnerDate": "2026-05-06T07:18:42.000Z",
+      "responseFromOwnerText": "Thank you for your kind review! We are so happy to hear of your positive experience with us and look forward to serve you again 😊",
+      "reviewImageUrls": [],
+      "reviewContext": {},
+      "reviewDetailedRating": {},
+      "visitedIn": null,
+      "originalLanguage": "en",
+      "translatedLanguage": null
+    },
+    {
+      "reviewerId": "103134856710148636023",
+      "reviewerUrl": "https://www.google.com/maps/contrib/103134856710148636023?hl=en",
+      "name": "syafiqah rahmad",
+      "reviewerNumberOfReviews": 23,
+      "isLocalGuide": true,
+      "reviewerPhotoUrl": "https://lh3.googleusercontent.com/a-/ALV-UjWz9KLYZLSSbkFZ2L7vAtjM-ksfgYGDHb7-1AsQ4ebaVS6DafbM=s1920-c-rp-mo-ba12-br100",
+      "text": "Doctor provide expert advice good",
+      "textTranslated": null,
+      "publishAt": "2 months ago",
+      "publishedAtDate": "2026-04-29T10:03:07.413Z",
+      "likesCount": 0,
+      "reviewId": "Ci9DQUlRQUNvZENodHljRjlvT2pCdFRVbHFVa1p3VGtGM1VEUk1ZWEIzWjNaVlYwRRAB",
+      "reviewUrl": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2pCdFRVbHFVa1p3VGtGM1VEUk1ZWEIzWjNaVlYwRRAB!2m1!1s0x0:0x6fd98a71eac3ce7b!3m1!1s2@1:CAIQACodChtycF9oOjBtTUlqUkZwTkF3UDRMYXB3Z3ZVV0E%7C%7C?hl=en",
+      "reviewOrigin": "Google",
+      "stars": 5,
+      "rating": null,
+      "responseFromOwnerDate": "2026-05-06T07:18:11.000Z",
+      "responseFromOwnerText": "Thank you for sharing your positive experience with us!",
+      "reviewImageUrls": [],
+      "reviewContext": {},
+      "reviewDetailedRating": {},
+      "visitedIn": null,
+      "originalLanguage": "en",
+      "translatedLanguage": null
+    },
+    {
+      "reviewerId": "103700253938692420695",
+      "reviewerUrl": "https://www.google.com/maps/contrib/103700253938692420695?hl=en",
+      "name": "Hyun Meera",
+      "reviewerNumberOfReviews": 39,
+      "isLocalGuide": true,
+      "reviewerPhotoUrl": "https://lh3.googleusercontent.com/a-/ALV-UjXqb_PVeIUnMTL8rzBy4ERjH5deecJpQp65LzirBExzKI62nsyt=s1920-c-rp-mo-ba12-br100",
+      "text": "Dr Tan did Oligio X for me, was comfortable and see results immediately! Recommended",
+      "textTranslated": null,
+      "publishAt": "2 months ago",
+      "publishedAtDate": "2026-04-29T09:59:55.768Z",
+      "likesCount": 0,
+      "reviewId": "Ci9DQUlRQUNvZENodHljRjlvT21aTVdsUXRTV0pUYUdkVWNYcFlVREUyZERsTE9FRRAB",
+      "reviewUrl": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21aTVdsUXRTV0pUYUdkVWNYcFlVREUyZERsTE9FRRAB!2m1!1s0x0:0x6fd98a71eac3ce7b!3m1!1s2@1:CAIQACodChtycF9oOmZMWlQtSWJTaGdUcXpYUDE2dDlLOEE%7C%7C?hl=en",
+      "reviewOrigin": "Google",
+      "stars": 5,
+      "rating": null,
+      "responseFromOwnerDate": "2026-05-06T07:17:51.000Z",
+      "responseFromOwnerText": "Hi Hyun Meera, thank you for your kind review! We are so happy to hear of your positive experience with us, and am so grateful for your recommendation 😊",
+      "reviewImageUrls": [],
+      "reviewContext": {},
+      "reviewDetailedRating": {},
+      "visitedIn": null,
+      "originalLanguage": "en",
+      "translatedLanguage": null
+    }
+  ],
+  "leadsEnrichment": []
+},
+{
+  "title": "Dr. A Clinic (Damansara)",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Skin care clinic",
+  "address": "A-G-2 & A-G-3, Menara Glomac Damansara, Jln Damansara, Taman Tun Dr Ismail, 60000 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur, Malaysia",
+  "neighborhood": "Taman Tun Dr Ismail",
+  "street": "A-G-2 & A-G-3, Menara Glomac Damansara, Jln Damansara",
+  "city": "Kuala Lumpur",
+  "postalCode": "60000",
+  "state": "Federal Territory of Kuala Lumpur",
+  "countryCode": "MY",
+  "website": "http://www.draclinic.com.my/",
+  "phone": "+60 18-389 3321",
+  "phoneUnformatted": "+60183893321",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 3.1351021,
+    "lng": 101.6299439
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": "4JPH+2X Kuala Lumpur, Federal Territory of Kuala Lumpur, Malaysia",
+  "menu": null,
+  "servicesLink": "https://draclinic.com.my/",
+  "totalScore": 4.9,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ5f9wp8VJzDER1nlCUNV40Qw",
+  "categories": [
+    "Skin care clinic",
+    "Doctor"
+  ],
+  "fid": "0x31cc49c5a770ffe5:0xcd178d5504279d6",
+  "cid": "923652256157563350",
+  "reviewsCount": 673,
+  "reviewsDistribution": {
+    "oneStar": 10,
+    "twoStar": 0,
+    "threeStar": 1,
+    "fourStar": 5,
+    "fiveStar": 657
+  },
+  "imagesCount": 51,
+  "imageCategories": [
+    "All",
+    "By owner",
+    "Street View & 360°"
+  ],
+  "scrapedAt": "2026-07-19T03:15:05.983Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "Monday",
+      "hours": "10 AM to 7 PM"
+    },
+    {
+      "day": "Tuesday",
+      "hours": "10 AM to 7 PM"
+    },
+    {
+      "day": "Wednesday",
+      "hours": "10 AM to 7 PM"
+    },
+    {
+      "day": "Thursday",
+      "hours": "10 AM to 7 PM"
+    },
+    {
+      "day": "Friday",
+      "hours": "10 AM to 7 PM"
+    },
+    {
+      "day": "Saturday",
+      "hours": "10 AM to 6 PM"
+    },
+    {
+      "day": "Sunday",
+      "hours": "10 AM to 5 PM"
+    }
+  ],
+  "additionalOpeningHours": {
+    "Pickup": [
+      {
+        "day": "Monday",
+        "hours": "10 AM–7 PM"
+      },
+      {
+        "day": "Tuesday",
+        "hours": "10 AM–7 PM"
+      },
+      {
+        "day": "Wednesday",
+        "hours": "10 AM–7 PM"
+      },
+      {
+        "day": "Thursday",
+        "hours": "10 AM–7 PM"
+      },
+      {
+        "day": "Friday",
+        "hours": "10 AM–7 PM"
+      },
+      {
+        "day": "Saturday",
+        "hours": "10 AM–6 PM"
+      },
+      {
+        "day": "Sunday",
+        "hours": "10 AM–5 PM"
+      }
+    ]
+  },
+  "peopleAlsoSearch": [
+    {
+      "category": "People also search for",
+      "title": "AY Skin Specialist Clinic",
+      "reviewsCount": 138,
+      "totalScore": 3.6
+    },
+    {
+      "category": "People also search for",
+      "title": "Dr Chong Clinic TTDI | Skin, Laser, Aesthetic",
+      "reviewsCount": 898,
+      "totalScore": 4.8
+    },
+    {
+      "category": "People also search for",
+      "title": "Dr Nazelia Clinic TTDI: Skin Health,Aesthetic, Laser",
+      "reviewsCount": 154,
+      "totalScore": 4.9
+    },
+    {
+      "category": "People also search for",
+      "title": "Derma Sculpture Aesthetic - 3 Damansara",
+      "reviewsCount": 9,
+      "totalScore": 4.6
+    },
+    {
+      "category": "People also search for",
+      "title": "Dr Wee Clinic",
+      "reviewsCount": 40,
+      "totalScore": 5
+    }
+  ],
+  "placesTags": [],
+  "reviewsTags": [
+    {
+      "title": "prp",
+      "count": 26
+    },
+    {
+      "title": "pico laser",
+      "count": 13
+    },
+    {
+      "title": "botox treatment",
+      "count": 12
+    },
+    {
+      "title": "clean environment",
+      "count": 67
+    },
+    {
+      "title": "skin booster",
+      "count": 11
+    },
+    {
+      "title": "hifu",
+      "count": 9
+    },
+    {
+      "title": "acne treatment",
+      "count": 37
+    },
+    {
+      "title": "eczema treatment",
+      "count": 6
+    },
+    {
+      "title": "scalp treatments",
+      "count": 8
+    },
+    {
+      "title": "dna test",
+      "count": 5
+    }
+  ],
+  "additionalInfo": {
+    "From the business": [
+      {
+        "Identifies as women-owned": true
+      }
+    ],
+    "Service options": [
+      {
+        "Onsite services": true
+      }
+    ],
+    "Accessibility": [
+      {
+        "Wheelchair accessible entrance": true
+      },
+      {
+        "Wheelchair accessible parking lot": true
+      },
+      {
+        "Wheelchair accessible restroom": true
+      }
+    ],
+    "Amenities": [
+      {
+        "Restroom": true
+      }
+    ],
+    "Planning": [
+      {
+        "Appointment required": true
+      },
+      {
+        "Appointments recommended": true
+      }
+    ],
+    "Payments": [
+      {
+        "Credit cards": true
+      },
+      {
+        "Debit cards": true
+      },
+      {
+        "NFC mobile payments": true
+      },
+      {
+        "Credit cards": true
+      }
+    ],
+    "Parking": [
+      {
+        "Paid parking lot": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "questionsAndAnswers": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Dr.%20A%20Clinic%20(Damansara)&query_place_id=ChIJ5f9wp8VJzDER1nlCUNV40Qw",
+  "searchString": "Direct Detail URL: https://www.google.com/maps/place/Dr.+A+Clinic+(Damansara)/@3.1351075,101.6273636,17z/data=!3m1!4b1!4m6!3m5!1s0x31cc49c5a770ffe5:0xcd178d5504279d6!8m2!3d3.1351021!4d101.6299439!16s%2Fg%2F11gv0tq5vw?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D",
+  "language": "en",
+  "inputStartUrl": "https://www.google.com/maps/place/Dr.+A+Clinic+(Damansara)/@3.1351075,101.6273636,17z/data=!3m1!4b1!4m6!3m5!1s0x31cc49c5a770ffe5:0xcd178d5504279d6!8m2!3d3.1351021!4d101.6299439!16s%2Fg%2F11gv0tq5vw?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D",
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlBtXDKX8ZwmrIMcWwKK3Q4iSQLcldT0iXdyCAtg-_7Or1OX2cOlIiloH8LJwlR0H0Yka06wbtYqQWuRAJYIb9d-AVPfQYTtA-eedpFOS7A4u55RL0VQfJ0baGWjqlc_vO1QpUXzg=w408-h408-k-no",
+  "kgmid": "/g/11gv0tq5vw",
+  "webResults": [],
+  "tableReservationLinks": [],
+  "tableReservationProviders": [],
+  "bookingLinks": [
+    {
+      "name": "wassap.my",
+      "url": "http://wassap.my/60183893321"
+    }
+  ],
+  "restaurantData": {
+    "tableReservationProvider": null
+  },
+  "ownerUpdates": [
+    {
+      "text": "Whether you are looking to refresh your own look or gifting a special man in your life, Dr. A Clinic is here to help. Our LCP-certified doctors utilize advanced, zero-downtime medical technologies engineered specifically for men’s skin anatomy.\n\n🎉 Limited-Time Father's Day Event Savings\nCelebrate Father's Day with up to 50% off* on our 3 targeted clinical solutions. Give him (or yourself) a gift backed by real medical results.\n\n👨🏻 父亲节限时特惠：高达 50% 折扣！\n平均每 4 位男士就有 1 位在 30 岁前出现初老现象（如发际线后移、额头皱纹或下颌线松弛）。Dr. A Clinic 的 LCP 认证专业医生团队专为男士皮肤量身定制医疗级解决方案，助您重塑自信面容。配合父亲节，本月亲临即可享有高达 50% 的特别折扣*！\n\nReady to step into our clinic for a personalized consultation? Contact our branches today to book your session:\n\n- TTDI, Damansara (HQ): +6018-389 3321\n- Sunway Geo, Subang: +6018-389 3182\n\n*Terms & Conditions apply.\n\n",
+      "buttonText": "Book",
+      "buttonLink": "https://wa.me/60183893321",
+      "date": "2026-06-12T07:02:06.000Z",
+      "imageUrl": "https://lh3.googleusercontent.com/geougc/AF1QipOibWzEJAzPdl1gXVLQ5_HcucR_EPoSX66-mj_b=h400-no"
+    }
+  ],
+  "imageUrls": [
+    "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlBtXDKX8ZwmrIMcWwKK3Q4iSQLcldT0iXdyCAtg-_7Or1OX2cOlIiloH8LJwlR0H0Yka06wbtYqQWuRAJYIb9d-AVPfQYTtA-eedpFOS7A4u55RL0VQfJ0baGWjqlc_vO1QpUXzg=w1920-h1080-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmlpT80KjGtRmWfI0rMAx17e4K1Pqc5X3GMasTSno5DFruyDHNvBYPq9YwQ75X52eslFCWgxI8VTrbKdO2yyypdKHgINF0YBgKkTdMjDv5LsSFPWHxi_2MaW0gOlNkqtuk5tJggx1H-EqU=w1920-h1080-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmS7B2Ny0ZQpk2GLLm9G2ZieL2f3vIyPwEzNEgC_uqZdnWyuFYXVu_YXjeHOt2g7qofsU6pbEOeU6VgSvwwYVH_TUXbEEloxzAHc_ICryThJdCLTdf_J8qPtJNt2_yAmAgf1LnM=w1920-h1080-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl75xzLBcKZp5A2er3OEWL7QHr_LQ26DI4xFdbDA97JaC7S8UMwOP9lb0qtd4Rv-MORtZU9NzqNZLS4O3BsqbcHF6OTW--O9_evGTbuwfu6egGIPw15oRjqf8On7A9mmMKjPeDo=w1920-h1080-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlfmYYKyw9LKhPohBfiDwSaySHaGTCX-RSdFWnkllYbzng5Ll_XnmB6swyBu6IXSMd_sgBvlJ33fO9-I5Zhs0TMH8NShBp5F6JwY4lpvu8_Pwc0h_ErpMHeRhi4j7USXAMi1-j5Lg=w1920-h1080-k-no"
+  ],
+  "reviews": [
+    {
+      "reviewerId": "105776841311692379869",
+      "reviewerUrl": "https://www.google.com/maps/contrib/105776841311692379869?hl=en",
+      "name": "Eddy Leong Family",
+      "reviewerNumberOfReviews": 0,
+      "isLocalGuide": false,
+      "reviewerPhotoUrl": "https://lh3.googleusercontent.com/a/ACg8ocL-LTQ2XrpZPFLzOK11kG3r6AwiqcN24F1ckGZiaQI1RkoCag=s1920-c-rp-mo-br100",
+      "text": null,
+      "textTranslated": null,
+      "publishAt": "4 weeks ago",
+      "publishedAtDate": "2026-06-21T00:10:11.670Z",
+      "likesCount": 0,
+      "reviewId": "Ci9DQUlRQUNvZENodHljRjlvT2pKV2VGaHZNV1ZXTlRodE1sa3RSMWRHUWw5WVJVRRAB",
+      "reviewUrl": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2pKV2VGaHZNV1ZXTlRodE1sa3RSMWRHUWw5WVJVRRAB!2m1!1s0x0:0xcd178d5504279d6!3m1!1s2@1:CAIQACodChtycF9oOjJWeFhvMWVWNThtMlktR1dGQl9YRUE%7C%7C?hl=en",
+      "reviewOrigin": "Google",
+      "stars": 4,
+      "rating": null,
+      "responseFromOwnerDate": "2026-06-22T05:32:48.000Z",
+      "responseFromOwnerText": "Thank you for leaving us a review 😊 We look forward to welcoming you back at Dr. A Clinic",
+      "reviewImageUrls": [],
+      "reviewContext": {},
+      "reviewDetailedRating": {},
+      "visitedIn": null,
+      "originalLanguage": null,
+      "translatedLanguage": null
+    },
+    {
+      "reviewerId": "103722810702188134499",
+      "reviewerUrl": "https://www.google.com/maps/contrib/103722810702188134499?hl=en",
+      "name": "mdzia",
+      "reviewerNumberOfReviews": 0,
+      "isLocalGuide": false,
+      "reviewerPhotoUrl": "https://lh3.googleusercontent.com/a/ACg8ocIdt-iNZ14QZ5KftxcV4j-XVXwSCzbmxyMtDvjXu44jWhvI=s1920-c-rp-mo-br100",
+      "text": null,
+      "textTranslated": null,
+      "publishAt": "a month ago",
+      "publishedAtDate": "2026-06-15T08:48:08.277Z",
+      "likesCount": 0,
+      "reviewId": "Ci9DQUlRQUNvZENodHljRjlvT21oVE1sOTFiVVowWDFnMVJrRnZSMWxYVFhSSWMxRRAB",
+      "reviewUrl": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21oVE1sOTFiVVowWDFnMVJrRnZSMWxYVFhSSWMxRRAB!2m1!1s0x0:0xcd178d5504279d6!3m1!1s2@1:CAIQACodChtycF9oOmhTMl91bUZ0X1g1RkFvR1lXTXRIc1E%7C%7C?hl=en",
+      "reviewOrigin": "Google",
+      "stars": 1,
+      "rating": null,
+      "responseFromOwnerDate": "2026-06-26T03:41:46.000Z",
+      "responseFromOwnerText": "Thank you for your feedback, however we were unable to locate a patient record matching this profile in our system. If this review was intended for our clinic, please contact us directly so we can assist you. Otherwise, you may wish to double-check that your review was posted for the correct business, thank you.",
+      "reviewImageUrls": [],
+      "reviewContext": {},
+      "reviewDetailedRating": {},
+      "visitedIn": null,
+      "originalLanguage": null,
+      "translatedLanguage": null
+    },
+    {
+      "reviewerId": "107069868422837774027",
+      "reviewerUrl": "https://www.google.com/maps/contrib/107069868422837774027?hl=en",
+      "name": "tee cheng weng",
+      "reviewerNumberOfReviews": 1,
+      "isLocalGuide": false,
+      "reviewerPhotoUrl": "https://lh3.googleusercontent.com/a-/ALV-UjWk5D-oE_dMOXO7n2Gd0Nrdw75DfDex9vysHu3wT0dlzGUzhiu9=s1920-c-rp-mo-br100",
+      "text": null,
+      "textTranslated": null,
+      "publishAt": "a month ago",
+      "publishedAtDate": "2026-06-14T19:27:11.099Z",
+      "likesCount": 0,
+      "reviewId": "Ci9DQUlRQUNvZENodHljRjlvT2xWa04zSmFaRlZ2TlVJMFVFZ3dNRjlaVGtKdVVYYxAB",
+      "reviewUrl": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xWa04zSmFaRlZ2TlVJMFVFZ3dNRjlaVGtKdVVYYxAB!2m1!1s0x0:0xcd178d5504279d6!3m1!1s2@1:CAIQACodChtycF9oOlVkN3JaZFVvNUI0UEgwMF9ZTkJuUXc%7C%7C?hl=en",
+      "reviewOrigin": "Google",
+      "stars": 5,
+      "rating": null,
+      "responseFromOwnerDate": "2026-06-15T02:05:46.000Z",
+      "responseFromOwnerText": "Thank you for leaving us a positive review! ",
+      "reviewImageUrls": [],
+      "reviewContext": {},
+      "reviewDetailedRating": {},
+      "visitedIn": null,
+      "originalLanguage": null,
+      "translatedLanguage": null
+    },
+    {
+      "reviewerId": "102656339106837615202",
+      "reviewerUrl": "https://www.google.com/maps/contrib/102656339106837615202?hl=en",
+      "name": "Nani Hafizah",
+      "reviewerNumberOfReviews": 6,
+      "isLocalGuide": false,
+      "reviewerPhotoUrl": "https://lh3.googleusercontent.com/a/ACg8ocKe9DAqqLyxJ48gN0BTDG2U9Wje91YVjUox-NWsXURu7ke_Rw=s1920-c-rp-mo-br100",
+      "text": "Drs are patient with my kids, mole removal for them was quick and easy too with no pain!",
+      "textTranslated": null,
+      "publishAt": "2 months ago",
+      "publishedAtDate": "2026-04-30T02:28:52.044Z",
+      "likesCount": 0,
+      "reviewId": "Ci9DQUlRQUNvZENodHljRjlvT20xRmJFaDJRbE5aWHpsSlNHbHdMVlF0VVROWWEwRRAB",
+      "reviewUrl": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT20xRmJFaDJRbE5aWHpsSlNHbHdMVlF0VVROWWEwRRAB!2m1!1s0x0:0xcd178d5504279d6!3m1!1s2@1:CAIQACodChtycF9oOm1FbEh2QlNZXzlJSGlwLVQtUTNYa0E%7C%7C?hl=en",
+      "reviewOrigin": "Google",
+      "stars": 5,
+      "rating": null,
+      "responseFromOwnerDate": "2026-05-06T07:09:10.000Z",
+      "responseFromOwnerText": "Hi Nani, thankyou for your kind review! We're happy to hear you had a great experience 😊",
+      "reviewImageUrls": [],
+      "reviewContext": {},
+      "reviewDetailedRating": {},
+      "visitedIn": null,
+      "originalLanguage": "en",
+      "translatedLanguage": null
+    },
+    {
+      "reviewerId": "111822068135588532504",
+      "reviewerUrl": "https://www.google.com/maps/contrib/111822068135588532504?hl=en",
+      "name": "Nur Syazwanyy",
+      "reviewerNumberOfReviews": 8,
+      "isLocalGuide": false,
+      "reviewerPhotoUrl": "https://lh3.googleusercontent.com/a-/ALV-UjWp_mqFMGt_ZoXXC-RXNmBRXMQC0CAtk9utqJWKzrKNNOSEhBcw=s1920-c-rp-mo-br100",
+      "text": "Surprisingly fast for laser treatment! I was in and out within an hour. Very efficient system 👍",
+      "textTranslated": null,
+      "publishAt": "2 months ago",
+      "publishedAtDate": "2026-04-28T03:17:27.041Z",
+      "likesCount": 0,
+      "reviewId": "Ci9DQUlRQUNvZENodHljRjlvT205bWNWcGtOR2x4U1RSd2FscFJTRUZJZFVkSGMwRRAB",
+      "reviewUrl": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT205bWNWcGtOR2x4U1RSd2FscFJTRUZJZFVkSGMwRRAB!2m1!1s0x0:0xcd178d5504279d6!3m1!1s2@1:CAIQACodChtycF9oOm9mcVpkNGlxSTRwalpRSEFIdUdHc0E%7C%7C?hl=en",
+      "reviewOrigin": "Google",
+      "stars": 5,
+      "rating": null,
+      "responseFromOwnerDate": "2026-05-06T07:08:46.000Z",
+      "responseFromOwnerText": "Hi there, thank you so much for your kind words ☺️❤️",
+      "reviewImageUrls": [],
+      "reviewContext": {},
+      "reviewDetailedRating": {},
+      "visitedIn": null,
+      "originalLanguage": "en",
+      "translatedLanguage": null
+    }
+  ],
+  "leadsEnrichment": []
+}]

@@ -2,6 +2,7 @@ export interface ClinicImage {
   id: string;
   image_url: string;
   imagekit_file_id: string;
+  display_order?: number;
 }
 export interface ClinicService {
   id: string;

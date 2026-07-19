@@ -9,11 +9,17 @@ import Link from 'next/link';
 // Removed CloudinaryService import - now using ImageKit
 import type { ClinicArea, ClinicState } from '@/types/clinic';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Trash2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import * as z from 'zod';
 
-import { formatFileSize, generateUniqueFilename } from '@/lib/utils';
+import { generateUniqueFilename } from '@/lib/utils';
+import {
+  createNewImageEntries,
+  uploadOrderedNewImages,
+  type ClinicImageEntry,
+} from '@/lib/clinic-images';
 
+import { ClinicImageGallery } from '@/components/dashboard/clinic-image-gallery';
 import { Input } from '@/components/form-fields/input';
 import { RadioGroup, RadioGroupItem } from '@/components/form-fields/radio';
 import {
@@ -87,6 +93,7 @@ export default function SubmitClinicForm({ states, areas }: Props) {
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [selectedState, setSelectedState] = useState<string>('');
+  const [orderedImages, setOrderedImages] = useState<ClinicImageEntry[]>([]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -114,52 +121,40 @@ export default function SubmitClinicForm({ states, areas }: Props) {
   });
 
   const watchStateId = form.watch('state_id');
-  const watchImages = form.watch('images');
 
   // Filter areas by selected state
   const filteredAreas = areas.filter((a) => a.state_id === (watchStateId || selectedState));
 
-  // Handle image previews for dropzone
-  const handleDrop = (acceptedFiles: File[]) => {
-    // Only keep valid image files (size > 0, is image, has name with extension)
-    const validFiles = acceptedFiles.filter(
-      (f) => f.size > 0 && f.type.startsWith('image/') && f.name && f.name.includes('.'),
+  const isDuplicateFile = (file: File, existingFiles: File[]) =>
+    existingFiles.some(
+      (existing) =>
+        existing.name === file.name &&
+        existing.size === file.size &&
+        existing.type === file.type,
     );
-    const currentFiles: File[] = Array.from(form.getValues('images') || []);
-    let newFiles: File[] = [];
-    for (const file of validFiles) {
-      if (
-        !currentFiles.some(
-          (f) => f.name === file.name && f.size === file.size && f.type === file.type,
-        )
-      ) {
-        newFiles.push(file);
-      }
-    }
-    if (currentFiles.length + newFiles.length > 5) {
+
+  const handleDrop = (acceptedFiles: File[]) => {
+    const validFiles = acceptedFiles.filter(
+      (file) => file.size > 0 && file.type.startsWith('image/') && file.name && file.name.includes('.'),
+    );
+    const currentFiles = orderedImages
+      .filter((entry): entry is Extract<ClinicImageEntry, { kind: 'new' }> => entry.kind === 'new')
+      .map((entry) => entry.file);
+
+    let newFiles = validFiles.filter((file) => !isDuplicateFile(file, currentFiles));
+
+    if (orderedImages.length + newFiles.length > 5) {
       toast({
         title: 'Image Limit',
         description: 'You can only upload up to 5 images.',
         variant: 'destructive',
       });
-      newFiles = newFiles.slice(0, 5 - currentFiles.length);
+      newFiles = newFiles.slice(0, 5 - orderedImages.length);
     }
-    const allFiles = [...currentFiles, ...newFiles];
-    form.setValue('images', allFiles);
-  };
 
-  // Remove image by file identity (not index)
-  const removeImage = (targetFile: File) => {
-    const files: File[] = Array.from(form.getValues('images') || []);
-    const newFiles = files.filter(
-      (file) =>
-        !(
-          file.name === targetFile.name &&
-          file.size === targetFile.size &&
-          file.type === targetFile.type
-        ),
-    );
-    form.setValue('images', newFiles);
+    if (newFiles.length > 0) {
+      setOrderedImages((prev) => [...prev, ...createNewImageEntries(newFiles)]);
+    }
   };
 
   // Upload image to ImageKit
@@ -263,36 +258,22 @@ export default function SubmitClinicForm({ states, areas }: Props) {
       description: 'Please wait while we process your submission.',
     });
     try {
-      // For "instant" price option:
-      // 1. Upload all images to ImageKit
-      // 2. Get back secure URLs for the uploaded images
-      // 3. Create final data object with form data and image URLs
-      // 4. Create Stripe checkout session with final data
-      // 5. Redirect user to Stripe checkout page
+      // Shared step: upload images to ImageKit in the user's chosen order.
+      // The returned array preserves display_order (index + 1) when saved to clinic_images.
+      const newImages = await uploadOrderedNewImages(orderedImages, uploadImageToImageKit);
 
       if (formData.price === 'instant') {
-        // Upload new images to ImageKit
-        const newImages: Array<{ url: string; fileId: string }> = [];
-        if (watchImages && watchImages.length > 0) {
-          for (const imageFile of watchImages) {
-            if (imageFile instanceof File) {
-              const imagekitResult = await uploadImageToImageKit(imageFile);
-              if (imagekitResult) {
-                newImages.push(imagekitResult);
-              } else {
-                // If any image upload fails, stop the process
-                throw new Error('Failed to upload one or more images. Please try again.');
-              }
-            }
-          }
-        }
-
+        // Instant listing (paid) workflow:
+        // 1. POST to /api/stripe/checkout-session
+        // 2. API creates clinic with status "pending_payment" and source "ugc_paid"
+        // 3. API inserts images into clinic_images with display_order
+        // 4. API creates a Stripe checkout session (RM199) linked to the clinic
+        // 5. User is redirected to Stripe; listing goes live after successful payment
         const finalData = {
           ...formData,
           images: newImages,
         };
 
-        // Create Stripe checkout session and redirect
         const res = await fetch('/api/stripe/checkout-session', {
           method: 'POST',
           headers: {
@@ -308,30 +289,12 @@ export default function SubmitClinicForm({ states, areas }: Props) {
         window.location.href = checkoutUrl;
         return;
       } else {
-        // For free listings:
-        // 1. Upload images to ImageKit first
-        // 2. Create final data object with form data and image URLs
-        // 3. Submit to /api/clinics endpoint which will:
-        //    - Create clinic record in database
-        //    - Send notification emails
-        // 4. Show success message on completion
-
-        // Upload images to ImageKit
-        const newImages: Array<{ url: string; fileId: string }> = [];
-        if (watchImages && watchImages.length > 0) {
-          for (const imageFile of watchImages) {
-            if (imageFile instanceof File) {
-              const imagekitResult = await uploadImageToImageKit(imageFile);
-              if (imagekitResult) {
-                newImages.push(imagekitResult);
-              } else {
-                // If any image upload fails, stop the process
-                throw new Error('Failed to upload one or more images. Please try again.');
-              }
-            }
-          }
-        }
-
+        // Free listing workflow:
+        // 1. POST to /api/clinics
+        // 2. API geocodes the address and creates clinic with status "pending" and source "ugc_free"
+        // 3. API inserts images into clinic_images with display_order
+        // 4. API sends a notification email to admins
+        // 5. User sees success message; listing is reviewed and published within ~6 months
         const finalData = {
           ...formData,
           images: newImages,
@@ -351,6 +314,7 @@ export default function SubmitClinicForm({ states, areas }: Props) {
         setSuccess(true);
         toast({ title: 'Success', description: 'Your clinic has been submitted!' });
         form.reset();
+        setOrderedImages([]);
       }
     } catch (error: unknown) {
       let message = 'Failed to submit clinic. Please try again later.';
@@ -592,54 +556,15 @@ export default function SubmitClinicForm({ states, areas }: Props) {
                     : 'border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-900'
                 }`}>
                 <input {...dropzone.getInputProps()} onBlur={field.onBlur} />
-                <p className="text-gray-500">Drag and drop or click to select up to 5 images.</p>
-                {field.value && field.value.length > 0 && (
-                  <div className="mt-4 flex flex-col gap-2">
-                    {(field.value as File[])
-                      .filter(
-                        (file: File) =>
-                          file.size > 0 &&
-                          file.type.startsWith('image/') &&
-                          file.name &&
-                          file.name.includes('.'),
-                      )
-                      .map((file: File) => {
-                        const previewUrl = URL.createObjectURL(file);
-                        return (
-                          <div
-                            key={file.name + file.size + file.type}
-                            className="flex items-center gap-3 rounded border bg-gray-50 p-2">
-                            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded bg-gray-100">
-                              <img
-                                src={previewUrl}
-                                alt={file.name}
-                                className="h-full w-full object-cover"
-                              />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <div className="truncate text-sm font-medium text-gray-900">
-                                {file.name}
-                              </div>
-                              <div className="text-xs text-gray-500">
-                                {formatFileSize(file.size)} {file.type}
-                              </div>
-                            </div>
-                            <button
-                              type="button"
-                              className="grid size-10 place-items-center text-gray-400 hover:text-red-600"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                removeImage(file);
-                              }}
-                              aria-label="Remove image">
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </div>
-                        );
-                      })}
-                  </div>
-                )}
+                <p className="text-gray-500 dark:text-gray-400">
+                  Drag and drop or click to select up to 5 images.
+                </p>
               </div>
+              <ClinicImageGallery
+                images={orderedImages}
+                onChange={setOrderedImages}
+                onRemoveExisting={() => {}}
+              />
               <FormDescription>Drag and drop or select up to 5 images.</FormDescription>
               <FormMessage />
             </FormItem>

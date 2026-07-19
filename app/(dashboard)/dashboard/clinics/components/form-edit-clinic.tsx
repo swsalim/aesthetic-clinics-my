@@ -3,7 +3,6 @@
 import { ChangeEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -21,6 +20,12 @@ import { CheckIcon, ChevronsUpDown, RefreshCwIcon, XIcon } from 'lucide-react';
 import * as z from 'zod';
 
 // Lib imports
+import {
+  clinicImagesToEntries,
+  createNewImageEntries,
+  persistClinicImageOrder,
+  type ClinicImageEntry,
+} from '@/lib/clinic-images';
 import { createClient } from '@/lib/supabase/client';
 import { cn, sanitizeHtmlField } from '@/lib/utils';
 import { generateUniqueFilename } from '@/lib/utils';
@@ -41,7 +46,7 @@ import { SelectTrigger, SelectValue } from '@/components/form-fields/select';
 import { Select } from '@/components/form-fields/select';
 import { Switch } from '@/components/form-fields/switch';
 import { Textarea } from '@/components/form-fields/textarea';
-import { ImageKit } from '@/components/image/image-kit';
+import { ClinicImageGallery } from '@/components/dashboard/clinic-image-gallery';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -205,7 +210,9 @@ export default function FormEditClinic({
   const router = useRouter();
   const supabase = createClient();
 
-  const [currentImages, setCurrentImages] = useState<ClinicImage[]>(clinic.images || []);
+  const [orderedImages, setOrderedImages] = useState<ClinicImageEntry[]>(() =>
+    clinicImagesToEntries(clinic.images || []),
+  );
   const [imagesToRemove, setImagesToRemove] = useState<string[]>([]);
 
   const handleTimeInput = async (days: readonly string[]) => {
@@ -318,7 +325,6 @@ export default function FormEditClinic({
   const { reset } = form;
   const { isSubmitting } = form.formState;
   const watchName = form.watch('name');
-  const watchImages = form.watch('images');
   const watchStateId = form.watch('state_id');
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -328,29 +334,12 @@ export default function FormEditClinic({
   const handleImagesChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
     const files = Array.from(e.target.files);
-    const newFiles = [...(watchImages || []), ...files];
-    form.setValue('images', newFiles);
+    setOrderedImages((prev) => [...prev, ...createNewImageEntries(files)]);
+    e.target.value = '';
   };
 
-  const handleImageRemove = (indexToRemove: number) => {
-    if (!indexToRemove) return;
-
-    const updatedImages = (watchImages || []).filter((image, index) => index !== indexToRemove);
-    form.setValue('images', updatedImages);
-  };
-
-  const handleImagekitImageRemove = (e: React.MouseEvent, imageToRemove: string) => {
-    e.preventDefault();
-
-    // Store the imagekit_file_id for removal during form submission
-    const imageToRemoveObj = currentImages.find((img) => img.image_url === imageToRemove);
-    if (imageToRemoveObj) {
-      setImagesToRemove((prev) => [...prev, imageToRemoveObj.imagekit_file_id]);
-    }
-
-    // Remove from current images array (just visually, not from database yet)
-    const filterImages = currentImages.filter((image) => image.image_url !== imageToRemove);
-    setCurrentImages(filterImages);
+  const handleRemoveExistingImage = (imagekitFileId: string) => {
+    setImagesToRemove((prev) => [...prev, imagekitFileId]);
   };
 
   const uploadImageToImageKit = async (
@@ -406,64 +395,6 @@ export default function FormEditClinic({
     }
   };
 
-  const renderImages = (images: (ClinicImage | File)[], isCurrentImage = false) => {
-    return (
-      <div className="mt-4 grid grid-cols-4 gap-4">
-        {images.map((image, index) => {
-          let imageSrc;
-
-          if (!isCurrentImage) {
-            imageSrc = URL.createObjectURL(image as File);
-          } else {
-            imageSrc = (image as ClinicImage).image_url;
-          }
-
-          console.log('imageSrc', imageSrc);
-
-          return (
-            <div key={index}>
-              <div className="aspect-h-3 aspect-w-4 relative overflow-hidden rounded-md shadow-md">
-                {!isCurrentImage && (
-                  <button
-                    className="absolute left-auto right-2 top-2 z-10 h-8 w-8 rounded-full border-2 border-gray-700 bg-white/90"
-                    onClick={() => handleImageRemove(index)}>
-                    <XIcon className="mx-auto h-6 w-6"></XIcon>
-                  </button>
-                )}
-                {isCurrentImage && (
-                  <button
-                    className="absolute left-auto right-2 top-2 z-10 h-8 w-8 rounded-full border-2 border-gray-700 bg-white/90"
-                    onClick={(e) => handleImagekitImageRemove(e, (image as ClinicImage).image_url)}>
-                    <XIcon className="mx-auto h-6 w-6"></XIcon>
-                  </button>
-                )}
-                {!isCurrentImage && (
-                  <Image
-                    src={imageSrc}
-                    alt="Image preview"
-                    width={600}
-                    height={600}
-                    className="object-cover"
-                  />
-                )}
-
-                {isCurrentImage && (
-                  <ImageKit
-                    src={imageSrc}
-                    alt="Image preview"
-                    width={600}
-                    height={600}
-                    className="object-cover"
-                  />
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
   const onSubmit = async (data: FormData) => {
     console.log('onSubmit ~ data');
     console.log(data);
@@ -500,19 +431,6 @@ export default function FormEditClinic({
           }
         } catch (error) {
           console.error('Error marking image for removal:', error);
-        }
-      }
-
-      // Upload new images to ImageKit
-      const newImages: Array<{ url: string; fileId: string }> = [];
-      if (watchImages && watchImages.length > 0) {
-        for (const imageFile of watchImages) {
-          if (imageFile instanceof File) {
-            const imagekitResult = await uploadImageToImageKit(imageFile);
-            if (imagekitResult) {
-              newImages.push(imagekitResult);
-            }
-          }
         }
       }
 
@@ -569,30 +487,14 @@ export default function FormEditClinic({
         throw updateError;
       }
 
-      // Insert new images into clinic_images table if we have any
-      if (newImages.length > 0 && updatedClinic) {
-        const clinicImageRecords = newImages.map((image) => ({
-          clinic_id: updatedClinic.id,
-          image_url: image.url,
-          imagekit_file_id: image.fileId,
-        }));
-
-        const { data: insertedImages, error: imageInsertError } = await supabase
-          .from('clinic_images')
-          .insert(clinicImageRecords)
-          .select();
-
-        if (imageInsertError) {
-          console.error('Error inserting clinic images:', imageInsertError);
-          // Don't throw error here as the clinic was updated successfully
-          // Just log the error and continue
-        } else if (insertedImages) {
-          // Update current images state with new images
-          setCurrentImages((prev) => [
-            ...prev.filter((img) => !imagesToRemove.includes(img.imagekit_file_id)),
-            ...insertedImages,
-          ]);
-        }
+      if (updatedClinic) {
+        const savedImages = await persistClinicImageOrder(
+          supabase,
+          updatedClinic.id,
+          orderedImages,
+          uploadImageToImageKit,
+        );
+        setOrderedImages(clinicImagesToEntries(savedImages));
       }
 
       // Delete existing hours
@@ -757,9 +659,6 @@ export default function FormEditClinic({
           businessHours: updatedBusinessHours,
           services: updatedServicesMap,
         });
-
-        // Update the current images state
-        setCurrentImages(updatedClinic.images || []);
       }
 
       toast({
@@ -1073,12 +972,6 @@ export default function FormEditClinic({
                 />
               </div>
 
-              {currentImages.length > 0 && (
-                <div className="col-span-6">
-                  <h3>Current Images</h3>
-                  {renderImages(currentImages, true)}
-                </div>
-              )}
               <div className="col-span-6">
                 <FormField
                   control={form.control}
@@ -1101,7 +994,11 @@ export default function FormEditClinic({
                     </FormItem>
                   )}
                 />
-                {watchImages && watchImages.length > 0 && renderImages(watchImages)}
+                <ClinicImageGallery
+                  images={orderedImages}
+                  onChange={setOrderedImages}
+                  onRemoveExisting={handleRemoveExistingImage}
+                />
               </div>
             </div>
           </div>

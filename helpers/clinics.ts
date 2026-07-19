@@ -12,7 +12,62 @@ import {
   ClinicState,
 } from '@/types/clinic';
 
+import { getFeaturedListingSlugs } from '@/config/featured';
+
 import { createAdminClient, createServerClient } from '@/lib/supabase';
+
+/**
+ * Fetches the clinics configured as featured listings (see config/featured.ts).
+ * Returns full card data plus state/area slugs so callers can pin them to the
+ * top of the relevant listing pages.
+ */
+export const getFeaturedListings = unstable_cache(
+  async () => {
+    const slugs = getFeaturedListingSlugs();
+
+    if (slugs.length === 0) return [];
+
+    const supabase = createAdminClient();
+
+    const { data, error } = await supabase
+      .from('clinics')
+      .select(
+        `
+        id,
+        name,
+        slug,
+        address,
+        phone,
+        postal_code,
+        rating,
+        images:clinic_images(image_url, imagekit_file_id),
+        is_permanently_closed,
+        open_on_public_holidays,
+        is_featured,
+        hours:clinic_hours(*),
+        special_hours:clinic_special_hours(*),
+        area:areas!inner(name, slug),
+        state:states!inner(name, slug)
+      `,
+      )
+      .eq('is_active', true)
+      .in('slug', slugs);
+
+    if (error) throw error;
+
+    const clinics = (data as unknown as Partial<Clinic>[]) || [];
+
+    // Preserve the configured order (partners first).
+    return slugs
+      .map((slug) => clinics.find((clinic) => clinic.slug === slug))
+      .filter((clinic): clinic is Partial<Clinic> => Boolean(clinic));
+  },
+  ['featured-listings'],
+  {
+    revalidate: 1_209_600, // Cache for 2 weeks
+    tags: ['clinics'],
+  },
+);
 
 export const getRecentClinics = unstable_cache(
   async (limit: number = 20) => {

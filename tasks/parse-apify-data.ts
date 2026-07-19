@@ -26,13 +26,7 @@ interface ProcessingOptions {
   maxConcurrent?: number;
   retryAttempts?: number;
   retryDelay?: number;
-  model?:
-    | 'gpt-4'
-    | 'gpt-4-1106-preview'
-    | 'gpt-3.5-turbo-1106'
-    | 'gpt-5'
-    | 'gpt-5-mini'
-    | 'gpt-5-nano';
+  model?: 'gpt-4o' | 'gpt-4o-mini' | 'gpt-5' | 'gpt-5-mini' | 'gpt-5-nano';
   temperature?: number;
 }
 
@@ -64,8 +58,8 @@ const DEFAULT_OPTIONS: Required<ProcessingOptions> = {
   maxConcurrent: 3,
   retryAttempts: 3,
   retryDelay: 1000,
-  model: 'gpt-5-mini',
-  temperature: 0.7,
+  model: 'gpt-4o-mini',
+  temperature: 1,
 };
 
 const PROMPT_TEMPLATES: PromptTemplate[] = [
@@ -277,20 +271,42 @@ Output Format:
 
   return retryOperation(
     async () => {
-      const response = await openai.chat.completions.create({
-        model: options.model,
-        messages: [
-          { role: 'system', content: systemMessage },
-          { role: 'user', content: prompt },
-        ],
-        temperature: options.temperature,
-        top_p: 1,
-        frequency_penalty: 0.2,
-        presence_penalty: 0.1,
-        max_tokens: 800,
-        stream: false,
-        n: 1,
-      });
+      // Check if model is a newer gpt-5 model
+      const isNewModel = options.model.startsWith('gpt-5');
+
+      const messages = [
+        { role: 'system' as const, content: systemMessage },
+        { role: 'user' as const, content: prompt },
+      ];
+
+      // Build model-specific parameters
+      let response;
+      if (isNewModel) {
+        // New models (gpt-5, gpt-5-mini, gpt-5-nano) use max_completion_tokens
+        // and don't support top_p, frequency_penalty, presence_penalty
+        response = await openai.chat.completions.create({
+          model: options.model,
+          messages,
+          temperature: options.temperature,
+          max_completion_tokens: 800,
+          stream: false,
+          n: 1,
+        });
+      } else {
+        // Old models (gpt-4, gpt-3.5-turbo) use max_tokens
+        // and support top_p, frequency_penalty, presence_penalty
+        response = await openai.chat.completions.create({
+          model: options.model,
+          messages,
+          temperature: options.temperature,
+          max_tokens: 800,
+          top_p: 1,
+          frequency_penalty: 0.2,
+          presence_penalty: 0.1,
+          stream: false,
+          n: 1,
+        });
+      }
 
       const completionText = response.choices[0]?.message?.content;
       if (!completionText) {

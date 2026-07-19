@@ -1,17 +1,26 @@
 import Link from 'next/link';
 
+import { ClinicImage } from '@/types/clinic';
 import { ArrowRightIcon, AwardIcon, MapPinIcon } from 'lucide-react';
+
+import { isFeatured, isFeaturedPartner } from '@/config/featured';
 
 import { cn } from '@/lib/utils';
 
-import { StarRating } from '@/components/ui/star-rating';
-import Container from '@/components/ui/container';
-import { Wrapper } from '@/components/ui/wrapper';
+import { getFeaturedListings } from '@/helpers/clinics';
 
+import { ClinicCard } from '@/components/cards/clinic-card';
 import {
   FeaturedClinicSpotlight,
   type FeaturedClinicSpotlightData,
 } from '@/components/listing/featured-clinic-spotlight';
+import {
+  type FeaturedPartnerCard,
+  FeaturedPartnerRotator,
+} from '@/components/listing/featured-partner-rotator';
+import Container from '@/components/ui/container';
+import { StarRating } from '@/components/ui/star-rating';
+import { Wrapper } from '@/components/ui/wrapper';
 
 /* Hallmark · macrostructure: Split Studio (section) · genre: editorial · tone: luxury-utilitarian
  * section: spotlight diptych + supporting pair · enrichment: Tier-A gradient wash
@@ -75,7 +84,7 @@ function SecondaryCard({ clinic }: { clinic: FeaturedClinicSpotlightData }) {
 
       <div className="flex min-w-0 flex-1 flex-col gap-3 p-5">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1 rounded-md border border-blue-300/50 bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-blue-700 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300">
+          <span className="dark:bg-blue-950/50 inline-flex items-center gap-1 rounded-md border border-blue-300/50 bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-blue-700 dark:border-blue-800 dark:text-blue-300">
             <AwardIcon className="size-3" aria-hidden="true" />
             Featured
           </span>
@@ -105,12 +114,51 @@ function SecondaryCard({ clinic }: { clinic: FeaturedClinicSpotlightData }) {
   );
 }
 
-export function FeaturedClinics() {
+function PlaceholderShowcase() {
   const [spotlight, ...secondary] = PLACEHOLDER_CLINICS;
 
   if (!spotlight) {
     return null;
   }
+
+  return (
+    <div className="grid min-w-0 gap-6 lg:gap-8">
+      <FeaturedClinicSpotlight clinic={spotlight} />
+
+      <ul className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2">
+        {secondary.map((clinic) => (
+          <li key={clinic.name} className="min-w-0">
+            <SecondaryCard clinic={clinic} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export async function FeaturedClinics() {
+  const featuredListings = await getFeaturedListings();
+  const hasFeaturedListings = featuredListings.length > 0;
+
+  const partnerCards: FeaturedPartnerCard[] = featuredListings
+    .filter((clinic) => isFeaturedPartner(clinic.slug))
+    .map((clinic) => ({
+      slug: clinic.slug ?? '',
+      name: clinic.name ?? '',
+      address: clinic.address ?? '',
+      postalCode: clinic.postal_code ?? '',
+      state: clinic.state?.name ?? '',
+      area: clinic.area?.name ?? '',
+      image: clinic.images?.[0]
+        ? (clinic.images[0] as unknown as ClinicImage).image_url
+        : undefined,
+      rating: clinic.rating,
+      hours: clinic.hours ?? [],
+      specialHours: clinic.special_hours ?? [],
+      isPermanentlyClosed: clinic.is_permanently_closed ?? false,
+    }));
+
+  const otherFeatured = featuredListings.filter((clinic) => !isFeaturedPartner(clinic.slug));
 
   return (
     <Wrapper
@@ -130,32 +178,53 @@ export function FeaturedClinics() {
             <h2 className="min-w-0 text-balance font-display text-2xl font-black tracking-tight text-gray-900 [overflow-wrap:anywhere] md:text-3xl dark:text-gray-50">
               Featured aesthetic clinics
             </h2>
-            <p className="mt-2 text-base leading-relaxed text-gray-600 dark:text-gray-300">
-              Premium placements for LCP-certified practices — verified profiles, standout
-              visibility, and priority placement on our homepage.
-            </p>
           </div>
 
           <Link
             href="/advertise-with-us"
             prefetch={false}
-            className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 no-underline shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 motion-reduce:transition-none dark:border-blue-800 dark:bg-gray-900 dark:text-blue-300 dark:hover:bg-blue-950/40 dark:focus-visible:outline-blue-400">
+            className="dark:hover:bg-blue-950/40 inline-flex shrink-0 items-center gap-1.5 self-start rounded-full border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 no-underline shadow-sm transition hover:border-blue-300 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 motion-reduce:transition-none dark:border-blue-800 dark:bg-gray-900 dark:text-blue-300 dark:focus-visible:outline-blue-400">
             List your clinic here
             <ArrowRightIcon className="size-4" aria-hidden="true" />
           </Link>
         </div>
 
-        <div className="grid min-w-0 gap-6 lg:gap-8">
-          <FeaturedClinicSpotlight clinic={spotlight} />
+        {hasFeaturedListings ? (
+          <div className="grid min-w-0 gap-6 lg:gap-8">
+            {partnerCards.length > 0 && <FeaturedPartnerRotator partners={partnerCards} />}
 
-          <ul className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2">
-            {secondary.map((clinic) => (
-              <li key={clinic.name} className="min-w-0">
-                <SecondaryCard clinic={clinic} />
-              </li>
-            ))}
-          </ul>
-        </div>
+            {otherFeatured.length > 0 && (
+              <div className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8 lg:grid-cols-4">
+                {otherFeatured.map((clinic) => (
+                  <ClinicCard
+                    key={clinic.slug}
+                    slug={clinic.slug ?? ''}
+                    name={clinic.name ?? ''}
+                    address={clinic.address ?? ''}
+                    phone={clinic.phone ?? ''}
+                    postalCode={clinic.postal_code ?? ''}
+                    state={clinic.state?.name ?? ''}
+                    area={clinic.area?.name ?? ''}
+                    image={
+                      clinic.images?.[0]
+                        ? (clinic.images[0] as unknown as ClinicImage).image_url
+                        : undefined
+                    }
+                    rating={clinic.rating}
+                    isFeatured={isFeatured(clinic.slug)}
+                    isFeaturedPartner={isFeaturedPartner(clinic.slug)}
+                    hours={clinic.hours ?? []}
+                    specialHours={clinic.special_hours ?? []}
+                    openOnPublicHolidays={clinic.open_on_public_holidays ?? false}
+                    isPermanentlyClosed={clinic.is_permanently_closed ?? false}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <PlaceholderShowcase />
+        )}
       </Container>
     </Wrapper>
   );

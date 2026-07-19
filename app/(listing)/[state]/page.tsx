@@ -8,17 +8,22 @@ import { notFound } from 'next/navigation';
 import { Clinic, ClinicImage } from '@/types/clinic';
 import { ArrowRightIcon, PersonStandingIcon } from 'lucide-react';
 
+import { isFeatured, isFeaturedPartner } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
 import { absoluteUrl, cn, getPagination } from '@/lib/utils';
 
+import { getFeaturedListings } from '@/helpers/clinics';
 import { getDoctorsByState } from '@/helpers/doctors';
 import { getStateBySlug, getStateListings } from '@/helpers/states';
 
 import { LazyAdsArticle } from '@/components/ads/lazy-ads-article';
 import { ClinicCard } from '@/components/cards/clinic-card';
 import { ImageKit } from '@/components/image/image-kit';
-// import { getVelvetSkinClinicCardPlaceholder } from '@/components/listing/featured-clinic-spotlight';
+import {
+  getFeaturedListingCardPlaceholder,
+  getFeaturedPartnerCardPlaceholder,
+} from '@/components/listing/featured-clinic-spotlight';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import CollectionPageJsonLd from '@/components/structured-data/collection-page-json-ld';
 import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
@@ -143,6 +148,15 @@ export default async function StatePage({ params, searchParams }: StatePageProps
   const doctorsResult = await getDoctorsByState(state, 5, 0);
   const doctors = doctorsResult.data;
   const totalDoctors = doctorsResult.count || 0;
+
+  // Featured listings pinned to the top of this state's listing.
+  const featuredListings = (await getFeaturedListings()).filter(
+    (clinic) => clinic.state?.slug === state,
+  );
+  const featuredSlugs = new Set(featuredListings.map((clinic) => clinic.slug));
+  const listingClinics = (stateData.clinics ?? []).filter(
+    (clinic) => !featuredSlugs.has(clinic.slug),
+  );
 
   const totalClinics = stateData.total_clinics || 0;
   const totalPages = Math.ceil(totalClinics / limit);
@@ -279,23 +293,58 @@ export default async function StatePage({ params, searchParams }: StatePageProps
             <h2 className="mb-6 text-balance text-xl font-bold md:text-2xl">
               {totalClinics} Aesthetic Clinics in {stateData.name}
             </h2>
-            {stateData.clinics?.length > 0 ? (
+            {listingClinics.length > 0 || featuredListings.length > 0 ? (
               <>
                 <div
                   className={cn(
                     'grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8 lg:grid-cols-4',
                   )}>
-                  {/* {currentPage === 1 && (
-                    <ClinicCard
-                      key="featured-placeholder-velvet-skin-clinic"
-                      {...getVelvetSkinClinicCardPlaceholder(
-                        stateData.name,
-                        stateData.areas?.[0]?.name,
-                      )}
-                    />
-                  )} */}
-                  {stateData.clinics
-                    ?.sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0))
+                  {currentPage === 1 &&
+                    (featuredListings.length > 0 ? (
+                      featuredListings.map((clinic) => (
+                        <ClinicCard
+                          key={clinic.slug}
+                          slug={clinic.slug ?? ''}
+                          name={clinic.name ?? ''}
+                          address={clinic.address ?? ''}
+                          phone={clinic.phone ?? ''}
+                          postalCode={clinic.postal_code ?? ''}
+                          state={clinic.state?.name ?? stateData.name}
+                          area={clinic.area?.name ?? ''}
+                          image={
+                            clinic.images?.[0]
+                              ? (clinic.images[0] as unknown as ClinicImage).image_url
+                              : undefined
+                          }
+                          rating={clinic.rating}
+                          isFeatured={isFeatured(clinic.slug)}
+                          isFeaturedPartner={isFeaturedPartner(clinic.slug)}
+                          hours={clinic.hours ?? []}
+                          specialHours={clinic.special_hours ?? []}
+                          openOnPublicHolidays={clinic.open_on_public_holidays ?? false}
+                          isPermanentlyClosed={clinic.is_permanently_closed ?? false}
+                        />
+                      ))
+                    ) : (
+                      <>
+                        <ClinicCard
+                          key="featured-placeholder-partner"
+                          {...getFeaturedPartnerCardPlaceholder(
+                            stateData.name,
+                            stateData.areas?.[0]?.name,
+                          )}
+                        />
+                        <ClinicCard
+                          key="featured-placeholder-listing"
+                          {...getFeaturedListingCardPlaceholder(
+                            stateData.name,
+                            stateData.areas?.[1]?.name ?? stateData.areas?.[0]?.name,
+                          )}
+                        />
+                      </>
+                    ))}
+                  {listingClinics
+                    .sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0))
                     .map((clinic, index) => {
                       return (
                         <React.Fragment key={clinic.slug}>
@@ -337,7 +386,8 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                                 : undefined
                             }
                             rating={clinic.rating}
-                            isFeatured={clinic.is_featured ?? false}
+                            isFeatured={isFeatured(clinic.slug) || (clinic.is_featured ?? false)}
+                            isFeaturedPartner={isFeaturedPartner(clinic.slug)}
                             hours={clinic.hours ?? []}
                             specialHours={clinic.special_hours ?? []}
                             openOnPublicHolidays={clinic.open_on_public_holidays ?? false}

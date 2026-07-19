@@ -17,6 +17,7 @@ import {
   YoutubeIcon,
 } from 'lucide-react';
 
+import { isFeaturedListing } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
 import { absoluteUrl, cn } from '@/lib/utils';
@@ -250,6 +251,9 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
 
   const memberOf: { '@type': string; '@id': string } | null = null;
 
+  // Featured listings get an ad-free profile page (no banners or ad placeholders).
+  const hideAds = isFeaturedListing(parsedClinic.slug);
+
   // Format opening hours for JSON-LD using OpeningHoursSpecification
   const openingHoursSpecification = formatOpeningHoursForJsonLd(parsedClinic.hours);
 
@@ -482,7 +486,7 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
             </div>
           </div>
 
-          <LazyAdsLeaderboard />
+          {!hideAds && <LazyAdsLeaderboard />}
 
           {/* content */}
           <div className="py-8 md:gap-8 lg:grid lg:grid-cols-sidebar lg:gap-10">
@@ -506,30 +510,34 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
 
               <DoctorPracticeAvatar clinicSlug={clinicSlug} />
 
-              <div className="flex flex-col gap-2 text-center">
-                <a
-                  href="https://invl.me/clnm6di"
-                  target="_blank"
-                  className="hover:!border-b-transparent">
-                  <Image
-                    src="/images/banner-total-image-1.jpg"
-                    alt="Total Image Whita Glo"
-                    width={600}
-                    height={600}
-                    priority
-                    quality={85}
-                    sizes="100vw"
-                    className="mb-0 h-auto w-full object-cover"
-                    style={{
-                      objectPosition: 'center center',
-                    }}
-                  />
-                </a>
-              </div>
+              {!hideAds && (
+                <div className="flex flex-col gap-2 text-center">
+                  <a
+                    href="https://invl.me/clnm6di"
+                    target="_blank"
+                    className="hover:!border-b-transparent">
+                    <Image
+                      src="/images/banner-total-image-1.jpg"
+                      alt="Total Image Whita Glo"
+                      width={600}
+                      height={600}
+                      priority
+                      quality={85}
+                      sizes="100vw"
+                      className="mb-0 h-auto w-full object-cover"
+                      style={{
+                        objectPosition: 'center center',
+                      }}
+                    />
+                  </a>
+                </div>
+              )}
 
-              <div>
-                <div ta-ad-container=""></div>
-              </div>
+              {!hideAds && (
+                <div>
+                  <div ta-ad-container=""></div>
+                </div>
+              )}
 
               {parsedClinic.services && (
                 <article className="block lg:hidden">
@@ -592,26 +600,28 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
 
                 <DoctorPractice clinicSlug={clinicSlug} />
 
-                <div className="flex flex-col items-center justify-center gap-2 text-center">
-                  <a
-                    href="https://invl.me/clnm6di"
-                    target="_blank"
-                    className="hover:!border-b-transparent">
-                    <Image
-                      src="/images/banner-total-image-3.jpg"
-                      alt="Total Image Whita Glo"
-                      width={600}
-                      height={600}
-                      priority
-                      quality={85}
-                      sizes="100vw"
-                      className="mb-0 h-auto w-full object-cover"
-                      style={{
-                        objectPosition: 'center center',
-                      }}
-                    />
-                  </a>
-                </div>
+                {!hideAds && (
+                  <div className="flex flex-col items-center justify-center gap-2 text-center">
+                    <a
+                      href="https://invl.me/clnm6di"
+                      target="_blank"
+                      className="hover:!border-b-transparent">
+                      <Image
+                        src="/images/banner-total-image-3.jpg"
+                        alt="Total Image Whita Glo"
+                        width={600}
+                        height={600}
+                        priority
+                        quality={85}
+                        sizes="100vw"
+                        className="mb-0 h-auto w-full object-cover"
+                        style={{
+                          objectPosition: 'center center',
+                        }}
+                      />
+                    </a>
+                  </div>
+                )}
 
                 {parsedClinic.services && (
                   <div className="hidden lg:block">

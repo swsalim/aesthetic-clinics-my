@@ -8,11 +8,13 @@ import { notFound } from 'next/navigation';
 import { Clinic, ClinicImage } from '@/types/clinic';
 import { ArrowRightIcon } from 'lucide-react';
 
+import { isFeatured, isFeaturedPartner } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
 import { absoluteUrl, cn, getPagination } from '@/lib/utils';
 
 import { getAreaBySlug, getAreaListings } from '@/helpers/areas';
+import { getFeaturedListings } from '@/helpers/clinics';
 import { getStateBySlug } from '@/helpers/states';
 
 import { LazyAdsArticle } from '@/components/ads/lazy-ads-article';
@@ -159,6 +161,15 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
   const totalClinics = areaData.total_clinics || 0;
   const totalPages = Math.ceil(totalClinics / limit);
 
+  // Featured listings pinned to the top of this area's listing.
+  const featuredListings = (await getFeaturedListings()).filter(
+    (clinic) => clinic.area?.slug === area,
+  );
+  const featuredSlugs = new Set(featuredListings.map((clinic) => clinic.slug));
+  const listingClinics = (areaData.clinics ?? []).filter(
+    (clinic) => !featuredSlugs.has(clinic.slug),
+  );
+
   const title = `Top Aesthetic Clinics in ${areaData.name}, ${areaData.state?.name}`;
   const description = `Explore ${totalClinics} trusted aesthetic clinics across cities in ${areaData.state?.name}. Read verified reviews, check services and contact details to book your next beauty treatment nearby.`;
 
@@ -267,7 +278,7 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
           <h2 className="mb-6 text-balance text-xl font-bold md:text-2xl">
             {totalClinics} Aesthetic Clinics in {areaData.name}, {areaData.state?.name}
           </h2>
-          {areaData.clinics?.length > 0 ? (
+          {listingClinics.length > 0 || featuredListings.length > 0 ? (
             <>
               <div className={cn(isJohorBahru && 'grid grid-cols-1 gap-8 lg:grid-cols-sidebar')}>
                 <div
@@ -275,8 +286,33 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
                     'grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8',
                     !isJohorBahru && 'lg:grid-cols-4',
                   )}>
-                  {areaData.clinics
-                    ?.sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0))
+                  {currentPage === 1 &&
+                    featuredListings.map((clinic) => (
+                      <ClinicCard
+                        key={clinic.slug}
+                        slug={clinic.slug ?? ''}
+                        name={clinic.name ?? ''}
+                        address={clinic.address ?? ''}
+                        phone={clinic.phone ?? ''}
+                        image={
+                          clinic.images?.[0]
+                            ? (clinic.images[0] as unknown as ClinicImage).image_url
+                            : undefined
+                        }
+                        postalCode={clinic.postal_code ?? ''}
+                        state={clinic.state?.name ?? areaData.state?.name ?? ''}
+                        area={clinic.area?.name ?? areaData.name ?? ''}
+                        rating={clinic.rating}
+                        isFeatured={isFeatured(clinic.slug)}
+                        isFeaturedPartner={isFeaturedPartner(clinic.slug)}
+                        hours={clinic.hours ?? []}
+                        specialHours={clinic.special_hours ?? []}
+                        openOnPublicHolidays={clinic.open_on_public_holidays ?? false}
+                        isPermanentlyClosed={clinic.is_permanently_closed ?? false}
+                      />
+                    ))}
+                  {listingClinics
+                    .sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0))
                     .map((clinic, index) => {
                       return (
                         <React.Fragment key={clinic.slug}>
@@ -318,7 +354,8 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
                             state={areaData.state?.name ?? ''}
                             area={areaData.name ?? ''}
                             rating={clinic.rating}
-                            isFeatured={clinic.is_featured ?? false}
+                            isFeatured={isFeatured(clinic.slug) || (clinic.is_featured ?? false)}
+                            isFeaturedPartner={isFeaturedPartner(clinic.slug)}
                             hours={clinic.hours ?? []}
                             specialHours={clinic.special_hours ?? []}
                             openOnPublicHolidays={clinic.open_on_public_holidays ?? false}

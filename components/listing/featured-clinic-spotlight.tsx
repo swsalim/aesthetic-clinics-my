@@ -16,7 +16,27 @@ export type FeaturedClinicSpotlightData = {
   accent: string;
 };
 
-export function getVelvetSkinClinicCardPlaceholder(stateName: string, areaName?: string) {
+export function getFeaturedPartnerCardPlaceholder(stateName: string, areaName?: string) {
+  return {
+    slug: 'lumiere-aesthetics-demo',
+    name: 'Lumière Aesthetics',
+    address: '12 Jalan Bukit Bintang',
+    phone: '+60 3-2141 8800',
+    postalCode: '55100',
+    state: stateName,
+    area: areaName ?? 'Central',
+    rating: 4.9,
+    isFeaturedPartner: true,
+    isFeatured: false,
+    isPlaceholder: true,
+    hours: [],
+    specialHours: [],
+    openOnPublicHolidays: false,
+    isPermanentlyClosed: false,
+  };
+}
+
+export function getFeaturedListingCardPlaceholder(stateName: string, areaName?: string) {
   return {
     slug: 'velvet-skin-clinic-demo',
     name: 'Velvet Skin Clinic',
@@ -26,6 +46,7 @@ export function getVelvetSkinClinicCardPlaceholder(stateName: string, areaName?:
     state: stateName,
     area: areaName ?? 'Central',
     rating: 4.8,
+    isFeaturedPartner: false,
     isFeatured: true,
     isPlaceholder: true,
     hours: [],
