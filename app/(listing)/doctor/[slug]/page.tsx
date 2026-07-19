@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 
 import type { ClinicDoctor, ClinicImage } from '@/types/clinic';
 
+import { isFeatured, isFeaturedPartner } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
 import { absoluteUrl, cn } from '@/lib/utils';
@@ -286,7 +287,8 @@ export default async function DentistPage({ params }: DentistPageProps) {
                             ? (clinic.images[0] as unknown as ClinicImage).image_url
                             : undefined
                         }
-                        isFeatured={false}
+                        isFeatured={isFeatured(clinic.slug)}
+                        isFeaturedPartner={isFeaturedPartner(clinic.slug)}
                         rating={clinic.rating}
                         hours={[]}
                         specialHours={[]}
