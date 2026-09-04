@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
 
-import { ImageCloudinary } from '@/components/image/image-cloudinary';
+import { MediaImage } from '@/components/image/media-image';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface ImageCaptionProps {
@@ -106,7 +106,7 @@ export default function ImageCaption({
   const imageContent = (
     <ImageWrapper className={className} isPortrait={isPortrait} fullBleed={fullBleed}>
       <Suspense fallback={<ImageSkeleton />}>
-        <ImageCloudinary
+        <MediaImage
           src={src}
           alt={alt}
           directory={directory}

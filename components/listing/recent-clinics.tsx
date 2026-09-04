@@ -35,11 +35,7 @@ export async function RecentClinics() {
                 postalCode={clinic.postal_code || ''}
                 state={clinic.state?.name || ''}
                 area={clinic.area?.name || ''}
-                image={
-                  clinic.images?.[0]
-                    ? (clinic.images[0] as unknown as ClinicImage).image_url
-                    : undefined
-                }
+                image={clinic.images?.[0] as ClinicImage | undefined}
                 rating={clinic.rating}
                 hours={clinic.hours || []}
                 specialHours={clinic.special_hours || []}

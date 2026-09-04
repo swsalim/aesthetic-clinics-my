@@ -2,7 +2,7 @@ import React from 'react';
 
 import { cn } from '@/lib/utils';
 
-import { ImageKit } from '@/components/image/image-kit';
+import { MediaImage } from '@/components/image/media-image';
 
 const Logo: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => {
   return (
@@ -15,9 +15,8 @@ const Logo: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...pr
         )}
         aria-hidden="true"
         {...props}>
-        <ImageKit
-          src="aesthetic-clinics-my-v3.png"
-          directory="logos"
+        <MediaImage
+          src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/logos/aesthetic-clinics-my-v3.png"
           alt="Aesthetic Clinics Malaysia"
           width={300}
           height={300}

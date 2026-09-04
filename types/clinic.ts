@@ -1,7 +1,9 @@
 export interface ClinicImage {
   id: string;
-  image_url: string;
-  imagekit_file_id: string;
+  image_url?: string | null;
+  imagekit_file_id?: string | null;
+  r2_key?: string | null;
+  r2_url?: string | null;
   display_order?: number;
 }
 export interface ClinicService {
@@ -31,6 +33,8 @@ export interface ClinicArea {
   banner_image: string | null;
   image: string | null;
   imagekit_file_id: string | null;
+  r2_key?: string | null;
+  r2_url?: string | null;
   state_id: string | null;
   created_at: string | null;
   modified_at: string | null;
@@ -48,6 +52,8 @@ export interface ClinicState {
   banner_image: string | null;
   image: string | null;
   imagekit_file_id: string | null;
+  r2_key?: string | null;
+  r2_url?: string | null;
   created_at: string | null;
   modified_at: string | null;
   clinics?: Partial<ClinicInsert>[] | null;
@@ -65,7 +71,13 @@ export interface ClinicDoctor {
   specialty: string | null;
   qualification: string | null;
   status: string | null;
-  images: { id: string; image_url: string; imagekit_file_id: string }[] | null;
+  images: {
+    id: string;
+    image_url?: string | null;
+    imagekit_file_id?: string | null;
+    r2_key?: string | null;
+    r2_url?: string | null;
+  }[] | null;
   featured_video: string | null;
   is_active: boolean | null;
   is_featured: boolean | null;
@@ -87,7 +99,13 @@ export interface ClinicDoctor {
         review_count: number | null;
         is_permanently_closed: boolean | null;
         open_on_public_holidays: boolean | null;
-        images: { id: string; image_url: string; imagekit_file_id: string }[] | null;
+        images: {
+    id: string;
+    image_url?: string | null;
+    imagekit_file_id?: string | null;
+    r2_key?: string | null;
+    r2_url?: string | null;
+  }[] | null;
         area?: { name: string } | null;
         state?: { name: string } | null;
       }[]
@@ -227,7 +245,13 @@ export interface ClinicDetails {
   longitude: number;
   rating: number;
   review_count: number;
-  images: { id: string; image_url: string; imagekit_file_id: string }[] | null;
+  images: {
+    id: string;
+    image_url?: string | null;
+    imagekit_file_id?: string | null;
+    r2_key?: string | null;
+    r2_url?: string | null;
+  }[] | null;
   featured_video: string;
   youtube_url: string;
   facebook_url: string;

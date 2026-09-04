@@ -10,7 +10,7 @@ import {
 
 import { cn } from '@/lib/utils';
 
-import { ImageKit } from '@/components/image/image-kit';
+import { MediaImage } from '@/components/image/media-image';
 import { PricingPlan } from '@/components/listing/pricing-plan';
 import PageHeading from '@/components/page-heading';
 import WebPageJsonLd from '@/components/structured-data/web-page-json-ld';
@@ -218,9 +218,8 @@ function FeaturedListingPreview() {
 
       <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <figure className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900/60">
-          <ImageKit
-            src="sample-homepage-listing.png"
-            directory="images"
+          <MediaImage
+            src="/images/sample-homepage-listing.png"
             alt="Sample homepage featured listing placement"
             width={1587}
             height={1208}
@@ -234,9 +233,8 @@ function FeaturedListingPreview() {
         </figure>
 
         <figure className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900/60">
-          <ImageKit
-            src="sample-featured-listing.png"
-            directory="images"
+          <MediaImage
+            src="/images/sample-featured-listing.png"
             alt="Sample featured clinic card in listing page results"
             width={1587}
             height={1208}

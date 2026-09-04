@@ -10,9 +10,10 @@ import pluralize from 'pluralize';
 import { siteConfig } from '@/config/site';
 
 import { createAdminClient } from '@/lib/supabase';
+import { resolveMediaUrl } from '@/lib/media';
 import { absoluteUrl } from '@/lib/utils';
 
-import { ImageKit } from '@/components/image/image-kit';
+import { MediaImage } from '@/components/image/media-image';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import WebPageJsonLd from '@/components/structured-data/web-page-json-ld';
 import Breadcrumb from '@/components/ui/breadcrumb';
@@ -71,7 +72,7 @@ export const metadata: Metadata = {
   },
 };
 
-type BrowseState = Pick<ClinicState, 'id' | 'name' | 'slug' | 'image'> & { clinicCount: number };
+type BrowseState = Pick<ClinicState, 'id' | 'name' | 'slug' | 'r2_url'> & { clinicCount: number };
 type BrowseArea = Pick<ClinicArea, 'id' | 'name' | 'slug' | 'state_id'> & { clinicCount: number };
 
 const getBrowseData = unstable_cache(
@@ -81,7 +82,7 @@ const getBrowseData = unstable_cache(
     const [{ data: statesData }, { data: areasData }, { count: clinicCount }] = await Promise.all([
       supabase
         .from('states')
-        .select('id, name, slug, image, clinics(count)')
+        .select('id, name, slug, r2_url, clinics(count)')
         .eq('clinics.status', 'approved')
         .eq('clinics.is_active', true),
       supabase
@@ -100,7 +101,7 @@ const getBrowseData = unstable_cache(
         id: state.id,
         name: state.name,
         slug: state.slug,
-        image: state.image,
+        r2_url: state.r2_url,
         clinicCount: state.clinics?.[0]?.count ?? 0,
       }))
       .filter((state) => state.clinicCount > 0);
@@ -226,8 +227,11 @@ export default async function BrowsePage() {
                       href={`/${state.slug}`}
                       prefetch={false}
                       className="group relative block aspect-[16/9] overflow-hidden no-underline md:aspect-[21/9]">
-                      <ImageKit
-                        src={state.image || 'placeholder-location.jpg'}
+                      <MediaImage
+                        src={
+                          resolveMediaUrl({ r2_url: state.r2_url }) ??
+                          'https://res.cloudinary.com/typeeighty/image/upload/f_auto,q_auto/dental-clinics-my/placeholder-location.jpg'
+                        }
                         alt={state.name}
                         width={960}
                         height={411}

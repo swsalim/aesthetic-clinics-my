@@ -98,13 +98,11 @@ class ClinicDataProcessor {
     return `${cleanSlug}_${timestamp}.${extension}`;
   }
 
-  private async uploadImageToImageKit(
+  private async uploadImageToR2(
     imageUrl: string,
     clinicSlug: string,
-  ): Promise<{ url: string; fileId: string } | null> {
+  ): Promise<{ url: string; key: string } | null> {
     try {
-      // For this script, we'll use a direct fetch to the ImageKit API
-      // In production, you might want to use the ImageKit SDK
       const response = await fetch(imageUrl);
       if (!response.ok) {
         throw new Error(`Failed to fetch image: ${response.status}`);
@@ -113,17 +111,15 @@ class ClinicDataProcessor {
       const imageBuffer = await response.arrayBuffer();
       const formData = new FormData();
 
-      // Create a buffer from the array buffer
       const buffer = Buffer.from(imageBuffer);
       formData.append('file', buffer, {
         filename: `clinic_${Date.now()}.jpg`,
         contentType: 'image/jpeg',
       });
-      formData.append('folder', 'aesthetic-clinics-my/places');
+      formData.append('folder', 'places');
       formData.append('fileName', this.generateUniqueFilename(imageUrl, clinicSlug));
 
-      // Upload to ImageKit via our API endpoint
-      const uploadResponse = await fetch(`${this.baseUrl}/api/upload-imagekit`, {
+      const uploadResponse = await fetch(`${this.baseUrl}/api/upload-r2`, {
         method: 'POST',
         body: formData,
       });
@@ -131,23 +127,22 @@ class ClinicDataProcessor {
       if (!uploadResponse.ok) {
         const errorData = await uploadResponse.json().catch(() => ({}));
         const errorMessage =
-          (errorData as { message: string })?.message ||
+          (errorData as { message?: string; error?: string })?.message ||
+          (errorData as { error?: string })?.error ||
           `Upload failed with status: ${uploadResponse.status}`;
         throw new Error(errorMessage);
       }
 
       const data = (await uploadResponse.json()) as {
         success: boolean;
-        url: string;
-        imagekit_file_id: string;
+        r2_url: string;
+        r2_key: string;
       };
 
-      if (data.success && data.imagekit_file_id) {
+      if (data.success && data.r2_key && data.r2_url) {
         return {
-          url:
-            data.url ||
-            `https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/places/${data.imagekit_file_id}`,
-          fileId: data.imagekit_file_id,
+          url: data.r2_url,
+          key: data.r2_key,
         };
       } else {
         throw new Error('Invalid response from image upload');
@@ -291,8 +286,8 @@ class ClinicDataProcessor {
 
       if (error) throw error;
 
-      // Upload images to ImageKit if available
-      const processedImages: Array<{ url: string; fileId: string }> = [];
+      // Upload images to R2 if available
+      const processedImages: Array<{ url: string; key: string }> = [];
       if (listing.images) {
         console.log(`  Processing ${listing.images.length} images for ${listing.title}...`);
 
@@ -305,9 +300,9 @@ class ClinicDataProcessor {
               console.log(
                 `    Uploading image ${i + 1}/${listing.images.length}: ${trimmedUrl.substring(0, 50)}...`,
               );
-              const imagekitResult = await this.uploadImageToImageKit(trimmedUrl, listing.slug);
-              if (imagekitResult) {
-                processedImages.push(imagekitResult);
+              const r2Result = await this.uploadImageToR2(trimmedUrl, listing.slug);
+              if (r2Result) {
+                processedImages.push(r2Result);
                 console.log(`    ✓ Image ${i + 1} uploaded successfully`);
               } else {
                 console.log(`    ⚠ Image ${i + 1} failed to upload`);
@@ -323,10 +318,11 @@ class ClinicDataProcessor {
 
       // Insert images into clinic_images table if we have any
       if (processedImages.length > 0 && data?.id) {
-        const clinicImageRecords = processedImages.map((image) => ({
+        const clinicImageRecords = processedImages.map((image, index) => ({
           clinic_id: data.id,
-          image_url: image.url,
-          imagekit_file_id: image.fileId,
+          r2_url: image.url,
+          r2_key: image.key,
+          display_order: index + 1,
         }));
 
         const { error: imageInsertError } = await this.supabase

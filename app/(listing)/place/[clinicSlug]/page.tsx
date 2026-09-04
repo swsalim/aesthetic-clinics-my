@@ -20,6 +20,7 @@ import {
 import { isFeaturedListing } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
+import { resolveMediaUrl } from '@/lib/media';
 import { absoluteUrl, cn } from '@/lib/utils';
 
 import { getClinicBySlug, getClinicListings } from '@/helpers/clinics';
@@ -317,7 +318,7 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
       {parsedClinic.images && parsedClinic.images.length > 0 && parsedClinic.images[0] && (
         <Wrapper
           style={{
-            backgroundImage: `url('${(parsedClinic.images[0] as unknown as ClinicImage).image_url}')`,
+            backgroundImage: `url('${resolveMediaUrl(parsedClinic.images[0] as ClinicImage) ?? ''}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center center',
             backgroundRepeat: 'no-repeat',

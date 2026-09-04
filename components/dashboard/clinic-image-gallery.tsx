@@ -5,15 +5,16 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 import type { ClinicImageEntry } from '@/lib/clinic-images';
+import { resolveMediaUrl } from '@/lib/media';
 import { GripVertical, XIcon } from 'lucide-react';
 
-import { ImageKit } from '@/components/image/image-kit';
+import { MediaImage } from '@/components/image/media-image';
 import { cn } from '@/lib/utils';
 
 interface ClinicImageGalleryProps {
   images: ClinicImageEntry[];
   onChange: (images: ClinicImageEntry[]) => void;
-  onRemoveExisting: (imagekitFileId: string) => void;
+  onRemoveExisting: (imageId: string) => void;
 }
 
 function getEntryKey(entry: ClinicImageEntry): string {
@@ -32,7 +33,7 @@ export function ClinicImageGallery({
     const entry = images[index];
 
     if (entry.kind === 'existing') {
-      onRemoveExisting(entry.imagekit_file_id);
+      onRemoveExisting(entry.id);
     }
 
     onChange(images.filter((_, i) => i !== index));
@@ -122,8 +123,8 @@ export function ClinicImageGallery({
                     className="object-cover"
                   />
                 ) : (
-                  <ImageKit
-                    src={entry.image_url}
+                  <MediaImage
+                    src={resolveMediaUrl(entry) ?? ''}
                     alt={`Clinic image ${index + 1}`}
                     width={600}
                     height={600}

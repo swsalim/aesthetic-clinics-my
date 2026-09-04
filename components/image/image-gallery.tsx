@@ -5,9 +5,10 @@ import { useEffect, useState } from 'react';
 import { ClinicImage } from '@/types/clinic';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
+import { resolveMediaUrl } from '@/lib/media';
 import { cn } from '@/lib/utils';
 
-import { ImageKit } from './image-kit';
+import { MediaImage } from './media-image';
 
 interface ImageGalleryProps {
   images: (string | ClinicImage | undefined)[] | null;
@@ -15,14 +16,19 @@ interface ImageGalleryProps {
   className?: string;
 }
 
+function getGallerySrc(img: string | ClinicImage): string | null {
+  if (typeof img === 'string') return img || null;
+  return resolveMediaUrl(img);
+}
+
 export function ImageGallery({ images, title, className }: ImageGalleryProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
-  // Filter out undefined values and ensure image_url exists
   const validImages = (images ?? []).filter(
     (img): img is string | ClinicImage =>
-      typeof img === 'string' ||
-      (typeof img === 'object' && img !== null && 'image_url' in img && !!img.image_url),
+      typeof img === 'string'
+        ? !!img
+        : typeof img === 'object' && img !== null && !!resolveMediaUrl(img),
   );
 
   useEffect(() => {
@@ -73,8 +79,8 @@ export function ImageGallery({ images, title, className }: ImageGalleryProps) {
           <button
             onClick={() => handleImageClick(0)}
             className="relative h-full max-h-[500px] w-full overflow-hidden rounded-lg">
-            <ImageKit
-              src={typeof validImages[0] === 'string' ? validImages[0] : validImages[0].image_url}
+            <MediaImage
+              src={getGallerySrc(validImages[0]) ?? ''}
               alt={`Main photo for ${title}`}
               priority={true}
               width={600}
@@ -89,8 +95,8 @@ export function ImageGallery({ images, title, className }: ImageGalleryProps) {
             key={`${title}-image-${index + 1}`}
             onClick={() => handleImageClick(index + 1)}
             className="relative col-span-2 row-span-1 h-60 w-full overflow-hidden rounded-lg">
-            <ImageKit
-              src={typeof image === 'string' ? image : image.image_url}
+            <MediaImage
+              src={getGallerySrc(image) ?? ''}
               alt={`Photo ${index + 2} for ${title}`}
               width={350}
               height={350}
@@ -120,12 +126,8 @@ export function ImageGallery({ images, title, className }: ImageGalleryProps) {
             <ChevronRight className="h-12 w-12" />
           </button>
           <div className="relative max-h-[90vh] max-w-[90vw]">
-            <ImageKit
-              src={
-                typeof validImages[selectedImageIndex] === 'string'
-                  ? validImages[selectedImageIndex]
-                  : validImages[selectedImageIndex].image_url
-              }
+            <MediaImage
+              src={getGallerySrc(validImages[selectedImageIndex]) ?? ''}
               alt={`Photo ${selectedImageIndex + 1} for ${title}`}
               width={1000}
               height={1000}

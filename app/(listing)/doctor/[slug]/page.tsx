@@ -7,6 +7,7 @@ import type { ClinicDoctor, ClinicImage } from '@/types/clinic';
 import { isFeatured, isFeaturedPartner } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
+import { resolveMediaUrl } from '@/lib/media';
 import { absoluteUrl, cn } from '@/lib/utils';
 
 import { getDoctorBySlug, getDoctorListings } from '@/helpers/doctors';
@@ -14,7 +15,7 @@ import { getDoctorBySlug, getDoctorListings } from '@/helpers/doctors';
 import { LazyAdsLeaderboard } from '@/components/ads/lazy-ads-leaderboard';
 import { LazyAdsSquare } from '@/components/ads/lazy-ads-square';
 import { ClinicCard } from '@/components/cards/clinic-card';
-import { ImageKit } from '@/components/image/image-kit';
+import { MediaImage } from '@/components/image/media-image';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import BusinessJsonLd from '@/components/structured-data/business-json-ld';
 import DentistJsonLd from '@/components/structured-data/physician-json-ld';
@@ -137,7 +138,7 @@ export default async function DentistPage({ params }: DentistPageProps) {
         <BusinessJsonLd
           name={primaryClinic?.name}
           url={`${process.env.NEXT_PUBLIC_BASE_URL}/doctor/${slug}`}
-          image={(doctorWithClinics.images?.[0] as unknown as ClinicImage)?.image_url ?? ''}
+          image={resolveMediaUrl(doctorWithClinics.images?.[0] as ClinicImage | undefined) ?? ''}
           email={primaryClinic?.email || null}
           phone={primaryClinic?.phone || null}
           location={{
@@ -159,7 +160,7 @@ export default async function DentistPage({ params }: DentistPageProps) {
       <DentistJsonLd
         name={doctor.name}
         url={absoluteUrl(`/doctor/${doctor.slug}`)}
-        photo={(doctor.images?.[0] as unknown as ClinicImage)?.image_url ?? ''}
+        photo={resolveMediaUrl(doctor.images?.[0] as ClinicImage | undefined) ?? ''}
         phone={primaryClinic?.phone || null}
         specialty="Aesthetics"
         email={primaryClinic?.email || 'support@aestheticclinics.my'}
@@ -189,8 +190,8 @@ export default async function DentistPage({ params }: DentistPageProps) {
               <div className="flex flex-row items-start justify-end gap-6">
                 {profileImage && (
                   <div className="aspect-[2/3] w-full max-w-48 lg:min-w-48 lg:max-w-72">
-                    <ImageKit
-                      src={(profileImage as unknown as ClinicImage).image_url}
+                    <MediaImage
+                      src={resolveMediaUrl(profileImage as ClinicImage) ?? ''}
                       alt={`${doctor.name} - Profile Image`}
                       width={600}
                       height={600}
@@ -237,9 +238,9 @@ export default async function DentistPage({ params }: DentistPageProps) {
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {galleryImages.map((image, index) =>
                       image ? (
-                        <ImageKit
+                        <MediaImage
                           key={index}
-                          src={(image as unknown as ClinicImage).image_url}
+                          src={resolveMediaUrl(image as ClinicImage) ?? ''}
                           width={350}
                           height={350}
                           sizes="(max-width: 600px) 100vw, 350px"
@@ -284,7 +285,7 @@ export default async function DentistPage({ params }: DentistPageProps) {
                         area={clinic.area?.name ?? ''}
                         image={
                           clinic.images?.[0]
-                            ? (clinic.images[0] as unknown as ClinicImage).image_url
+                            ? (clinic.images[0] as ClinicImage)
                             : undefined
                         }
                         isFeatured={isFeatured(clinic.slug)}

@@ -11,6 +11,7 @@ import { ArrowRightIcon } from 'lucide-react';
 import { isFeatured, isFeaturedPartner } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
+import { resolveMediaUrl } from '@/lib/media';
 import { absoluteUrl, cn, getPagination } from '@/lib/utils';
 
 import { getAreaBySlug, getAreaListings } from '@/helpers/areas';
@@ -20,7 +21,7 @@ import { getStateBySlug } from '@/helpers/states';
 import { LazyAdsArticle } from '@/components/ads/lazy-ads-article';
 import { ClinicCard } from '@/components/cards/clinic-card';
 import AddBookingForm from '@/components/forms/add-booking-form';
-import { ImageKit } from '@/components/image/image-kit';
+import { MediaImage } from '@/components/image/media-image';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import CollectionPageJsonLd from '@/components/structured-data/collection-page-json-ld';
 import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
@@ -201,6 +202,11 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
     },
   ];
 
+  const areaBackgroundSrc =
+    resolveMediaUrl({
+      r2_url: areaData.r2_url,
+    }) || resolveMediaUrl({ r2_url: areaData.state?.r2_url });
+
   return (
     <>
       <WebsiteJsonLd />
@@ -213,9 +219,9 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
       />
       <Wrapper className="relative overflow-hidden">
         {/* Optimized background image using Next.js Image */}
-        {(areaData.image || areaData.state?.image) && (
-          <ImageKit
-            src={areaData.image || areaData.state?.image || ''}
+        {areaBackgroundSrc && (
+          <MediaImage
+            src={areaBackgroundSrc}
             alt={`${areaData.name}, ${areaData.state?.name} aesthetic clinics background`}
             width={1920}
             height={600}
@@ -294,11 +300,7 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
                         name={clinic.name ?? ''}
                         address={clinic.address ?? ''}
                         phone={clinic.phone ?? ''}
-                        image={
-                          clinic.images?.[0]
-                            ? (clinic.images[0] as unknown as ClinicImage).image_url
-                            : undefined
-                        }
+                        image={clinic.images?.[0] as ClinicImage | undefined}
                         postalCode={clinic.postal_code ?? ''}
                         state={clinic.state?.name ?? areaData.state?.name ?? ''}
                         area={clinic.area?.name ?? areaData.name ?? ''}
@@ -345,11 +347,7 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
                             name={clinic.name ?? ''}
                             address={clinic.address ?? ''}
                             phone={clinic.phone ?? ''}
-                            image={
-                              clinic.images?.[0]
-                                ? (clinic.images[0] as unknown as ClinicImage).image_url
-                                : undefined
-                            }
+                            image={clinic.images?.[0] as ClinicImage | undefined}
                             postalCode={clinic.postal_code ?? ''}
                             state={areaData.state?.name ?? ''}
                             area={areaData.name ?? ''}
@@ -380,8 +378,8 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
             <div className="flex flex-col items-center justify-center gap-y-4">
               <div className="flex flex-col items-center justify-center">
                 <div className="relative size-64 md:size-96">
-                  <ImageKit
-                    src="lost-boy.png"
+                    <MediaImage
+                      src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/lost-boy.png"
                     alt="No aesthetic clinics found"
                     width={500}
                     height={500}

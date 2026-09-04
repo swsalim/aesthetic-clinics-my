@@ -6,8 +6,10 @@ export type ClinicImageEntry =
   | {
       kind: 'existing';
       id: string;
-      image_url: string;
-      imagekit_file_id: string;
+      image_url?: string | null;
+      imagekit_file_id?: string | null;
+      r2_key?: string | null;
+      r2_url?: string | null;
       display_order?: number;
     }
   | {
@@ -24,6 +26,8 @@ export function clinicImagesToEntries(images: ClinicImage[]): ClinicImageEntry[]
       id: image.id,
       image_url: image.image_url,
       imagekit_file_id: image.imagekit_file_id,
+      r2_key: image.r2_key,
+      r2_url: image.r2_url,
       display_order: image.display_order,
     }));
 }
@@ -43,11 +47,13 @@ export function entriesToClinicImages(entries: ClinicImageEntry[]): ClinicImage[
       id: entry.id,
       image_url: entry.image_url,
       imagekit_file_id: entry.imagekit_file_id,
+      r2_key: entry.r2_key,
+      r2_url: entry.r2_url,
       display_order: entry.display_order,
     }));
 }
 
-type UploadResult = { url: string; fileId: string };
+export type UploadResult = { url: string; key: string };
 
 export async function uploadOrderedNewImages(
   orderedImages: ClinicImageEntry[],
@@ -93,6 +99,7 @@ export async function persistClinicImageOrder(
   }
 
   const savedImages: ClinicImage[] = [];
+  const selectCols = 'id, r2_key, r2_url, display_order';
 
   for (let index = 0; index < orderedImages.length; index++) {
     const entry = orderedImages[index];
@@ -103,7 +110,7 @@ export async function persistClinicImageOrder(
         .from('clinic_images')
         .update({ display_order })
         .eq('id', entry.id)
-        .select('id, image_url, imagekit_file_id, display_order')
+        .select(selectCols)
         .single();
 
       if (error) {
@@ -124,11 +131,11 @@ export async function persistClinicImageOrder(
         .from('clinic_images')
         .insert({
           clinic_id: clinicId,
-          image_url: uploaded.url,
-          imagekit_file_id: uploaded.fileId,
+          r2_url: uploaded.url,
+          r2_key: uploaded.key,
           display_order,
         })
-        .select('id, image_url, imagekit_file_id, display_order')
+        .select(selectCols)
         .single();
 
       if (error) {

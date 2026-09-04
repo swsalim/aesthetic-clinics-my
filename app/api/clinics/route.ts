@@ -19,7 +19,7 @@ interface ClinicSubmissionData {
   address: string;
   phone: string;
   postal_code: string;
-  images?: Array<{ url: string; fileId: string }>;
+  images?: Array<{ url: string; key: string }>;
   youtube_url?: string;
   facebook_url?: string;
   instagram_url?: string;
@@ -43,7 +43,7 @@ const schema = z.object({
     .array(
       z.object({
         url: z.string().url(),
-        fileId: z.string(),
+        key: z.string(),
       }),
     )
     .optional(),
@@ -66,8 +66,8 @@ export async function POST(request: Request) {
     const googleMapsService = new GoogleMapsService();
     const databaseService = new DatabaseService();
 
-    // Images are already uploaded to ImageKit, so we can use them directly
-    const images: Array<{ url: string; fileId: string }> = validatedData.images || [];
+    // Images are already uploaded to R2, so we can use them directly
+    const images: Array<{ url: string; key: string }> = validatedData.images || [];
 
     // Geocode address
     const { lat, lng, placeId, neighborhood, city } = await googleMapsService.geocodeAddress(

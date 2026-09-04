@@ -23,7 +23,8 @@ import {
   type ClinicImageEntry,
 } from '@/lib/clinic-images';
 import { createClient } from '@/lib/supabase/client';
-import { cn, generateUniqueFilename, sanitizeHtmlField } from '@/lib/utils';
+import { uploadFileToR2, deleteFileFromR2 } from '@/lib/upload-r2-client';
+import { cn, sanitizeHtmlField } from '@/lib/utils';
 
 import {
   Command,
@@ -321,52 +322,26 @@ export default function FormAddClinic({ services, areas, states }: AddClinicForm
     e.target.value = '';
   };
 
-  const handleRemoveExistingImage = (imagekitFileId: string) => {
-    setImagesToRemove((prev) => [...prev, imagekitFileId]);
+  const handleRemoveExistingImage = (imageId: string) => {
+    setImagesToRemove((prev) => [...prev, imageId]);
   };
 
-  const uploadImageToImageKit = async (
-    imageFile: File,
-  ): Promise<{ url: string; fileId: string } | null> => {
+  const uploadImageToR2 = async (imageFile: File): Promise<{ url: string; key: string } | null> => {
     try {
-      // Validate file size (max 3MB)
       const maxSize = 3 * 1024 * 1024; // 3MB
       if (imageFile.size > maxSize) {
         throw new Error('Image file size must be less than 2MB');
       }
 
-      // Validate file type
       if (!imageFile.type.startsWith('image/')) {
         throw new Error('Please select a valid image file');
       }
 
-      const formData = new FormData();
-      formData.append('file', imageFile);
-      formData.append('folder', 'aesthetic-clinics-my/places');
-      formData.append('fileName', generateUniqueFilename(imageFile.name));
-
-      const response = await fetch('/api/upload-imagekit', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `Upload failed with status: ${response.status}`);
+      const result = await uploadFileToR2(imageFile, 'places');
+      if (!result) {
+        throw new Error('Failed to upload image');
       }
-
-      const data = await response.json();
-
-      if (data.success && data.imagekit_file_id) {
-        return {
-          url:
-            data.url ||
-            `https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/places/${data.imagekit_file_id}`,
-          fileId: data.imagekit_file_id,
-        };
-      } else {
-        throw new Error('Invalid response from image upload');
-      }
+      return result;
     } catch (error) {
       console.error('Image upload error:', error);
       toast({
@@ -388,29 +363,25 @@ export default function FormAddClinic({ services, areas, states }: AddClinicForm
       } = await supabase.auth.getUser();
       if (!user) throw new Error('User not found');
 
-      for (const imagekitFileId of imagesToRemove) {
+      for (const imageId of imagesToRemove) {
         try {
-          // Delete from to_be_reviewed_clinic_images table
+          const { data: imageRecord } = await supabase
+            .from('clinic_images')
+            .select('r2_key')
+            .eq('id', imageId)
+            .single();
+
           const { error: deleteError } = await supabase
             .from('clinic_images')
             .delete()
-            .eq('imagekit_file_id', imagekitFileId);
+            .eq('id', imageId);
 
           if (deleteError) {
             console.error('Error deleting image record:', deleteError);
           }
 
-          // Delete from ImageKit
-          const deleteResponse = await fetch('/api/delete-imagekit', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ imagekit_file_id: imagekitFileId }),
-          });
-
-          if (!deleteResponse.ok) {
-            console.error('Error deleting image from ImageKit:', imagekitFileId);
+          if (imageRecord?.r2_key) {
+            await deleteFileFromR2(imageRecord.r2_key);
           }
         } catch (error) {
           console.error('Error marking image for removal:', error);
@@ -477,7 +448,7 @@ export default function FormAddClinic({ services, areas, states }: AddClinicForm
           supabase,
           newClinic.id,
           orderedImages,
-          uploadImageToImageKit,
+          uploadImageToR2,
         );
       }
 

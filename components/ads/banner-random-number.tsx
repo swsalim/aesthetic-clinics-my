@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ArrowUpRightIcon } from 'lucide-react';
 
-import { ImageCloudinary } from '@/components/image/image-cloudinary';
+import { MediaImage } from '@/components/image/media-image';
 
 export default function BannerRandomnumber() {
   return (
@@ -16,9 +16,8 @@ export default function BannerRandomnumber() {
         <div className="flex flex-row items-center gap-x-4">
           <div className="mb-3 hidden w-12 sm:block md:mb-0 md:py-3">
             <div className="relative h-10 w-10">
-              <ImageCloudinary
-                src="randomnumberapp.png"
-                directory="logos"
+              <MediaImage
+                src="https://res.cloudinary.com/typeeighty/image/upload/f_auto,q_auto/dental-clinics-my/logos/randomnumberapp.png"
                 width={150}
                 height={150}
                 alt="Random Number App"

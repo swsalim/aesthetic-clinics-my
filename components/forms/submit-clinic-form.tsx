@@ -6,18 +6,18 @@ import { useForm } from 'react-hook-form';
 
 import Link from 'next/link';
 
-// Removed CloudinaryService import - now using ImageKit
+// Image uploads go to Cloudflare R2 via /api/upload-r2
 import type { ClinicArea, ClinicState } from '@/types/clinic';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import * as z from 'zod';
 
-import { generateUniqueFilename } from '@/lib/utils';
 import {
   createNewImageEntries,
   uploadOrderedNewImages,
   type ClinicImageEntry,
 } from '@/lib/clinic-images';
+import { uploadFileToR2 } from '@/lib/upload-r2-client';
 
 import { ClinicImageGallery } from '@/components/dashboard/clinic-image-gallery';
 import { Input } from '@/components/form-fields/input';
@@ -157,49 +157,22 @@ export default function SubmitClinicForm({ states, areas }: Props) {
     }
   };
 
-  // Upload image to ImageKit
-  const uploadImageToImageKit = async (
-    imageFile: File,
-  ): Promise<{ url: string; fileId: string } | null> => {
+  const uploadImageToR2 = async (imageFile: File): Promise<{ url: string; key: string } | null> => {
     try {
-      // Validate file size (max 2MB)
       const maxSize = 2 * 1024 * 1024; // 2MB
       if (imageFile.size > maxSize) {
         throw new Error('Image file size must be less than 2MB');
       }
 
-      // Validate file type
       if (!imageFile.type.startsWith('image/')) {
         throw new Error('Please select a valid image file');
       }
 
-      const formData = new FormData();
-      formData.append('file', imageFile);
-      formData.append('folder', 'aesthetic-clinics-my/places');
-      formData.append('fileName', generateUniqueFilename(imageFile.name));
-
-      const response = await fetch('/api/upload-imagekit', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `Upload failed with status: ${response.status}`);
+      const result = await uploadFileToR2(imageFile, 'places');
+      if (!result) {
+        throw new Error('Failed to upload image');
       }
-
-      const data = await response.json();
-
-      if (data.success && data.imagekit_file_id) {
-        return {
-          url:
-            data.url ||
-            `https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/places/${data.imagekit_file_id}`,
-          fileId: data.imagekit_file_id,
-        };
-      } else {
-        throw new Error('Invalid response from image upload');
-      }
+      return result;
     } catch (error) {
       console.error('Image upload error:', error);
       toast({
@@ -258,9 +231,9 @@ export default function SubmitClinicForm({ states, areas }: Props) {
       description: 'Please wait while we process your submission.',
     });
     try {
-      // Shared step: upload images to ImageKit in the user's chosen order.
+      // Shared step: upload images to R2 in the user's chosen order.
       // The returned array preserves display_order (index + 1) when saved to clinic_images.
-      const newImages = await uploadOrderedNewImages(orderedImages, uploadImageToImageKit);
+      const newImages = await uploadOrderedNewImages(orderedImages, uploadImageToR2);
 
       if (formData.price === 'instant') {
         // Instant listing (paid) workflow:

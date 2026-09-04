@@ -8,7 +8,7 @@ import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import { ImageCloudinary } from '@/components/image/image-cloudinary';
+import { MediaImage } from '@/components/image/media-image';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface ImageCarouselProps {
@@ -28,7 +28,7 @@ function ImageCarouselSkeleton() {
 function ImageSlide({ image, title, index }: { image: string; title: string; index: number }) {
   return (
     <div className="relative h-[200px] w-full overflow-hidden rounded-md sm:h-[270px] md:h-[350px]">
-      <ImageCloudinary
+      <MediaImage
         src={image}
         alt={`Photo ${index + 1} for ${title}`}
         priority={index === 0}

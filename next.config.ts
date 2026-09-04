@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'media.aestheticclinics.my',
+        pathname: '/**',
+      },
+      // Legacy hosts kept during backfill (resolveMediaUrl fallback)
+      {
+        protocol: 'https',
         hostname: 'res.cloudinary.com',
         pathname: '/**',
       },

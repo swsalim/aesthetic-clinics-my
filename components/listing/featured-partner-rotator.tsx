@@ -10,7 +10,7 @@ import { ArrowRightIcon, MapPinIcon, SparklesIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 import { ClinicStatus } from '@/components/clinic-status';
-import { ImageKit } from '@/components/image/image-kit';
+import { MediaImage } from '@/components/image/media-image';
 import { buttonVariants } from '@/components/ui/button';
 import { StarRating } from '@/components/ui/star-rating';
 
@@ -71,7 +71,7 @@ function useRotatingIndex(length: number) {
 function PartnerImage({ partner }: { partner: FeaturedPartnerCard }) {
   if (partner.image) {
     return (
-      <ImageKit
+      <MediaImage
         src={partner.image}
         alt={partner.name}
         width={800}

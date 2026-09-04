@@ -14,6 +14,7 @@ import * as z from 'zod';
 
 // Lib imports
 import { createClient } from '@/lib/supabase/client';
+import { uploadFileToR2, deleteFileFromR2 } from '@/lib/upload-r2-client';
 import { sanitizeHtmlField } from '@/lib/utils';
 
 import { FileInput } from '@/components/form-fields/file';
@@ -49,12 +50,10 @@ export default function FormEditState({ state }: EditStateFormProps) {
   const router = useRouter();
   const supabase = createClient();
 
-  const [currentImage, setCurrentImage] = useState<string | undefined>(state.image || '');
-  const [currentImagekitFileId, setCurrentImagekitFileId] = useState<string | undefined>(
-    state.imagekit_file_id || '',
-  );
+  const [currentImage, setCurrentImage] = useState<string | undefined>(state.r2_url || '');
+  const [currentR2Key, setCurrentR2Key] = useState<string | undefined>(state.r2_key || '');
   const [shouldRemoveImage, setShouldRemoveImage] = useState(false);
-  const [imageToRemove, setImageToRemove] = useState<string | null>(null);
+  const [r2KeyToRemove, setR2KeyToRemove] = useState<string | null>(null);
 
   const form = useForm<ClinicStateFormData>({
     resolver: zodResolver(clinicProfileSchema),
@@ -82,41 +81,16 @@ export default function FormEditState({ state }: EditStateFormProps) {
     form.setValue('image', '');
   };
 
-  const handleImagekitImageRemove = (e: React.MouseEvent) => {
+  const handleExistingImageRemove = (e: React.MouseEvent) => {
     e.preventDefault();
-    // Store the file ID before clearing it so we can delete from ImageKit
-    const fileIdToRemove = currentImagekitFileId;
+    const keyToRemove = currentR2Key;
     setCurrentImage(undefined);
-    setCurrentImagekitFileId(undefined);
+    setCurrentR2Key(undefined);
     setShouldRemoveImage(true);
     form.setValue('image', '');
 
-    // Store the file ID in a ref or state that persists until form submission
-    if (fileIdToRemove) {
-      setImageToRemove(fileIdToRemove);
-    }
-  };
-
-  const deleteImagekitImage = async (fileId: string): Promise<boolean> => {
-    try {
-      const response = await fetch('/api/delete-imagekit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          imagekit_file_id: fileId,
-        }),
-      });
-
-      if (!response.ok) {
-        console.warn('Failed to delete image from ImageKit');
-        return false;
-      }
-      return true;
-    } catch (error) {
-      console.error('Error deleting image from ImageKit:', error);
-      return false;
+    if (keyToRemove) {
+      setR2KeyToRemove(keyToRemove);
     }
   };
 
@@ -134,7 +108,7 @@ export default function FormEditState({ state }: EditStateFormProps) {
               if (!isCurrentImage) {
                 handleImageRemove();
               } else {
-                handleImagekitImageRemove(e);
+                handleExistingImageRemove(e);
               }
             }}
             aria-label="Remove image"
@@ -157,57 +131,29 @@ export default function FormEditState({ state }: EditStateFormProps) {
     console.log('onSubmit ~ data');
     console.log(data);
     try {
-      let imagekitImage: string | undefined;
-      let imagekitFileId: string | undefined;
+      let newR2Url: string | undefined;
+      let newR2Key: string | undefined;
 
-      // Handle image removal/replacement logic
-      if (shouldRemoveImage && imageToRemove) {
-        await deleteImagekitImage(imageToRemove);
-        // Clear the current image references since we're removing the image
+      if (shouldRemoveImage && r2KeyToRemove) {
+        await deleteFileFromR2(r2KeyToRemove);
         setCurrentImage(undefined);
-        setCurrentImagekitFileId(undefined);
+        setCurrentR2Key(undefined);
       }
 
-      // If we have a new image and there's an existing ImageKit file ID, delete the old image
-      // (This handles the case where we're replacing an image, not just removing it)
-      if (watchImage && currentImagekitFileId && !shouldRemoveImage) {
-        await deleteImagekitImage(currentImagekitFileId);
+      if (watchImage && currentR2Key && !shouldRemoveImage) {
+        await deleteFileFromR2(currentR2Key);
       }
 
-      // Upload new image if provided
       if (watchImage && watchImage instanceof globalThis.File) {
         try {
-          const formData = new FormData();
-          formData.append('file', watchImage);
-          formData.append('folder', 'aesthetic-clinics-my/location');
-          formData.append('fileName', `state-${state.slug}-${Date.now()}`);
-          formData.append('tags', 'state,thumbnail');
-          formData.append('useUniqueFileName', 'true');
-
-          const response = await fetch('/api/upload-imagekit', {
-            method: 'POST',
-            body: formData,
-          });
-
-          if (!response.ok) {
+          const result = await uploadFileToR2(watchImage, 'location');
+          if (!result) {
             throw new Error('Failed to upload image');
           }
-
-          const imagekitData = (await response.json()) as unknown as {
-            success: boolean;
-            imagekit_file_id: string;
-            url: string;
-          };
-
-          if (imagekitData.success && imagekitData.imagekit_file_id) {
-            imagekitImage =
-              imagekitData.url ||
-              `https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/location/${imagekitData.imagekit_file_id}`;
-            setCurrentImagekitFileId(imagekitData.imagekit_file_id);
-            imagekitFileId = imagekitData.imagekit_file_id;
-          } else {
-            throw new Error('Invalid response from image upload');
-          }
+          newR2Url = result.url;
+          newR2Key = result.key;
+          setCurrentR2Key(result.key);
+          setCurrentImage(result.url);
         } catch (error) {
           console.error('Image upload error:', error);
           toast({
@@ -219,39 +165,36 @@ export default function FormEditState({ state }: EditStateFormProps) {
         }
       }
 
-      // Determine the final image values based on removal state and new image upload
-      // If we're removing AND uploading new image, use the new image
-      // If we're just removing without new image, set to null
-      const finalImage = shouldRemoveImage && !watchImage ? null : imagekitImage || currentImage;
-      const finalImagekitFileId =
-        shouldRemoveImage && !watchImage ? null : imagekitFileId || undefined;
-
-      const finalData = {
-        ...data,
+      const updatePayload: {
+        id: string | undefined;
+        name: string;
+        description: string | null | undefined;
+        short_description: string | null | undefined;
+        slug: string;
+        r2_url?: string | null;
+        r2_key?: string | null;
+      } = {
         id: state.id,
+        name: data.name,
         description: sanitizeHtmlField(data.description),
         short_description: sanitizeHtmlField(data.short_description),
-        image: finalImage,
-        imagekit_file_id: finalImagekitFileId,
+        slug: data.slug,
       };
 
-      console.log('finalData');
-      console.log(finalData);
+      if (newR2Url && newR2Key) {
+        updatePayload.r2_url = newR2Url;
+        updatePayload.r2_key = newR2Key;
+      } else if (shouldRemoveImage && !watchImage) {
+        updatePayload.r2_url = null;
+        updatePayload.r2_key = null;
+      }
 
-      // Update area information
+      console.log('finalData');
+      console.log(updatePayload);
+
       const { data: updatedState, error: updateError } = await supabase
         .from('states')
-        .upsert({
-          id: state.id,
-          // GENERAL
-          name: finalData.name,
-          description: finalData.description,
-          short_description: finalData.short_description,
-          slug: finalData.slug,
-          // IMAGE RELATED
-          image: finalData.image,
-          imagekit_file_id: finalData.imagekit_file_id,
-        })
+        .upsert(updatePayload)
         .select()
         .single();
 
@@ -260,7 +203,6 @@ export default function FormEditState({ state }: EditStateFormProps) {
       }
 
       if (updatedState) {
-        // Update the form with the new data
         reset({
           name: updatedState.name || '',
           slug: updatedState.slug || '',
@@ -269,9 +211,8 @@ export default function FormEditState({ state }: EditStateFormProps) {
           image: '',
         });
 
-        // Update the current images state
-        setCurrentImage(updatedState.image || '');
-        setCurrentImagekitFileId(updatedState.imagekit_file_id || '');
+        setCurrentImage(updatedState.r2_url || '');
+        setCurrentR2Key(updatedState.r2_key || '');
       }
 
       toast({
@@ -279,9 +220,8 @@ export default function FormEditState({ state }: EditStateFormProps) {
         description: 'State updated successfully',
       });
 
-      // Reset form state
       setShouldRemoveImage(false);
-      setImageToRemove(null);
+      setR2KeyToRemove(null);
       router.refresh();
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to update state';

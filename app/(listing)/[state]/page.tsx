@@ -11,6 +11,7 @@ import { ArrowRightIcon, PersonStandingIcon } from 'lucide-react';
 import { isFeatured, isFeaturedPartner } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
+import { resolveMediaUrl } from '@/lib/media';
 import { absoluteUrl, cn, getPagination } from '@/lib/utils';
 
 import { getFeaturedListings } from '@/helpers/clinics';
@@ -19,7 +20,7 @@ import { getStateBySlug, getStateListings } from '@/helpers/states';
 
 import { LazyAdsArticle } from '@/components/ads/lazy-ads-article';
 import { ClinicCard } from '@/components/cards/clinic-card';
-import { ImageKit } from '@/components/image/image-kit';
+import { MediaImage } from '@/components/image/media-image';
 import {
   getFeaturedListingCardPlaceholder,
   getFeaturedPartnerCardPlaceholder,
@@ -190,6 +191,10 @@ export default async function StatePage({ params, searchParams }: StatePageProps
     },
   ];
 
+  const stateBackgroundSrc = resolveMediaUrl({
+    r2_url: stateData.r2_url,
+  });
+
   return (
     <>
       <WebsiteJsonLd />
@@ -202,9 +207,9 @@ export default async function StatePage({ params, searchParams }: StatePageProps
       />
       <Wrapper className="relative overflow-hidden">
         {/* Optimized background image using Next.js Image */}
-        {stateData.image && (
-          <ImageKit
-            src={stateData.image}
+        {stateBackgroundSrc && (
+          <MediaImage
+            src={stateBackgroundSrc}
             alt={`${stateData.name} aesthetic clinics background`}
             width={1920}
             height={600}
@@ -258,9 +263,9 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                         href={`/doctor/${doctor.slug}`}
                         className="relative size-16 overflow-hidden rounded-full outline -outline-offset-1 outline-blue-200 ring-2 ring-blue-300"
                         key={`${doctor.id}-${index}`}>
-                        {doctor.images?.[0] && (
-                          <ImageKit
-                            src={doctor.images?.[0].image_url}
+                        {resolveMediaUrl(doctor.images?.[0]) && (
+                          <MediaImage
+                            src={resolveMediaUrl(doctor.images?.[0]) ?? ''}
                             alt={`Photo of ${doctor.name}`}
                             width={100}
                             height={100}
@@ -311,11 +316,7 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                           postalCode={clinic.postal_code ?? ''}
                           state={clinic.state?.name ?? stateData.name}
                           area={clinic.area?.name ?? ''}
-                          image={
-                            clinic.images?.[0]
-                              ? (clinic.images[0] as unknown as ClinicImage).image_url
-                              : undefined
-                          }
+                          image={clinic.images?.[0] as ClinicImage | undefined}
                           rating={clinic.rating}
                           isFeatured={isFeatured(clinic.slug)}
                           isFeaturedPartner={isFeaturedPartner(clinic.slug)}
@@ -380,11 +381,7 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                             postalCode={clinic.postal_code ?? ''}
                             state={clinic.state?.name ?? ''}
                             area={clinic.area?.name ?? ''}
-                            image={
-                              clinic.images?.[0]
-                                ? (clinic.images[0] as unknown as ClinicImage).image_url
-                                : undefined
-                            }
+                            image={clinic.images?.[0] as ClinicImage | undefined}
                             rating={clinic.rating}
                             isFeatured={isFeatured(clinic.slug) || (clinic.is_featured ?? false)}
                             isFeaturedPartner={isFeaturedPartner(clinic.slug)}
@@ -403,8 +400,8 @@ export default async function StatePage({ params, searchParams }: StatePageProps
               <div className="flex flex-col items-center justify-center gap-y-4">
                 <div className="flex flex-col items-center justify-center">
                   <div className="relative size-64 md:size-96">
-                    <ImageKit
-                      src="lost-boy.png"
+                    <MediaImage
+                      src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/lost-boy.png"
                       alt="No aesthetic clinics found"
                       width={500}
                       height={500}

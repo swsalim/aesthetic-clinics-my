@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 
-import { ClinicDoctor, ClinicImage } from '@/types/clinic';
+import { ClinicDoctor } from '@/types/clinic';
 import { AwardIcon, HospitalIcon, MapPinIcon, SquareUserRoundIcon } from 'lucide-react';
 
-import { ImageKit } from '@/components/image/image-kit';
+import { resolveMediaUrl } from '@/lib/media';
+
+import { MediaImage } from '@/components/image/media-image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -17,6 +19,7 @@ interface DoctorCardProps {
 
 export function DoctorCard({ doctor }: DoctorCardProps) {
   const firstImage = doctor.images && doctor.images.length > 0 ? doctor.images[0] : null;
+  const imageSrc = resolveMediaUrl(firstImage);
   const primaryClinic = doctor.clinics && doctor.clinics.length > 0 ? doctor.clinics[0] : null;
 
   return (
@@ -26,9 +29,9 @@ export function DoctorCard({ doctor }: DoctorCardProps) {
       prefetch={false}>
       <Card className="h-full overflow-hidden rounded-2xl" role="article">
         <CardHeader className="relative h-72 overflow-hidden p-0">
-          {firstImage ? (
-            <ImageKit
-              src={(firstImage as unknown as ClinicImage).image_url}
+          {imageSrc ? (
+            <MediaImage
+              src={imageSrc}
               alt={doctor.name}
               width={400}
               height={600}

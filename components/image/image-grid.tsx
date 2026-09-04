@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { ImageCloudinary } from '@/components/image/image-cloudinary';
+import { MediaImage } from '@/components/image/media-image';
 import { ImagePlaceholder } from '@/components/image/image-placeholder';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -45,7 +45,7 @@ function GridImage({
   return (
     <div className="relative h-full w-full overflow-hidden">
       <div className="aspect-h-4 aspect-w-3 lg:aspect-h-3 lg:aspect-w-4 relative h-full w-full">
-        <ImageCloudinary
+        <MediaImage
           src={src}
           alt={alt}
           priority={priority}
