@@ -1,31 +1,36 @@
 /**
- * Shared media size presets — keep device/image sizes in sync with next.config.ts.
+ * Shared media size presets — keep in sync with next.config.ts.
  *
- * Intentionally small set so Next (or future Cloudflare /cdn-cgi/image) generates
- * fewer unique transforms across clinics / doctors / areas / states.
+ * Resizing is handled by Next.js / Vercel Image Optimization (`next/image`).
+ * Presets keep call-site widths consistent across clinics / doctors / areas / states.
  */
 
-export const MEDIA_DEVICE_SIZES = [350, 600, 900, 1200, 1920] as const;
-export const MEDIA_IMAGE_SIZES = [64, 128, 256] as const;
+/** Responsive srcset (`sizes` with vw/%). */
+export const MEDIA_DEVICE_SIZES = [640, 1080, 1920] as const;
+
+/** Fixed / small `sizes` (avatars, cards). */
+export const MEDIA_IMAGE_SIZES = [128, 256, 384] as const;
+
+export const MEDIA_QUALITY = 75;
 
 export const MEDIA = {
-  /** Avatars, map chips, tiny thumbs */
+  /** Avatars, logo, ad icons, doctor chips */
   avatar: {
     width: 128,
     height: 128,
     sizes: '128px',
   },
-  /** Gallery / list thumbs */
+  /** Gallery secondary thumbs */
   thumb: {
-    width: 350,
-    height: 350,
-    sizes: '(max-width: 600px) 100vw, 350px',
+    width: 384,
+    height: 384,
+    sizes: '(max-width: 600px) 100vw, 384px',
   },
   /** Clinic cards (landscape) */
   card: {
     width: 400,
     height: 300,
-    sizes: '(max-width: 600px) 100vw, 350px',
+    sizes: '(max-width: 600px) 100vw, 400px',
   },
   /** Doctor cards (portrait) */
   cardPortrait: {
@@ -33,47 +38,47 @@ export const MEDIA = {
     height: 600,
     sizes: '(max-width: 600px) 50vw, 400px',
   },
-  /** Main gallery tile, dashboard previews, clinic detail */
+  /** Main gallery, profiles, dashboard previews */
   gallery: {
-    width: 600,
-    height: 600,
-    sizes: '(max-width: 600px) 100vw, 600px',
+    width: 800,
+    height: 800,
+    sizes: '(max-width: 800px) 100vw, 800px',
   },
   /** Featured / partner spotlight */
   featured: {
-    width: 900,
-    height: 675,
+    width: 1080,
+    height: 810,
     sizes: '(max-width: 1024px) 100vw, 55vw',
   },
-  /** Lightbox / large grid hero tile */
+  /** Lightbox / large grids */
   lightbox: {
-    width: 1200,
-    height: 1200,
-    sizes: '(max-width: 1200px) 100vw, 1200px',
+    width: 1080,
+    height: 1080,
+    sizes: '(max-width: 1080px) 100vw, 1080px',
   },
   /** State / area page banners */
   hero: {
-    width: 1200,
-    height: 400,
+    width: 1920,
+    height: 640,
     sizes: '100vw',
   },
-  /** Explore-states style 16:9 tiles */
+  /** Explore-states 16:9 tiles */
   landscapeMd: {
-    width: 600,
-    height: 338,
+    width: 640,
+    height: 360,
     sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw',
   },
   /** Browse / wide state cards */
   landscapeLg: {
-    width: 900,
-    height: 386,
+    width: 1080,
+    height: 463,
     sizes: '100vw',
   },
   /** Area grid thumbs */
   areaThumb: {
-    width: 256,
-    height: 256,
-    sizes: '200px',
+    width: 384,
+    height: 384,
+    sizes: '256px',
   },
 } as const;
 

@@ -81,7 +81,6 @@ export function ClinicCard({
             width={MEDIA.card.width}
             height={MEDIA.card.height}
             sizes={MEDIA.card.sizes}
-            quality={85}
             className="h-full w-full object-cover"
             priority={false}
           />

@@ -24,8 +24,8 @@ function resolveSrc(src: string, directory?: string | null): string {
 
 /**
  * Generic next/image wrapper for R2 (and absolute legacy ImageKit/Cloudinary URLs during migration).
- * Prefer presets from `@/lib/media-sizes` at call sites so transform widths stay small.
- * Resizing in production is handled by Cloudflare via `image-loader.ts` (not Vercel).
+ * Prefer presets from `@/lib/media-sizes` at call sites.
+ * Resizing is handled by Next.js / Vercel Image Optimization.
  */
 export function MediaImage({
   src = 'placeholder.jpg',

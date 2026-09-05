@@ -78,7 +78,6 @@ function PartnerImage({ partner }: { partner: FeaturedPartnerCard }) {
         width={MEDIA.featured.width}
         height={MEDIA.featured.height}
         sizes={MEDIA.featured.sizes}
-        quality={85}
         priority
         className="h-56 w-full object-cover sm:h-72 lg:h-full"
       />

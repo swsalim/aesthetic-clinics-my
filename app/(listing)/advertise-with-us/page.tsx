@@ -225,7 +225,6 @@ function FeaturedListingPreview() {
             width={MEDIA.lightbox.width}
             height={MEDIA.lightbox.height}
             sizes={MEDIA.featured.sizes}
-            quality={85}
             className="h-auto w-full object-cover"
           />
           <figcaption className="border-t border-gray-100 px-4 py-3 text-sm font-medium text-gray-600 dark:border-gray-800 dark:text-gray-300">
@@ -240,7 +239,6 @@ function FeaturedListingPreview() {
             width={MEDIA.lightbox.width}
             height={MEDIA.lightbox.height}
             sizes={MEDIA.featured.sizes}
-            quality={85}
             className="h-auto w-full object-cover"
           />
           <figcaption className="border-t border-gray-100 px-4 py-3 text-sm font-medium text-gray-600 dark:border-gray-800 dark:text-gray-300">

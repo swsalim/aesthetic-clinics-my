@@ -227,7 +227,6 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
             width={MEDIA.hero.width}
             height={MEDIA.hero.height}
             priority
-            quality={85}
             sizes={MEDIA.hero.sizes}
             className="absolute inset-0 h-full w-full object-cover"
             style={{
@@ -385,7 +384,6 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
                     width={MEDIA.gallery.width}
                     height={MEDIA.gallery.height}
                     sizes={MEDIA.gallery.sizes}
-                    quality={85}
                     className="h-full w-full object-cover"
                   />
                 </div>

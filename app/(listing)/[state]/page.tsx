@@ -215,7 +215,6 @@ export default async function StatePage({ params, searchParams }: StatePageProps
             width={MEDIA.hero.width}
             height={MEDIA.hero.height}
             priority
-            quality={85}
             sizes={MEDIA.hero.sizes}
             className="absolute inset-0 h-full w-full object-cover"
             style={{
@@ -271,7 +270,6 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                             width={MEDIA.avatar.width}
                             height={MEDIA.avatar.height}
                             sizes={MEDIA.avatar.sizes}
-                            quality={85}
                             priority
                             className="h-full w-full object-cover"
                           />
@@ -408,7 +406,6 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                       height={MEDIA.gallery.height}
                       className="h-full w-full object-cover"
                       sizes={MEDIA.gallery.sizes}
-                      quality={85}
                     />
                   </div>
                 </div>

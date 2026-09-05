@@ -47,7 +47,7 @@ Source of truth for finishing **aesthetic-clinics-my** and replicating on **dent
 - **Non-breaking DB:** keep ImageKit/legacy columns; add `r2_key` + `r2_url`.
 - New uploads write **only** R2 columns (do not write `image_url` / `imagekit_file_id` for new rows).
 - Serving: `resolveMediaUrl` prefers `r2_url`, then falls back to ImageKit/legacy URLs.
-- Image sizes: shared presets in [`lib/media-sizes.ts`](lib/media-sizes.ts); `next.config.ts` `deviceSizes` / `imageSizes` stay in sync.
+- Image sizes: shared presets in [`lib/media-sizes.ts`](lib/media-sizes.ts); resizing via **Vercel** `next/image` (not Cloudflare `/cdn-cgi/image`).
 - RPCs return **both** ImageKit and R2 fields so old and new app code keep working.
 - Delete ImageKit files **last**, after verify (dry-run default).
 - Editor / Vercel Blob uploads stay out of scope.
@@ -248,16 +248,19 @@ Update every upload/delete to use `uploadFileToR2` / `deleteFileFromR2` and pers
 
 #### Image size presets (required for dental port)
 
-Use shared presets from [`lib/media-sizes.ts`](lib/media-sizes.ts) at every `MediaImage` call site — do **not** invent one-off widths. This keeps Next (and a future Cloudflare `/cdn-cgi/image` loader) generating a small transform set.
+Use shared presets from [`lib/media-sizes.ts`](lib/media-sizes.ts) at every `MediaImage` call site — do **not** invent one-off widths.
 
-**`next.config.ts` must import the same breakpoints:**
+**Resizing:** Next.js / **Vercel Image Optimization** (default `next/image`). Do **not** use a Cloudflare `/cdn-cgi/image` custom loader — CF unique-transform pricing is more expensive for this traffic pattern.
+
+**`next.config.ts`:**
 
 ```ts
 import { MEDIA_DEVICE_SIZES, MEDIA_IMAGE_SIZES } from './lib/media-sizes';
 
 images: {
-  deviceSizes: [...MEDIA_DEVICE_SIZES], // [350, 600, 900, 1200, 1920]
-  imageSizes: [...MEDIA_IMAGE_SIZES],   // [64, 128, 256]
+  // Default Vercel optimizer — no loader / loaderFile
+  deviceSizes: [...MEDIA_DEVICE_SIZES], // [640, 1080, 1920]
+  imageSizes: [...MEDIA_IMAGE_SIZES],   // [128, 256, 384]
   remotePatterns: [ /* media.<site> + legacy hosts */ ],
 }
 ```
@@ -267,16 +270,16 @@ images: {
 | Preset | W×H | Typical use |
 |--------|-----|-------------|
 | `avatar` | 128×128 | Logo, doctor chips, ad icons |
-| `thumb` | 350×350 | Gallery secondary thumbs |
+| `thumb` | 384×384 | Gallery secondary thumbs |
 | `card` | 400×300 | Clinic cards |
 | `cardPortrait` | 400×600 | Doctor cards |
-| `gallery` | 600×600 | Main gallery, profiles, dashboard previews |
-| `featured` | 900×675 | Featured partner spotlight |
-| `lightbox` | 1200×1200 | Lightbox / large grids |
-| `hero` | 1200×400 | State/area page banners |
-| `landscapeMd` | 600×338 | Explore-states tiles |
-| `landscapeLg` | 900×386 | Browse state banners |
-| `areaThumb` | 256×256 | Explore-areas grid |
+| `gallery` | 800×800 | Main gallery, profiles, dashboard |
+| `featured` | 1080×810 | Featured partner spotlight |
+| `lightbox` | 1080×1080 | Lightbox / large grids |
+| `hero` | 1920×640 | State/area page banners |
+| `landscapeMd` | 640×360 | Explore-states tiles |
+| `landscapeLg` | 1080×463 | Browse state banners |
+| `areaThumb` | 384×384 | Explore-areas grid |
 
 ```tsx
 import { MEDIA } from '@/lib/media-sizes';
@@ -290,20 +293,7 @@ import { MEDIA } from '@/lib/media-sizes';
 />
 ```
 
-**Production:** transforms go through **Cloudflare** via [`image-loader.ts`](image-loader.ts) + `next.config.ts` (`loader: 'custom'`). Example:
-
-```text
-https://media.aestheticclinics.my/cdn-cgi/image/width=600,quality=75,format=auto/places/<key>.jpg
-```
-
-**Requirements:**
-
-1. Image Transformations enabled on the Cloudflare zone that serves `media.<site>` (same zone as the site if the media hostname is a subdomain).
-2. `NEXT_PUBLIC_R2_PUBLIC_URL` points at that media host.
-3. `NEXT_PUBLIC_CF_IMAGE_TRANSFORMS=true` (default behavior when unset in production). Set `false` to serve R2 originals without `/cdn-cgi/image`.
-4. Local `next dev` always serves originals (CF path is not used on localhost).
-
-Legacy ImageKit/Cloudinary URLs and local `/images/...` paths are left untransformed.
+Legacy ImageKit/Cloudinary URLs and local `/images/...` still work via `remotePatterns` / static files.
 
 **Temporary legacy absolute URLs (aesthetic, until static upload to R2):**
 
@@ -411,7 +401,6 @@ flowchart LR
 ### New files
 
 - `lib/r2.ts`, `lib/r2-public.ts`, `lib/media.ts`, `lib/media-sizes.ts`, `lib/upload-r2-client.ts`
-- `image-loader.ts` (Cloudflare `/cdn-cgi/image` next/image loader)
 - `components/image/media-image.tsx`
 - `app/api/upload-r2/route.ts`, `app/api/delete-r2/route.ts`
 - `tasks/backfill-r2-from-imagekit.ts`, `tasks/delete-imagekit-assets.ts`

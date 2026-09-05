@@ -4,9 +4,7 @@ import { MEDIA_DEVICE_SIZES, MEDIA_IMAGE_SIZES } from './lib/media-sizes';
 
 const nextConfig: NextConfig = {
   images: {
-    // Cloudflare /cdn-cgi/image via image-loader.ts (skips Vercel Image Optimization).
-    loader: 'custom',
-    loaderFile: './image-loader.ts',
+    // Default Next.js / Vercel Image Optimization (no custom Cloudflare loader).
     // Keep in sync with lib/media-sizes.ts presets used by MediaImage call sites.
     deviceSizes: [...MEDIA_DEVICE_SIZES],
     imageSizes: [...MEDIA_IMAGE_SIZES],
