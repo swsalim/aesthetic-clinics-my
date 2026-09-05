@@ -2,8 +2,9 @@
  * Backfill existing ImageKit/Cloudinary media into Cloudflare R2.
  * Populates r2_key + r2_url only — never clears ImageKit columns.
  *
- * Safe to re-run: only rows with r2_key IS NULL are processed, so a mid-run
- * stop can continue by running the same command again.
+ * Safe to re-run: only rows with r2_key IS NULL are processed.
+ * Uses keyset pagination (id > lastSeen) so rows skipped for "no source URL"
+ * do not cause an infinite loop (they stay pending forever otherwise).
  *
  * Usage:
  *   npm run backfill-r2
@@ -156,15 +157,23 @@ async function fetchBatch(
   supabase: SupabaseClient,
   table: TableName,
   batchSize: number,
+  afterId: string | null,
 ): Promise<Record<string, unknown>[]> {
-  // Always start at 0: completed rows drop out of r2_key IS NULL, so the next
-  // page of pending work is always the new head of the filtered set.
-  const { data, error } = await supabase
+  // Keyset pagination: advance past the last seen id.
+  // Skipped rows (no source URL) stay r2_key IS NULL, so always using
+  // range(0, N) would re-fetch the same head forever.
+  let query = supabase
     .from(table)
     .select('*')
     .is('r2_key', null)
     .order('id', { ascending: true })
-    .range(0, batchSize - 1);
+    .limit(batchSize);
+
+  if (afterId) {
+    query = query.gt('id', afterId);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     throw new Error(`Failed to load ${table}: ${error.message}`);
@@ -236,6 +245,7 @@ async function backfillTable(
   let fail = 0;
   let processed = 0;
   let batchNum = 0;
+  let afterId: string | null = null;
 
   while (true) {
     if (budget.remaining !== null && budget.remaining <= 0) {
@@ -245,7 +255,7 @@ async function backfillTable(
 
     const take =
       budget.remaining !== null ? Math.min(BATCH_SIZE, budget.remaining) : BATCH_SIZE;
-    const rows = await fetchBatch(supabase, params.table, take);
+    const rows = await fetchBatch(supabase, params.table, take, afterId);
 
     if (rows.length === 0) {
       break;
@@ -277,6 +287,10 @@ async function backfillTable(
       }
     }
 
+    // Always advance past this page (including skips), or we loop forever on
+    // rows that have no source URL and never get an r2_key.
+    afterId = rows[rows.length - 1].id as string;
+
     if (rows.length < take) {
       break;
     }
@@ -285,7 +299,7 @@ async function backfillTable(
       await sleep(DELAY_MS);
     }
 
-    // Dry-run would loop forever on the same pending head; stop after one pass.
+    // Dry-run: one page is enough to preview.
     if (!EXECUTE) {
       break;
     }

@@ -212,7 +212,6 @@ export type Database = {
           created_at: string | null
           featured_video: string | null
           id: string
-          images: string[] | null
           is_active: boolean | null
           is_featured: boolean | null
           modified_at: string | null
@@ -227,7 +226,6 @@ export type Database = {
           created_at?: string | null
           featured_video?: string | null
           id?: string
-          images?: string[] | null
           is_active?: boolean | null
           is_featured?: boolean | null
           modified_at?: string | null
@@ -242,7 +240,6 @@ export type Database = {
           created_at?: string | null
           featured_video?: string | null
           id?: string
-          images?: string[] | null
           is_active?: boolean | null
           is_featured?: boolean | null
           modified_at?: string | null
@@ -552,7 +549,6 @@ export type Database = {
           facebook_url: string | null
           featured_video: string | null
           id: string
-          images: string[] | null
           instagram_url: string | null
           is_active: boolean | null
           is_featured: boolean | null
@@ -586,7 +582,6 @@ export type Database = {
           facebook_url?: string | null
           featured_video?: string | null
           id?: string
-          images?: string[] | null
           instagram_url?: string | null
           is_active?: boolean | null
           is_featured?: boolean | null
@@ -620,7 +615,6 @@ export type Database = {
           facebook_url?: string | null
           featured_video?: string | null
           id?: string
-          images?: string[] | null
           instagram_url?: string | null
           is_active?: boolean | null
           is_featured?: boolean | null
@@ -672,7 +666,6 @@ export type Database = {
           facebook_url: string | null
           featured_video: string | null
           id: string
-          images: string[] | null
           instagram_url: string | null
           is_active: boolean | null
           is_featured: boolean | null
@@ -706,7 +699,6 @@ export type Database = {
           facebook_url?: string | null
           featured_video?: string | null
           id?: string
-          images?: string[] | null
           instagram_url?: string | null
           is_active?: boolean | null
           is_featured?: boolean | null
@@ -740,7 +732,6 @@ export type Database = {
           facebook_url?: string | null
           featured_video?: string | null
           id?: string
-          images?: string[] | null
           instagram_url?: string | null
           is_active?: boolean | null
           is_featured?: boolean | null

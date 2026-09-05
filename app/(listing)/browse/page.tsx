@@ -11,6 +11,7 @@ import { siteConfig } from '@/config/site';
 
 import { createAdminClient } from '@/lib/supabase';
 import { resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 import { absoluteUrl } from '@/lib/utils';
 
 import { MediaImage } from '@/components/image/media-image';
@@ -233,9 +234,9 @@ export default async function BrowsePage() {
                           'https://res.cloudinary.com/typeeighty/image/upload/f_auto,q_auto/dental-clinics-my/placeholder-location.jpg'
                         }
                         alt={state.name}
-                        width={960}
-                        height={411}
-                        sizes="100vw"
+                        width={MEDIA.landscapeLg.width}
+                        height={MEDIA.landscapeLg.height}
+                        sizes={MEDIA.landscapeLg.sizes}
                         className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-gray-900/85 via-gray-900/30 to-transparent" />

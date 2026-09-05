@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import Link from 'next/link';
 
+import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
 import { MediaImage } from '@/components/image/media-image';
@@ -100,8 +101,8 @@ export default function ImageCaption({
   noMarginTop = false,
   directory,
 }: ImageCaptionProps) {
-  const defaultWidth = fullBleed ? 1000 : 800;
-  const defaultHeight = fullBleed ? 1000 : 800;
+  const defaultWidth = fullBleed ? MEDIA.lightbox.width : MEDIA.featured.width;
+  const defaultHeight = fullBleed ? MEDIA.lightbox.height : MEDIA.featured.height;
 
   const imageContent = (
     <ImageWrapper className={className} isPortrait={isPortrait} fullBleed={fullBleed}>

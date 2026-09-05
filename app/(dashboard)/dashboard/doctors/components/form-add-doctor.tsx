@@ -262,7 +262,6 @@ export default function FormAddDoctor({ clinics }: AddDoctorFormProps) {
         bio: sanitizeHtmlField(data.bio),
         qualification: sanitizeHtmlField(data.qualification),
         specialty: sanitizeHtmlField(data.specialty),
-        images: null,
       };
 
       // Update doctor information

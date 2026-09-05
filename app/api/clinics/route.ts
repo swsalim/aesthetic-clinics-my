@@ -91,7 +91,6 @@ export async function POST(request: Request) {
       phone: validatedData.phone,
       postal_code: validatedData.postal_code,
       email: validatedData.clinic_email,
-      images: null, // Set to null since images are stored in clinic_images table
       neighborhood,
       city,
       latitude: lat,

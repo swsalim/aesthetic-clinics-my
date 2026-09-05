@@ -1,9 +1,15 @@
 import type { NextConfig } from 'next';
 
+import { MEDIA_DEVICE_SIZES, MEDIA_IMAGE_SIZES } from './lib/media-sizes';
+
 const nextConfig: NextConfig = {
   images: {
-    deviceSizes: [200, 350, 600, 900, 1200, 1800],
-    imageSizes: [16, 32, 48, 64, 128, 256, 384],
+    // Cloudflare /cdn-cgi/image via image-loader.ts (skips Vercel Image Optimization).
+    loader: 'custom',
+    loaderFile: './image-loader.ts',
+    // Keep in sync with lib/media-sizes.ts presets used by MediaImage call sites.
+    deviceSizes: [...MEDIA_DEVICE_SIZES],
+    imageSizes: [...MEDIA_IMAGE_SIZES],
     remotePatterns: [
       {
         protocol: 'https',

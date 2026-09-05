@@ -17,20 +17,20 @@ todos:
   - id: serving-cleanup
     content: "aesthetic: MediaImage + resolveMediaUrl (R2 then ImageKit fallback); loaders removed"
     status: completed
-  - id: rpc-dual-columns
-    content: "aesthetic: RPC SQL ready (ImageKit + R2); apply manually in Supabase"
-    status: pending
   - id: backfill-script
-    content: "aesthetic: backfill script ready; sample (20 clinic_images) run; finish full backfill"
-    status: in_progress
+    content: "aesthetic: full backfill --execute completed (keyset pagination)"
+    status: completed
+  - id: rpc-dual-columns
+    content: "aesthetic: RPC SQL ready (ImageKit + R2); apply manually in Supabase if not yet"
+    status: pending
   - id: verify
     content: "aesthetic: smoke-test upload + listings after RPC + backfill"
     status: pending
-  - id: delete-imagekit-script
-    content: "aesthetic: run delete-imagekit-assets after verify; then remove legacy API routes"
-    status: pending
   - id: static-to-r2
     content: "aesthetic: upload logo/ads/placeholders to R2 and point code off ik.imagekit/cloudinary absolutes"
+    status: pending
+  - id: delete-imagekit-script
+    content: "aesthetic: run delete-imagekit-assets after verify; then remove legacy API routes"
     status: pending
   - id: dental-replicate
     content: "dental-clinics-close-to-me: repeat this runbook with dental domain/bucket/env"
@@ -47,6 +47,7 @@ Source of truth for finishing **aesthetic-clinics-my** and replicating on **dent
 - **Non-breaking DB:** keep ImageKit/legacy columns; add `r2_key` + `r2_url`.
 - New uploads write **only** R2 columns (do not write `image_url` / `imagekit_file_id` for new rows).
 - Serving: `resolveMediaUrl` prefers `r2_url`, then falls back to ImageKit/legacy URLs.
+- Image sizes: shared presets in [`lib/media-sizes.ts`](lib/media-sizes.ts); `next.config.ts` `deviceSizes` / `imageSizes` stay in sync.
 - RPCs return **both** ImageKit and R2 fields so old and new app code keep working.
 - Delete ImageKit files **last**, after verify (dry-run default).
 - Editor / Vercel Blob uploads stay out of scope.
@@ -74,7 +75,7 @@ Source of truth for finishing **aesthetic-clinics-my** and replicating on **dent
 | Media CDN | `https://media.aestheticclinics.my` | e.g. `https://media.<dental-domain>` |
 | R2 bucket | `aesthetic-clinic-media-production` | new bucket (e.g. `dental-clinic-media-production`) |
 | ImageKit id (legacy) | `yuurrific` | check that project's `NEXT_PUBLIC_IMAGEKIT_ID` |
-| Status | Code done; apply RPCs + finish backfill | Not started — follow this runbook |
+| Status | Code + backfill done; verify → static → delete ImageKit | Not started — follow this runbook |
 
 Keep aesthetic and dental R2 buckets **separate**.
 
@@ -192,6 +193,7 @@ npm install @aws-sdk/client-s3
 | [`lib/r2.ts`](lib/r2.ts) | S3 client, `uploadBufferToR2`, `deleteR2Object`, `buildR2ObjectKey` |
 | [`lib/r2-public.ts`](lib/r2-public.ts) | Client-safe `getR2PublicUrl` / `buildR2PublicUrl` (no secrets) |
 | [`lib/media.ts`](lib/media.ts) | `resolveMediaUrl()` — prefer R2, fall back to legacy |
+| [`lib/media-sizes.ts`](lib/media-sizes.ts) | `MEDIA` presets + `MEDIA_DEVICE_SIZES` / `MEDIA_IMAGE_SIZES` (sync with next.config) |
 | [`lib/upload-r2-client.ts`](lib/upload-r2-client.ts) | Browser helpers `uploadFileToR2` / `deleteFileFromR2` |
 | [`components/image/media-image.tsx`](components/image/media-image.tsx) | `next/image` wrapper (no ImageKit/Cloudinary loaders) |
 
@@ -238,11 +240,70 @@ Update every upload/delete to use `uploadFileToR2` / `deleteFileFromR2` and pers
 
 **Delete rules:** if row has `r2_key`, call `/api/delete-r2`; do not call ImageKit delete from app write paths anymore. Track removals by DB row `id`.
 
-### 7. Serving cleanup
+### 7. Serving cleanup + image size presets
 
 - Replace all `<ImageKit>` / `<ImageCloudinary>` with `<MediaImage>` + `resolveMediaUrl(...)`.
 - Delete `components/image/image-kit.tsx`, `image-cloudinary.tsx`, Cloudinary loaders in `lib/utils.ts`, unused `services/cloudinary.service.ts`.
 - [`next.config.ts`](next.config.ts): add `media.<site>` to `remotePatterns`; **keep** `ik.imagekit.io` + `res.cloudinary.com` until backfill + static cutover, then remove.
+
+#### Image size presets (required for dental port)
+
+Use shared presets from [`lib/media-sizes.ts`](lib/media-sizes.ts) at every `MediaImage` call site — do **not** invent one-off widths. This keeps Next (and a future Cloudflare `/cdn-cgi/image` loader) generating a small transform set.
+
+**`next.config.ts` must import the same breakpoints:**
+
+```ts
+import { MEDIA_DEVICE_SIZES, MEDIA_IMAGE_SIZES } from './lib/media-sizes';
+
+images: {
+  deviceSizes: [...MEDIA_DEVICE_SIZES], // [350, 600, 900, 1200, 1920]
+  imageSizes: [...MEDIA_IMAGE_SIZES],   // [64, 128, 256]
+  remotePatterns: [ /* media.<site> + legacy hosts */ ],
+}
+```
+
+**`MEDIA` presets:**
+
+| Preset | W×H | Typical use |
+|--------|-----|-------------|
+| `avatar` | 128×128 | Logo, doctor chips, ad icons |
+| `thumb` | 350×350 | Gallery secondary thumbs |
+| `card` | 400×300 | Clinic cards |
+| `cardPortrait` | 400×600 | Doctor cards |
+| `gallery` | 600×600 | Main gallery, profiles, dashboard previews |
+| `featured` | 900×675 | Featured partner spotlight |
+| `lightbox` | 1200×1200 | Lightbox / large grids |
+| `hero` | 1200×400 | State/area page banners |
+| `landscapeMd` | 600×338 | Explore-states tiles |
+| `landscapeLg` | 900×386 | Browse state banners |
+| `areaThumb` | 256×256 | Explore-areas grid |
+
+```tsx
+import { MEDIA } from '@/lib/media-sizes';
+
+<MediaImage
+  src={src}
+  alt={alt}
+  width={MEDIA.card.width}
+  height={MEDIA.card.height}
+  sizes={MEDIA.card.sizes}
+/>
+```
+
+**Production:** transforms go through **Cloudflare** via [`image-loader.ts`](image-loader.ts) + `next.config.ts` (`loader: 'custom'`). Example:
+
+```text
+https://media.aestheticclinics.my/cdn-cgi/image/width=600,quality=75,format=auto/places/<key>.jpg
+```
+
+**Requirements:**
+
+1. Image Transformations enabled on the Cloudflare zone that serves `media.<site>` (same zone as the site if the media hostname is a subdomain).
+2. `NEXT_PUBLIC_R2_PUBLIC_URL` points at that media host.
+3. `NEXT_PUBLIC_CF_IMAGE_TRANSFORMS=true` (default behavior when unset in production). Set `false` to serve R2 originals without `/cdn-cgi/image`.
+4. Local `next dev` always serves originals (CF path is not used on localhost).
+
+Legacy ImageKit/Cloudinary URLs and local `/images/...` paths are left untransformed.
 
 **Temporary legacy absolute URLs (aesthetic, until static upload to R2):**
 
@@ -261,19 +322,32 @@ After uploading those to R2 `logos/` / `static/`, point code at `NEXT_PUBLIC_R2_
 - Load **`.env.local`** via `dotenv.config({ path: '.env.local' })` (plain `dotenv/config` only loads `.env`).
 - **Resume-safe:** only rows with `r2_key IS NULL` are selected. Interrupted runs continue by re-running the same command.
 - Dry-run prints what would happen; does **not** upload or write DB. `--execute` does both.
-- Source URL: `image_url` → else `original_cloudinary_url` (clinic/doctor images); area/state use their legacy image fields.
+- Source URL: `image_url` → else `original_cloudinary_url` (clinic/doctor images); area/state use `image` → `thumbnail_image` → `banner_image`.
 - Never clears ImageKit columns.
+- **Keyset pagination required:** use `id > lastSeenId` (not always `range(0, N)`). Rows with no source URL are skipped and keep `r2_key IS NULL`; offset-0 pagination re-fetches the same head forever (e.g. `[areas] batch 40242` while only ~3k `clinic_images` exist). Many areas/states have no image — expect lots of `skip … no source URL`; that is normal, not a record-count bug.
+
+**Recommended commands:**
 
 ```bash
-npm run backfill-r2                          # dry-run
-npm run backfill-r2:sample                   # execute first 20 clinic_images (smoke)
+# Preview (no writes)
+npm run backfill-r2
+
+# Smoke test — first 20 clinic_images only
+npm run backfill-r2:sample
+
+# Full run (all tables)
 npm run backfill-r2 -- --execute
-npm run backfill-r2 -- --execute --batch-size=25
-npm run backfill-r2 -- --execute --limit=100
+
+# Preferred: one table at a time (easier to monitor / resume)
 npm run backfill-r2 -- --execute --table=clinic_images
 npm run backfill-r2 -- --execute --table=clinic_doctor_images
 npm run backfill-r2 -- --execute --table=areas
 npm run backfill-r2 -- --execute --table=states
+
+# Optional controls
+npm run backfill-r2 -- --execute --batch-size=25
+npm run backfill-r2 -- --execute --limit=100
+npm run backfill-r2 -- --execute --table=clinic_images --limit=100 --batch-size=25 --delay-ms=200
 ```
 
 | Flag | Default | Meaning |
@@ -282,7 +356,7 @@ npm run backfill-r2 -- --execute --table=states
 | `--sample` | off | Shortcut: execute first 20 pending `clinic_images` |
 | `--batch-size=N` | 50 | Rows per page |
 | `--limit=N` | none | Max rows this run |
-| `--table=NAME` | all | One table only |
+| `--table=NAME` | all | One table only (`clinic_images` \| `clinic_doctor_images` \| `areas` \| `states`) |
 | `--delay-ms=N` | 200 | Pause between batches |
 
 `package.json`:
@@ -336,7 +410,8 @@ flowchart LR
 
 ### New files
 
-- `lib/r2.ts`, `lib/r2-public.ts`, `lib/media.ts`, `lib/upload-r2-client.ts`
+- `lib/r2.ts`, `lib/r2-public.ts`, `lib/media.ts`, `lib/media-sizes.ts`, `lib/upload-r2-client.ts`
+- `image-loader.ts` (Cloudflare `/cdn-cgi/image` next/image loader)
 - `components/image/media-image.tsx`
 - `app/api/upload-r2/route.ts`, `app/api/delete-r2/route.ts`
 - `tasks/backfill-r2-from-imagekit.ts`, `tasks/delete-imagekit-assets.ts`
@@ -361,14 +436,15 @@ flowchart LR
 
 | Step | Status |
 |------|--------|
-| R2 + env + schema SQL | Done |
-| Code (APIs, callers, MediaImage, resolveMediaUrl fallback) | Done |
-| RPC SQL files (dual columns) | Ready — apply manually |
-| Sample backfill (20 `clinic_images`) | Done |
-| Full backfill `--execute` | Next |
-| Point static logo/ads at R2 | Pending |
-| Delete ImageKit assets | Pending (after verify) |
-| Remove legacy ImageKit API routes | Pending |
+| 1. R2 + env + schema SQL | Done |
+| 2. RPC SQL (dual columns) | Confirm applied in Supabase (files ready) |
+| 3. App code (APIs, callers, MediaImage, fallback, media-sizes presets) | Done |
+| 4. Full backfill `--execute` | Done |
+| 5. Verify listings + dashboard upload/delete | **You are here** |
+| 6. Point static logo/ads/placeholders at R2 | Pending |
+| 7. Delete ImageKit assets (dry-run → execute) | Pending (after verify) |
+| 8. Remove legacy ImageKit API routes + env + remotePatterns | Pending |
+| Dental replication | After aesthetic cutover |
 
 ---
 

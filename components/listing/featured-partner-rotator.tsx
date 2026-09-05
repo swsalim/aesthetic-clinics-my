@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ClinicHours, ClinicSpecialHours } from '@/types/clinic';
 import { ArrowRightIcon, MapPinIcon, SparklesIcon } from 'lucide-react';
 
+import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
 import { ClinicStatus } from '@/components/clinic-status';
@@ -74,9 +75,9 @@ function PartnerImage({ partner }: { partner: FeaturedPartnerCard }) {
       <MediaImage
         src={partner.image}
         alt={partner.name}
-        width={800}
-        height={600}
-        sizes="(max-width: 1024px) 100vw, 55vw"
+        width={MEDIA.featured.width}
+        height={MEDIA.featured.height}
+        sizes={MEDIA.featured.sizes}
         quality={85}
         priority
         className="h-56 w-full object-cover sm:h-72 lg:h-full"

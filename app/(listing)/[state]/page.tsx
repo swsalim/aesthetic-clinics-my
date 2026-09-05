@@ -12,6 +12,7 @@ import { isFeatured, isFeaturedPartner } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
 import { resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 import { absoluteUrl, cn, getPagination } from '@/lib/utils';
 
 import { getFeaturedListings } from '@/helpers/clinics';
@@ -211,11 +212,11 @@ export default async function StatePage({ params, searchParams }: StatePageProps
           <MediaImage
             src={stateBackgroundSrc}
             alt={`${stateData.name} aesthetic clinics background`}
-            width={1920}
-            height={600}
+            width={MEDIA.hero.width}
+            height={MEDIA.hero.height}
             priority
             quality={85}
-            sizes="100vw"
+            sizes={MEDIA.hero.sizes}
             className="absolute inset-0 h-full w-full object-cover"
             style={{
               objectPosition: 'center center',
@@ -267,9 +268,9 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                           <MediaImage
                             src={resolveMediaUrl(doctor.images?.[0]) ?? ''}
                             alt={`Photo of ${doctor.name}`}
-                            width={100}
-                            height={100}
-                            sizes="(max-width: 600px) 100vw, 350px"
+                            width={MEDIA.avatar.width}
+                            height={MEDIA.avatar.height}
+                            sizes={MEDIA.avatar.sizes}
                             quality={85}
                             priority
                             className="h-full w-full object-cover"
@@ -403,10 +404,10 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                     <MediaImage
                       src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/lost-boy.png"
                       alt="No aesthetic clinics found"
-                      width={500}
-                      height={500}
+                      width={MEDIA.gallery.width}
+                      height={MEDIA.gallery.height}
                       className="h-full w-full object-cover"
-                      sizes="(max-width: 600px) 100vw, 450px"
+                      sizes={MEDIA.gallery.sizes}
                       quality={85}
                     />
                   </div>

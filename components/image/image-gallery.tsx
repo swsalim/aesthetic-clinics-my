@@ -6,6 +6,7 @@ import { ClinicImage } from '@/types/clinic';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 import { resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
 import { MediaImage } from './media-image';
@@ -83,9 +84,9 @@ export function ImageGallery({ images, title, className }: ImageGalleryProps) {
               src={getGallerySrc(validImages[0]) ?? ''}
               alt={`Main photo for ${title}`}
               priority={true}
-              width={600}
-              height={600}
-              sizes="(max-width: 600px) 100vw, 600px"
+              width={MEDIA.gallery.width}
+              height={MEDIA.gallery.height}
+              sizes={MEDIA.gallery.sizes}
               className="h-full w-full transform object-cover object-center transition-transform hover:scale-105"
             />
           </button>
@@ -98,9 +99,9 @@ export function ImageGallery({ images, title, className }: ImageGalleryProps) {
             <MediaImage
               src={getGallerySrc(image) ?? ''}
               alt={`Photo ${index + 2} for ${title}`}
-              width={350}
-              height={350}
-              sizes="(max-width: 600px) 100vw, 350px"
+              width={MEDIA.thumb.width}
+              height={MEDIA.thumb.height}
+              sizes={MEDIA.thumb.sizes}
               className="h-full w-full transform object-cover object-center transition-transform hover:scale-105"
             />
           </button>
@@ -129,9 +130,9 @@ export function ImageGallery({ images, title, className }: ImageGalleryProps) {
             <MediaImage
               src={getGallerySrc(validImages[selectedImageIndex]) ?? ''}
               alt={`Photo ${selectedImageIndex + 1} for ${title}`}
-              width={1000}
-              height={1000}
-              sizes="(max-width: 1000px) 100vw, 1000px"
+              width={MEDIA.lightbox.width}
+              height={MEDIA.lightbox.height}
+              sizes={MEDIA.lightbox.sizes}
               className="max-h-[90vh] max-w-[90vw] object-contain"
             />
           </div>

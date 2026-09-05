@@ -410,10 +410,7 @@ export default function FormEditClinic({
         location,
       };
 
-      console.log('finalData');
-      console.log(finalData);
-
-      // Update clinic information
+      // Update clinic information (images live in clinic_images, not clinics.images)
       const { data: updatedClinic, error: updateError } = await supabase
         .from('clinics')
         .update({

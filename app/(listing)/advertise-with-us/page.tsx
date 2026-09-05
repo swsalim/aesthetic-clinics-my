@@ -8,6 +8,7 @@ import {
   SproutIcon,
 } from 'lucide-react';
 
+import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
 import { MediaImage } from '@/components/image/media-image';
@@ -221,9 +222,9 @@ function FeaturedListingPreview() {
           <MediaImage
             src="/images/sample-homepage-listing.png"
             alt="Sample homepage featured listing placement"
-            width={1587}
-            height={1208}
-            sizes="(max-width: 1024px) 100vw, 50vw"
+            width={MEDIA.lightbox.width}
+            height={MEDIA.lightbox.height}
+            sizes={MEDIA.featured.sizes}
             quality={85}
             className="h-auto w-full object-cover"
           />
@@ -236,9 +237,9 @@ function FeaturedListingPreview() {
           <MediaImage
             src="/images/sample-featured-listing.png"
             alt="Sample featured clinic card in listing page results"
-            width={1587}
-            height={1208}
-            sizes="(max-width: 1024px) 100vw, 50vw"
+            width={MEDIA.lightbox.width}
+            height={MEDIA.lightbox.height}
+            sizes={MEDIA.featured.sizes}
             quality={85}
             className="h-auto w-full object-cover"
           />

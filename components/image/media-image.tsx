@@ -2,6 +2,7 @@
 
 import Image, { type ImageProps } from 'next/image';
 
+import { MEDIA } from '@/lib/media-sizes';
 import { getR2PublicUrl } from '@/lib/r2-public';
 
 interface MediaImageProps extends Omit<ImageProps, 'src'> {
@@ -23,14 +24,15 @@ function resolveSrc(src: string, directory?: string | null): string {
 
 /**
  * Generic next/image wrapper for R2 (and absolute legacy ImageKit/Cloudinary URLs during migration).
- * No CDN transform loaders — Next.js handles resizing.
+ * Prefer presets from `@/lib/media-sizes` at call sites so transform widths stay small.
+ * Resizing in production is handled by Cloudflare via `image-loader.ts` (not Vercel).
  */
 export function MediaImage({
   src = 'placeholder.jpg',
   alt = 'Image',
   directory = null,
-  width = 400,
-  height = 400,
+  width = MEDIA.gallery.width,
+  height = MEDIA.gallery.height,
   ...props
 }: MediaImageProps) {
   const imageSrc = resolveSrc(src, directory);

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { SquareUserRoundIcon } from 'lucide-react';
 
 import { resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
 import { getDoctorsByClinicSlug } from '@/helpers/doctors';
@@ -40,8 +41,9 @@ export default async function DoctorPracticeAvatar({ clinicSlug, className }: Do
                 <MediaImage
                   src={imageSrc}
                   alt={doctor.name}
-                  width={150}
-                  height={150}
+                  width={MEDIA.avatar.width}
+                  height={MEDIA.avatar.height}
+                  sizes={MEDIA.avatar.sizes}
                   className="h-full w-full object-cover"
                   priority={false}
                 />

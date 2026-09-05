@@ -6,6 +6,7 @@ import { ClinicDoctor } from '@/types/clinic';
 import { AwardIcon, HospitalIcon, MapPinIcon, SquareUserRoundIcon } from 'lucide-react';
 
 import { resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 
 import { MediaImage } from '@/components/image/media-image';
 import { Badge } from '@/components/ui/badge';
@@ -33,8 +34,9 @@ export function DoctorCard({ doctor }: DoctorCardProps) {
             <MediaImage
               src={imageSrc}
               alt={doctor.name}
-              width={400}
-              height={600}
+              width={MEDIA.cardPortrait.width}
+              height={MEDIA.cardPortrait.height}
+              sizes={MEDIA.cardPortrait.sizes}
               className="h-full w-full object-cover"
               priority={false}
             />

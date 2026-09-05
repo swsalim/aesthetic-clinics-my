@@ -5,6 +5,7 @@ import { ArrowRightIcon } from 'lucide-react';
 import pluralize from 'pluralize';
 
 import { resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 import { createAdminClient } from '@/lib/supabase';
 
 import Container from '@/components/ui/container';
@@ -102,9 +103,9 @@ export async function ExploreStates() {
                     <MediaImage
                       src={imageSrc}
                       alt={state.name}
-                      width={480}
-                      height={270}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      width={MEDIA.landscapeMd.width}
+                      height={MEDIA.landscapeMd.height}
+                      sizes={MEDIA.landscapeMd.sizes}
                       className="h-full w-full object-cover transition duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/85 via-gray-900/25 to-transparent" />

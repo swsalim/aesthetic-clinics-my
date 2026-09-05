@@ -391,14 +391,10 @@ export default function FormAddClinic({ services, areas, states }: AddClinicForm
       const finalData = {
         ...data,
         description: sanitizeHtmlField(data.description),
-        images: null,
         location,
       };
 
-      console.log('finalData');
-      console.log(finalData);
-
-      // Insert clinic information
+      // Insert clinic information (images live in clinic_images, not clinics.images)
       const { data: newClinic, error: updateError } = await supabase
         .from('clinics')
         .insert({
@@ -422,8 +418,6 @@ export default function FormAddClinic({ services, areas, states }: AddClinicForm
           location,
           rating: finalData.rating,
           review_count: finalData.review_count,
-          // IMAGE RELATED
-          images: null, // Set to null since images are stored in clinic_images table
           // SOCIAL RELATED
           facebook_url: finalData.facebook_url,
           instagram_url: finalData.instagram_url,

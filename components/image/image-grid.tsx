@@ -1,5 +1,7 @@
 import { Suspense } from 'react';
 
+import { MEDIA } from '@/lib/media-sizes';
+
 import { MediaImage } from '@/components/image/media-image';
 import { ImagePlaceholder } from '@/components/image/image-placeholder';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -49,8 +51,9 @@ function GridImage({
           src={src}
           alt={alt}
           priority={priority}
-          width={priority ? 800 : 600}
-          height={priority ? 800 : 600}
+          width={priority ? MEDIA.lightbox.width : MEDIA.gallery.width}
+          height={priority ? MEDIA.lightbox.height : MEDIA.gallery.height}
+          sizes={priority ? MEDIA.lightbox.sizes : MEDIA.gallery.sizes}
           className="h-full w-full transform bg-gray-100 object-cover object-center"
         />
       </div>

@@ -10,7 +10,6 @@ export interface ClinicData {
   phone: string;
   postal_code: string;
   email?: string;
-  images: null; // Changed to null since images are now stored in clinic_images table
   neighborhood: string | null;
   city: string | null;
   latitude: number;
@@ -42,7 +41,6 @@ export class DatabaseService {
       .from('clinics')
       .insert({
         ...data,
-        images: null, // Always set images to null since they're stored in clinic_images table
         rating: 0,
         review_count: 0,
       })

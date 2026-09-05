@@ -8,6 +8,7 @@ import { isFeatured, isFeaturedPartner } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
 import { resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 import { absoluteUrl, cn } from '@/lib/utils';
 
 import { getDoctorBySlug, getDoctorListings } from '@/helpers/doctors';
@@ -193,9 +194,9 @@ export default async function DentistPage({ params }: DentistPageProps) {
                     <MediaImage
                       src={resolveMediaUrl(profileImage as ClinicImage) ?? ''}
                       alt={`${doctor.name} - Profile Image`}
-                      width={600}
-                      height={600}
-                      sizes="(max-width: 600px) 100vw, 350px"
+                      width={MEDIA.gallery.width}
+                      height={MEDIA.gallery.height}
+                      sizes={MEDIA.thumb.sizes}
                       className="h-full w-full rounded-lg object-cover"
                     />
                   </div>

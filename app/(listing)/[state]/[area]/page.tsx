@@ -12,6 +12,7 @@ import { isFeatured, isFeaturedPartner } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
 import { resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 import { absoluteUrl, cn, getPagination } from '@/lib/utils';
 
 import { getAreaBySlug, getAreaListings } from '@/helpers/areas';
@@ -223,11 +224,11 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
           <MediaImage
             src={areaBackgroundSrc}
             alt={`${areaData.name}, ${areaData.state?.name} aesthetic clinics background`}
-            width={1920}
-            height={600}
+            width={MEDIA.hero.width}
+            height={MEDIA.hero.height}
             priority
             quality={85}
-            sizes="100vw"
+            sizes={MEDIA.hero.sizes}
             className="absolute inset-0 h-full w-full object-cover"
             style={{
               objectPosition: 'center center',
@@ -381,9 +382,9 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
                     <MediaImage
                       src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/lost-boy.png"
                     alt="No aesthetic clinics found"
-                    width={500}
-                    height={500}
-                    sizes="(max-width: 600px) 100vw, 450px"
+                    width={MEDIA.gallery.width}
+                    height={MEDIA.gallery.height}
+                    sizes={MEDIA.gallery.sizes}
                     quality={85}
                     className="h-full w-full object-cover"
                   />

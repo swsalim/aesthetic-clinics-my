@@ -264,7 +264,6 @@ export default function FormEditDoctor({ doctor, clinics }: EditDoctorFormProps)
         bio: sanitizeHtmlField(data.bio),
         qualification: sanitizeHtmlField(data.qualification),
         specialty: sanitizeHtmlField(data.specialty),
-        images: null,
       };
 
       // Update doctor information
@@ -371,8 +370,8 @@ export default function FormEditDoctor({ doctor, clinics }: EditDoctorFormProps)
           // clinics: updatedClinics || [],
         });
 
-        // Update the current images state
-        setCurrentImages(updatedDoctor.images || []);
+        // Keep gallery state from earlier updates (clinic_doctors has no images column)
+        setCurrentImages((prev) => prev.filter((img) => !imagesToRemove.includes(img.id)));
       }
 
       toast({

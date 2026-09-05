@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 
 import { type MediaFields, resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
 import { ClinicStatus } from '@/components/clinic-status';
@@ -77,9 +78,9 @@ export function ClinicCard({
           <MediaImage
             src={imageSrc}
             alt={name}
-            width={400}
-            height={300}
-            sizes="(max-width: 600px) 100vw, 350px"
+            width={MEDIA.card.width}
+            height={MEDIA.card.height}
+            sizes={MEDIA.card.sizes}
             quality={85}
             className="h-full w-full object-cover"
             priority={false}

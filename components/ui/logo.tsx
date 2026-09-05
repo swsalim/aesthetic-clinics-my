@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
 import { MediaImage } from '@/components/image/media-image';
@@ -18,8 +19,9 @@ const Logo: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...pr
         <MediaImage
           src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/logos/aesthetic-clinics-my-v3.png"
           alt="Aesthetic Clinics Malaysia"
-          width={300}
-          height={300}
+          width={MEDIA.avatar.width}
+          height={MEDIA.avatar.height}
+          sizes={MEDIA.avatar.sizes}
           className="h-full w-auto object-contain"
           priority
         />

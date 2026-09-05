@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 import type { ClinicImageEntry } from '@/lib/clinic-images';
 import { resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 import { GripVertical, XIcon } from 'lucide-react';
 
 import { MediaImage } from '@/components/image/media-image';
@@ -118,16 +119,17 @@ export function ClinicImageGallery({
                   <Image
                     src={URL.createObjectURL(entry.file)}
                     alt={`New image ${index + 1}`}
-                    width={600}
-                    height={600}
+                    width={MEDIA.gallery.width}
+                    height={MEDIA.gallery.height}
                     className="object-cover"
                   />
                 ) : (
                   <MediaImage
                     src={resolveMediaUrl(entry) ?? ''}
                     alt={`Clinic image ${index + 1}`}
-                    width={600}
-                    height={600}
+                    width={MEDIA.gallery.width}
+                    height={MEDIA.gallery.height}
+                    sizes={MEDIA.gallery.sizes}
                     className="object-cover"
                   />
                 )}

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import pluralize from 'pluralize';
 
 import { resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 
 import { MediaImage } from '../image/media-image';
 
@@ -57,8 +58,9 @@ export function ExploreAreasClient({ areas }: ExploreAreasClientProps) {
                 <MediaImage
                   src={imageSrc}
                   alt={area.name}
-                  width={200}
-                  height={200}
+                  width={MEDIA.areaThumb.width}
+                  height={MEDIA.areaThumb.height}
+                  sizes={MEDIA.areaThumb.sizes}
                   className="h-full w-full object-cover"
                 />
               </div>

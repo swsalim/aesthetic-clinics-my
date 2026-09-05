@@ -1,5 +1,7 @@
 import { ArrowUpRightIcon } from 'lucide-react';
 
+import { MEDIA } from '@/lib/media-sizes';
+
 import { MediaImage } from '@/components/image/media-image';
 
 export default function BannerFrogDr() {
@@ -16,8 +18,9 @@ export default function BannerFrogDr() {
             <div className="relative h-10 w-10">
               <MediaImage
                 src="https://res.cloudinary.com/typeeighty/image/upload/f_auto,q_auto/dental-clinics-my/logos/frogdr.png"
-                width={150}
-                height={150}
+                width={MEDIA.avatar.width}
+                height={MEDIA.avatar.height}
+                sizes={MEDIA.avatar.sizes}
                 alt="FrogDR🔍"
                 className="h-full w-full object-cover"
               />
