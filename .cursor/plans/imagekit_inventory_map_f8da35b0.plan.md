@@ -48,7 +48,10 @@ Source of truth for finishing **aesthetic-clinics-my** and replicating on **dent
 - New uploads write **only** R2 columns (do not write `image_url` / `imagekit_file_id` for new rows).
 - Serving: `resolveMediaUrl` prefers `r2_url`, then falls back to ImageKit/legacy URLs.
 - **Storage:** Cloudflare R2 + custom domain `media.<site>`.
-- **Resizing:** Next.js / **Vercel Image Optimization** (`next/image`). **Do not** use Cloudflare `/cdn-cgi/image` (tried; unique-transform pricing was too expensive for listing traffic).
+- **Resizing:**
+  - R2 / other hosts → Next.js / **Vercel Image Optimization** (default `next/image`).
+  - Static assets still on ImageKit (`ik.imagekit.io`) → per-image ImageKit loader (`lib/imagekit-loader.ts` via `MediaImage`) — not a global `loaderFile`.
+  - Do **not** use Cloudflare `/cdn-cgi/image`.
 - Image sizes: shared presets in [`lib/media-sizes.ts`](lib/media-sizes.ts); keep `next.config.ts` `deviceSizes` / `imageSizes` in sync.
 - RPCs return **both** ImageKit and R2 fields so old and new app code keep working.
 - Delete ImageKit files **last**, after verify (dry-run default).
@@ -201,8 +204,9 @@ npm install @aws-sdk/client-s3
 | [`lib/r2-public.ts`](lib/r2-public.ts) | Client-safe `getR2PublicUrl` / `buildR2PublicUrl` (no secrets) |
 | [`lib/media.ts`](lib/media.ts) | `resolveMediaUrl()` — prefer R2, fall back to legacy |
 | [`lib/media-sizes.ts`](lib/media-sizes.ts) | `MEDIA` presets + `MEDIA_DEVICE_SIZES` / `MEDIA_IMAGE_SIZES` |
+| [`lib/imagekit-loader.ts`](lib/imagekit-loader.ts) | ImageKit `tr=` loader for static `ik.imagekit.io` URLs only |
 | [`lib/upload-r2-client.ts`](lib/upload-r2-client.ts) | Browser helpers `uploadFileToR2` / `deleteFileFromR2` |
-| [`components/image/media-image.tsx`](components/image/media-image.tsx) | `next/image` wrapper (Vercel optimizer) |
+| [`components/image/media-image.tsx`](components/image/media-image.tsx) | `next/image` wrapper — Vercel for R2, ImageKit loader for IK URLs |
 
 **`resolveMediaUrl` contract (keep fallbacks until ImageKit delete):**
 
@@ -407,7 +411,7 @@ flowchart LR
 
 ### New files
 
-- `lib/r2.ts`, `lib/r2-public.ts`, `lib/media.ts`, `lib/media-sizes.ts`, `lib/upload-r2-client.ts`
+- `lib/r2.ts`, `lib/r2-public.ts`, `lib/media.ts`, `lib/media-sizes.ts`, `lib/imagekit-loader.ts`, `lib/upload-r2-client.ts`
 - `components/image/media-image.tsx`
 - `app/api/upload-r2/route.ts`, `app/api/delete-r2/route.ts`
 - `tasks/backfill-r2-from-imagekit.ts`, `tasks/delete-imagekit-assets.ts`

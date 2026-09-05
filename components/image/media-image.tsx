@@ -2,6 +2,7 @@
 
 import Image, { type ImageProps } from 'next/image';
 
+import { imageKitLoader, isImageKitUrl } from '@/lib/imagekit-loader';
 import { MEDIA } from '@/lib/media-sizes';
 import { getR2PublicUrl } from '@/lib/r2-public';
 
@@ -23,9 +24,9 @@ function resolveSrc(src: string, directory?: string | null): string {
 }
 
 /**
- * Generic next/image wrapper for R2 (and absolute legacy ImageKit/Cloudinary URLs during migration).
- * Prefer presets from `@/lib/media-sizes` at call sites.
- * Resizing is handled by Next.js / Vercel Image Optimization.
+ * next/image wrapper for R2 + remaining static ImageKit URLs.
+ * - R2 / relative / other hosts → default Vercel Image Optimization
+ * - ik.imagekit.io → ImageKit `tr=` loader (no Vercel proxy for those)
  */
 export function MediaImage({
   src = 'placeholder.jpg',
@@ -33,9 +34,20 @@ export function MediaImage({
   directory = null,
   width = MEDIA.gallery.width,
   height = MEDIA.gallery.height,
+  loader,
   ...props
 }: MediaImageProps) {
   const imageSrc = resolveSrc(src, directory);
+  const resolvedLoader = loader ?? (isImageKitUrl(imageSrc) ? imageKitLoader : undefined);
 
-  return <Image src={imageSrc} alt={alt} width={width} height={height} {...props} />;
+  return (
+    <Image
+      {...props}
+      src={imageSrc}
+      alt={alt}
+      width={width}
+      height={height}
+      loader={resolvedLoader}
+    />
+  );
 }
