@@ -14,7 +14,8 @@ import * as z from 'zod';
 
 // Lib imports
 import { createClient } from '@/lib/supabase/client';
-import { cn, generateUniqueFilename, sanitizeHtmlField } from '@/lib/utils';
+import { uploadFileToR2, deleteFileFromR2 } from '@/lib/upload-r2-client';
+import { cn, sanitizeHtmlField } from '@/lib/utils';
 
 import {
   Command,
@@ -120,62 +121,29 @@ export default function FormAddDoctor({ clinics }: AddDoctorFormProps) {
     form.setValue('images', updatedImages);
   };
 
-  const handleImagekitImageRemove = (e: React.MouseEvent, imageToRemove: string) => {
+  const handleExistingImageRemove = (e: React.MouseEvent, imageId: string) => {
     e.preventDefault();
 
-    // Store the imagekit_file_id for removal during form submission
-    const imageToRemoveObj = currentImages.find((img) => img.image_url === imageToRemove);
-    if (imageToRemoveObj) {
-      setImagesToRemove((prev) => [...prev, imageToRemoveObj.imagekit_file_id]);
-    }
-
-    // Remove from current images array (just visually, not from database yet)
-    const filterImages = currentImages.filter((image) => image.image_url !== imageToRemove);
-    setCurrentImages(filterImages);
+    setImagesToRemove((prev) => [...prev, imageId]);
+    setCurrentImages((prev) => prev.filter((image) => image.id !== imageId));
   };
 
-  const uploadImageToImageKit = async (
-    imageFile: File,
-  ): Promise<{ url: string; fileId: string } | null> => {
+  const uploadImageToR2 = async (imageFile: File): Promise<{ url: string; key: string } | null> => {
     try {
-      // Validate file size (max 3MB)
       const maxSize = 3 * 1024 * 1024; // 3MB
       if (imageFile.size > maxSize) {
         throw new Error('Image file size must be less than 2MB');
       }
 
-      // Validate file type
       if (!imageFile.type.startsWith('image/')) {
         throw new Error('Please select a valid image file');
       }
 
-      const formData = new FormData();
-      formData.append('file', imageFile);
-      formData.append('folder', 'aesthetic-clinics-my/persons');
-      formData.append('fileName', generateUniqueFilename(imageFile.name));
-
-      const response = await fetch('/api/upload-imagekit', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `Upload failed with status: ${response.status}`);
+      const result = await uploadFileToR2(imageFile, 'persons');
+      if (!result) {
+        throw new Error('Failed to upload image');
       }
-
-      const data = await response.json();
-
-      if (data.success && data.imagekit_file_id) {
-        return {
-          url:
-            data.url ||
-            `https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/persons/${data.imagekit_file_id}`,
-          fileId: data.imagekit_file_id,
-        };
-      } else {
-        throw new Error('Invalid response from image upload');
-      }
+      return result;
     } catch (error) {
       console.error('Image upload error:', error);
       toast({
@@ -196,7 +164,8 @@ export default function FormAddDoctor({ clinics }: AddDoctorFormProps) {
           if (!isCurrentImage) {
             imageSrc = URL.createObjectURL(image as File);
           } else {
-            imageSrc = (image as ClinicImage).image_url;
+            const clinicImage = image as ClinicImage;
+            imageSrc = clinicImage.r2_url;
           }
 
           return (
@@ -212,13 +181,13 @@ export default function FormAddDoctor({ clinics }: AddDoctorFormProps) {
                 {isCurrentImage && (
                   <button
                     className="absolute left-auto right-2 top-2 z-10 h-8 w-8 rounded-full border-2 border-gray-700 bg-white/90"
-                    onClick={(e) => handleImagekitImageRemove(e, (image as ClinicImage).image_url)}>
+                    onClick={(e) => handleExistingImageRemove(e, (image as ClinicImage).id)}>
                     <XIcon className="mx-auto h-6 w-6"></XIcon>
                   </button>
                 )}
                 {!isCurrentImage && (
                   <Image
-                    src={imageSrc}
+                    src={imageSrc || ''}
                     alt="Image preview"
                     width={600}
                     height={600}
@@ -226,7 +195,7 @@ export default function FormAddDoctor({ clinics }: AddDoctorFormProps) {
                   />
                 )}
 
-                {isCurrentImage && (
+                {isCurrentImage && imageSrc && (
                   <Image
                     src={imageSrc}
                     alt="Image preview"
@@ -250,43 +219,39 @@ export default function FormAddDoctor({ clinics }: AddDoctorFormProps) {
       } = await supabase.auth.getUser();
       if (!user) throw new Error('User not found');
 
-      for (const imagekitFileId of imagesToRemove) {
+      for (const imageId of imagesToRemove) {
         try {
-          // Delete from to_be_reviewed_clinic_images table
+          const { data: imageRecord } = await supabase
+            .from('clinic_doctor_images')
+            .select('r2_key')
+            .eq('id', imageId)
+            .single();
+
           const { error: deleteError } = await supabase
-            .from('clinic_images')
+            .from('clinic_doctor_images')
             .delete()
-            .eq('imagekit_file_id', imagekitFileId);
+            .eq('id', imageId);
 
           if (deleteError) {
             console.error('Error deleting image record:', deleteError);
           }
 
-          // Delete from ImageKit
-          const deleteResponse = await fetch('/api/delete-imagekit', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ imagekit_file_id: imagekitFileId }),
-          });
-
-          if (!deleteResponse.ok) {
-            console.error('Error deleting image from ImageKit:', imagekitFileId);
+          if (imageRecord?.r2_key) {
+            await deleteFileFromR2(imageRecord.r2_key);
           }
         } catch (error) {
           console.error('Error marking image for removal:', error);
         }
       }
 
-      // Upload new images to ImageKit
-      const newImages: Array<{ url: string; fileId: string }> = [];
+      // Upload new images to R2
+      const newImages: Array<{ url: string; key: string }> = [];
       if (watchImages && watchImages.length > 0) {
         for (const imageFile of watchImages) {
           if (imageFile instanceof File) {
-            const imagekitResult = await uploadImageToImageKit(imageFile);
-            if (imagekitResult) {
-              newImages.push(imagekitResult);
+            const r2Result = await uploadImageToR2(imageFile);
+            if (r2Result) {
+              newImages.push(r2Result);
             }
           }
         }
@@ -297,7 +262,6 @@ export default function FormAddDoctor({ clinics }: AddDoctorFormProps) {
         bio: sanitizeHtmlField(data.bio),
         qualification: sanitizeHtmlField(data.qualification),
         specialty: sanitizeHtmlField(data.specialty),
-        images: null,
       };
 
       // Update doctor information
@@ -326,8 +290,8 @@ export default function FormAddDoctor({ clinics }: AddDoctorFormProps) {
       if (newImages.length > 0 && newDoctor) {
         const clinicDoctorImageRecords = newImages.map((image) => ({
           doctor_id: newDoctor.id,
-          image_url: image.url,
-          imagekit_file_id: image.fileId,
+          r2_url: image.url,
+          r2_key: image.key,
         }));
 
         const { data: insertedImages, error: imageInsertError } = await supabase
@@ -342,7 +306,7 @@ export default function FormAddDoctor({ clinics }: AddDoctorFormProps) {
         } else if (insertedImages) {
           // Update current images state with new images
           setCurrentImages((prev) => [
-            ...prev.filter((img) => !imagesToRemove.includes(img.imagekit_file_id)),
+            ...prev.filter((img) => !imagesToRemove.includes(img.id)),
             ...insertedImages,
           ]);
         }

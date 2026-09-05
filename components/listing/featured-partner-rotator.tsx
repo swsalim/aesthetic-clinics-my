@@ -7,10 +7,11 @@ import Link from 'next/link';
 import { ClinicHours, ClinicSpecialHours } from '@/types/clinic';
 import { ArrowRightIcon, MapPinIcon, SparklesIcon } from 'lucide-react';
 
+import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
 import { ClinicStatus } from '@/components/clinic-status';
-import { ImageKit } from '@/components/image/image-kit';
+import { MediaImage } from '@/components/image/media-image';
 import { buttonVariants } from '@/components/ui/button';
 import { StarRating } from '@/components/ui/star-rating';
 
@@ -71,13 +72,12 @@ function useRotatingIndex(length: number) {
 function PartnerImage({ partner }: { partner: FeaturedPartnerCard }) {
   if (partner.image) {
     return (
-      <ImageKit
+      <MediaImage
         src={partner.image}
         alt={partner.name}
-        width={800}
-        height={600}
-        sizes="(max-width: 1024px) 100vw, 55vw"
-        quality={85}
+        width={MEDIA.featured.width}
+        height={MEDIA.featured.height}
+        sizes={MEDIA.featured.sizes}
         priority
         className="h-56 w-full object-cover sm:h-72 lg:h-full"
       />

@@ -9,6 +9,7 @@ interface AreaData {
   name: string;
   slug: string;
   image: string;
+  r2_url?: string | null;
   state: Partial<ClinicState>;
   clinics: Partial<Clinic>[];
   total_clinics: number;

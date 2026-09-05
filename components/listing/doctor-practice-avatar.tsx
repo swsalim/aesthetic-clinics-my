@@ -2,11 +2,13 @@ import Link from 'next/link';
 
 import { SquareUserRoundIcon } from 'lucide-react';
 
+import { resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
 import { getDoctorsByClinicSlug } from '@/helpers/doctors';
 
-import { ImageKit } from '../image/image-kit';
+import { MediaImage } from '../image/media-image';
 
 interface DoctorPracticeProps {
   clinicSlug: string;
@@ -27,6 +29,7 @@ export default async function DoctorPracticeAvatar({ clinicSlug, className }: Do
       <div className="not-prose flex flex-wrap gap-4">
         {doctors.map((doctor) => {
           const firstImage = doctor.images && doctor.images.length > 0 ? doctor.images[0] : null;
+          const imageSrc = resolveMediaUrl(firstImage);
           return (
             <Link
               role="button"
@@ -34,12 +37,13 @@ export default async function DoctorPracticeAvatar({ clinicSlug, className }: Do
               href={`/doctor/${doctor.slug}`}
               className="relative h-24 w-24 transform overflow-hidden rounded-full transition-all duration-300 hover:scale-105 hover:border-none hover:opacity-90"
               title={`View ${doctor.name}'s profile`}>
-              {firstImage && firstImage.image_url ? (
-                <ImageKit
-                  src={firstImage.image_url}
+              {imageSrc ? (
+                <MediaImage
+                  src={imageSrc}
                   alt={doctor.name}
-                  width={150}
-                  height={150}
+                  width={MEDIA.avatar.width}
+                  height={MEDIA.avatar.height}
+                  sizes={MEDIA.avatar.sizes}
                   className="h-full w-full object-cover"
                   priority={false}
                 />

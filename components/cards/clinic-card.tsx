@@ -12,10 +12,12 @@ import {
   SparklesIcon,
 } from 'lucide-react';
 
+import { type MediaFields, resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
 import { ClinicStatus } from '@/components/clinic-status';
-import { ImageKit } from '@/components/image/image-kit';
+import { MediaImage } from '@/components/image/media-image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StarRating } from '@/components/ui/star-rating';
@@ -28,7 +30,7 @@ interface ClinicCardProps {
   postalCode: string;
   state: string;
   area: string;
-  image?: string;
+  image?: string | MediaFields | null;
   isFeatured?: boolean;
   isFeaturedPartner?: boolean;
   rating?: number | null;
@@ -59,6 +61,9 @@ export function ClinicCard({
   distance,
   isPlaceholder,
 }: ClinicCardProps) {
+  const imageSrc =
+    typeof image === 'string' ? image : resolveMediaUrl(image) ?? undefined;
+
   const card = (
     <Card
       className={cn(
@@ -69,14 +74,13 @@ export function ClinicCard({
       )}
       role="article">
       <CardHeader className="relative h-48 overflow-hidden p-0">
-        {image && (
-          <ImageKit
-            src={image}
+        {imageSrc && (
+          <MediaImage
+            src={imageSrc}
             alt={name}
-            width={400}
-            height={300}
-            sizes="(max-width: 600px) 100vw, 350px"
-            quality={85}
+            width={MEDIA.card.width}
+            height={MEDIA.card.height}
+            sizes={MEDIA.card.sizes}
             className="h-full w-full object-cover"
             priority={false}
           />

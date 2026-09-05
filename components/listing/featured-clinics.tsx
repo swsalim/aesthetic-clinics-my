@@ -5,6 +5,7 @@ import { ArrowRightIcon, AwardIcon, MapPinIcon } from 'lucide-react';
 
 import { isFeatured, isFeaturedPartner } from '@/config/featured';
 
+import { resolveMediaUrl } from '@/lib/media';
 import { cn } from '@/lib/utils';
 
 import { getFeaturedListings } from '@/helpers/clinics';
@@ -150,7 +151,7 @@ export async function FeaturedClinics() {
       state: clinic.state?.name ?? '',
       area: clinic.area?.name ?? '',
       image: clinic.images?.[0]
-        ? (clinic.images[0] as unknown as ClinicImage).image_url
+        ? resolveMediaUrl(clinic.images[0] as ClinicImage) ?? undefined
         : undefined,
       rating: clinic.rating,
       hours: clinic.hours ?? [],
@@ -205,11 +206,7 @@ export async function FeaturedClinics() {
                     postalCode={clinic.postal_code ?? ''}
                     state={clinic.state?.name ?? ''}
                     area={clinic.area?.name ?? ''}
-                    image={
-                      clinic.images?.[0]
-                        ? (clinic.images[0] as unknown as ClinicImage).image_url
-                        : undefined
-                    }
+                    image={clinic.images?.[0] as ClinicImage | undefined}
                     rating={clinic.rating}
                     isFeatured={isFeatured(clinic.slug)}
                     isFeaturedPartner={isFeaturedPartner(clinic.slug)}

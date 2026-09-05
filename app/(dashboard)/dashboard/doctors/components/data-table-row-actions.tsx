@@ -8,6 +8,7 @@ import { Row } from '@tanstack/react-table';
 import { MenuIcon } from 'lucide-react';
 
 import { createClient } from '@/lib/supabase/client';
+import { deleteFileFromR2 } from '@/lib/upload-r2-client';
 
 import {
   AlertDialog,
@@ -55,10 +56,10 @@ export function DataTableRowActions<TData extends DoctorTableData>({
     try {
       setIsDeleting(true);
 
-      // First, fetch images from clinic_images table
+      // First, fetch images from clinic_doctor_images table
       const { data: doctorImages, error: fetchError } = await supabase
         .from('clinic_doctor_images')
-        .select('imagekit_file_id')
+        .select('r2_key')
         .eq('doctor_id', doctor.id);
 
       if (fetchError) {
@@ -70,31 +71,22 @@ export function DataTableRowActions<TData extends DoctorTableData>({
 
       if (error) throw error;
 
-      // Delete images from ImageKit if they exist
+      // Delete images from R2 if they exist
       if (doctorImages && doctorImages.length > 0) {
         for (const imageRecord of doctorImages) {
-          if (imageRecord.imagekit_file_id) {
+          if (imageRecord.r2_key) {
             try {
-              const response = await fetch('/api/delete-imagekit', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  imagekit_file_id: imageRecord.imagekit_file_id,
-                }),
-              });
-
-              if (!response.ok) {
-                console.warn('Failed to delete image from ImageKit:', imageRecord.imagekit_file_id);
+              const deleted = await deleteFileFromR2(imageRecord.r2_key);
+              if (!deleted) {
+                console.warn('Failed to delete image from R2:', imageRecord.r2_key);
               }
             } catch (error) {
-              console.error('Error deleting image from ImageKit:', error);
+              console.error('Error deleting image from R2:', error);
             }
           }
         }
 
-        // Delete image records from clinic_images table
+        // Delete image records from clinic_doctor_images table
         const { error: deleteImagesError } = await supabase
           .from('clinic_doctor_images')
           .delete()

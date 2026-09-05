@@ -10,7 +10,6 @@ export interface ClinicData {
   phone: string;
   postal_code: string;
   email?: string;
-  images: null; // Changed to null since images are now stored in clinic_images table
   neighborhood: string | null;
   city: string | null;
   latitude: number;
@@ -27,7 +26,7 @@ export interface ClinicData {
 
 export interface ClinicImageData {
   url: string;
-  fileId: string;
+  key: string;
 }
 
 export class DatabaseService {
@@ -42,7 +41,6 @@ export class DatabaseService {
       .from('clinics')
       .insert({
         ...data,
-        images: null, // Always set images to null since they're stored in clinic_images table
         rating: 0,
         review_count: 0,
       })
@@ -77,8 +75,8 @@ export class DatabaseService {
 
     const imageRecords = images.map((image, index) => ({
       clinic_id: clinicId,
-      image_url: image.url,
-      imagekit_file_id: image.fileId,
+      r2_url: image.url,
+      r2_key: image.key,
       display_order: index + 1,
     }));
 

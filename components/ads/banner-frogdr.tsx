@@ -1,6 +1,8 @@
 import { ArrowUpRightIcon } from 'lucide-react';
 
-import { ImageCloudinary } from '@/components/image/image-cloudinary';
+import { MEDIA } from '@/lib/media-sizes';
+
+import { MediaImage } from '@/components/image/media-image';
 
 export default function BannerFrogDr() {
   return (
@@ -14,11 +16,11 @@ export default function BannerFrogDr() {
         <div className="flex flex-row items-center gap-x-4">
           <div className="mb-3 hidden w-12 sm:block md:mb-0 md:py-3">
             <div className="relative h-10 w-10">
-              <ImageCloudinary
-                src="frogdr.png"
-                directory="logos"
-                width={150}
-                height={150}
+              <MediaImage
+                src="https://res.cloudinary.com/typeeighty/image/upload/f_auto,q_auto/dental-clinics-my/logos/frogdr.png"
+                width={MEDIA.avatar.width}
+                height={MEDIA.avatar.height}
+                sizes={MEDIA.avatar.sizes}
                 alt="FrogDR🔍"
                 className="h-full w-full object-cover"
               />

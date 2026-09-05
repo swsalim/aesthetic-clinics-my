@@ -90,7 +90,12 @@ export const columns: ColumnDef<ClinicTableData>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="📸" className="" />,
     cell: ({ row }) => {
       const images = row.getValue('images') as
-        | Array<{ image_url: string; imagekit_file_id: string }>
+        | Array<{
+            image_url: string | null;
+            imagekit_file_id: string | null;
+            r2_key?: string | null;
+            r2_url?: string | null;
+          }>
         | undefined;
       return <div>{images?.length || 0}</div>;
     },

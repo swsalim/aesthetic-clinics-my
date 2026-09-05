@@ -58,7 +58,7 @@ export const EmailLayout: React.FC<LayoutProps> = ({ preview, children }) => {
                     <Img
                       alt="Dental Clinic Malaysia"
                       height="42"
-                      src="https://res.cloudinary.com/typeeighty/image/upload/v1746758897/aesthetic-clinics-my/logo.png"
+                      src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/logos/aesthetic-clinics-my-v3.png"
                     />
                   </td>
                 </tr>

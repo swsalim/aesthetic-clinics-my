@@ -61,7 +61,7 @@ export default async function DashboardClinicsPage() {
       name,
       slug,
       website,
-      images:clinic_images(image_url, imagekit_file_id),
+      images:clinic_images(id, r2_key, r2_url),
       area:area_id(name, slug),
       state:state_id(name, slug),
       is_active`,

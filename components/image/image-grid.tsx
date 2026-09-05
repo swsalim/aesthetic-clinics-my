@@ -1,6 +1,8 @@
 import { Suspense } from 'react';
 
-import { ImageCloudinary } from '@/components/image/image-cloudinary';
+import { MEDIA } from '@/lib/media-sizes';
+
+import { MediaImage } from '@/components/image/media-image';
 import { ImagePlaceholder } from '@/components/image/image-placeholder';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -45,12 +47,13 @@ function GridImage({
   return (
     <div className="relative h-full w-full overflow-hidden">
       <div className="aspect-h-4 aspect-w-3 lg:aspect-h-3 lg:aspect-w-4 relative h-full w-full">
-        <ImageCloudinary
+        <MediaImage
           src={src}
           alt={alt}
           priority={priority}
-          width={priority ? 800 : 600}
-          height={priority ? 800 : 600}
+          width={priority ? MEDIA.lightbox.width : MEDIA.gallery.width}
+          height={priority ? MEDIA.lightbox.height : MEDIA.gallery.height}
+          sizes={priority ? MEDIA.lightbox.sizes : MEDIA.gallery.sizes}
           className="h-full w-full transform bg-gray-100 object-cover object-center"
         />
       </div>
