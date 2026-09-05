@@ -1,6 +1,6 @@
 ---
 name: ImageKit to R2 migration
-overview: Replication runbook for non-breaking ImageKit → Cloudflare R2 migration. Implemented on aesthetic-clinics-my; copy the same pattern to dental-clinics-close-to-me.
+overview: Replication runbook for non-breaking ImageKit → Cloudflare R2 storage migration. Serving/resizing uses Vercel next/image (not Cloudflare Image Transformations). Implemented on aesthetic-clinics-my; copy to dental-clinics-close-to-me.
 todos:
   - id: cf-r2-setup
     content: "aesthetic: R2 bucket + media.aestheticclinics.my + env vars"
@@ -12,10 +12,10 @@ todos:
     content: "aesthetic: /api/upload-r2 + /api/delete-r2 + lib/r2* + MediaImage"
     status: completed
   - id: upload-callers
-    content: "aesthetic: all forms/helpers write r2_key/r2_url only"
+    content: "aesthetic: all forms/helpers write r2_key/r2_url only; no clinics.images column"
     status: completed
   - id: serving-cleanup
-    content: "aesthetic: MediaImage + resolveMediaUrl (R2 then ImageKit fallback); loaders removed"
+    content: "aesthetic: MediaImage + resolveMediaUrl + media-sizes; Vercel optimizer (CF transforms reverted)"
     status: completed
   - id: backfill-script
     content: "aesthetic: full backfill --execute completed (keyset pagination)"
@@ -47,7 +47,9 @@ Source of truth for finishing **aesthetic-clinics-my** and replicating on **dent
 - **Non-breaking DB:** keep ImageKit/legacy columns; add `r2_key` + `r2_url`.
 - New uploads write **only** R2 columns (do not write `image_url` / `imagekit_file_id` for new rows).
 - Serving: `resolveMediaUrl` prefers `r2_url`, then falls back to ImageKit/legacy URLs.
-- Image sizes: shared presets in [`lib/media-sizes.ts`](lib/media-sizes.ts); resizing via **Vercel** `next/image` (not Cloudflare `/cdn-cgi/image`).
+- **Storage:** Cloudflare R2 + custom domain `media.<site>`.
+- **Resizing:** Next.js / **Vercel Image Optimization** (`next/image`). **Do not** use Cloudflare `/cdn-cgi/image` (tried; unique-transform pricing was too expensive for listing traffic).
+- Image sizes: shared presets in [`lib/media-sizes.ts`](lib/media-sizes.ts); keep `next.config.ts` `deviceSizes` / `imageSizes` in sync.
 - RPCs return **both** ImageKit and R2 fields so old and new app code keep working.
 - Delete ImageKit files **last**, after verify (dry-run default).
 - Editor / Vercel Blob uploads stay out of scope.
@@ -57,7 +59,7 @@ Source of truth for finishing **aesthetic-clinics-my** and replicating on **dent
 ```text
 1. Schema SQL (r2 columns)          ← additive; safe alone
 2. RPC SQL (dual ImageKit + R2)     ← additive JSON keys; safe alone (no app deploy needed)
-3. App code (R2 APIs, MediaImage, callers, resolveMediaUrl fallback)
+3. App code (R2 APIs, MediaImage, callers, resolveMediaUrl fallback, media-sizes)
 4. Backfill ImageKit → R2           ← fills r2_*; never clears ImageKit cols
 5. Verify listings + dashboard uploads
 6. Upload static logo/ads to R2; point absolute URLs
@@ -72,8 +74,9 @@ Source of truth for finishing **aesthetic-clinics-my** and replicating on **dent
 | | aesthetic-clinics-my | dental-clinics-close-to-me |
 |--|--|--|
 | Site | https://aestheticclinics.my | (dental production domain) |
-| Media CDN | `https://media.aestheticclinics.my` | e.g. `https://media.<dental-domain>` |
+| Media CDN (R2) | `https://media.aestheticclinics.my` | e.g. `https://media.<dental-domain>` |
 | R2 bucket | `aesthetic-clinic-media-production` | new bucket (e.g. `dental-clinic-media-production`) |
+| Image resize | Vercel `next/image` → `/_next/image?url=…` | same |
 | ImageKit id (legacy) | `yuurrific` | check that project's `NEXT_PUBLIC_IMAGEKIT_ID` |
 | Status | Code + backfill done; verify → static → delete ImageKit | Not started — follow this runbook |
 
@@ -107,6 +110,8 @@ NEXT_PUBLIC_IMAGEKIT_ID=
 ```
 
 6. Smoke-test: object reachable at `NEXT_PUBLIC_R2_PUBLIC_URL/<key>`.
+
+**Do not** enable Cloudflare Image Transformations for app serving (Vercel handles resize). R2 is storage + CDN origin only.
 
 **aesthetic:** done (`R2_BUCKET=aesthetic-clinic-media-production`, public URL `https://media.aestheticclinics.my`).
 
@@ -145,6 +150,8 @@ ALTER TABLE clinic_doctor_images
 
 Then update `types/database.types.ts` + app types (`types/clinic.ts`) for `r2_key` / `r2_url` and nullable ImageKit fields.
 
+**Note:** live `clinics` / `clinic_doctors` tables have **no** `images` column (images live in child tables). Do not insert `images: null` into those parent tables (causes `PGRST204`).
+
 **aesthetic:** done.
 
 ### 2. RPC dual-column migrations (manual SQL)
@@ -174,8 +181,8 @@ Apply **after** schema columns exist. Both files keep ImageKit fields and add R2
 **Notes for dental:**
 
 1. Dump live RPC defs first (`pg_get_functiondef`) — dental may differ slightly; port the **image payload** pattern, don't blindly overwrite unrelated logic.
-2. If dental has `get_clinics_by_service_id` (or other RPCs that build image JSON), update those the same way. Aesthetic did not have a migration for that function yet — grep dental for `image_url` / `json_build_object` inside RPCs.
-3. `get_clinic_by_slug` migration uses `DROP FUNCTION IF EXISTS ... CASCADE` then recreate — confirm grants/policies after apply if dental uses restricted EXECUTE grants.
+2. If dental has `get_clinics_by_service_id` (or other RPCs that build image JSON), update those the same way.
+3. `get_clinic_by_slug` migration uses `DROP FUNCTION IF EXISTS ... CASCADE` then recreate — confirm grants after apply if needed.
 
 **aesthetic:** SQL files ready; apply in Supabase editor when ready.
 
@@ -183,7 +190,7 @@ Apply **after** schema columns exist. Both files keep ImageKit fields and add R2
 
 ```bash
 npm install @aws-sdk/client-s3
-# Remove imagekit package only after cutover (step 8); aesthetic already removed SDK usage
+# Remove imagekit package only after cutover (step 8)
 ```
 
 ### 4. Core libraries (copy these files)
@@ -193,11 +200,11 @@ npm install @aws-sdk/client-s3
 | [`lib/r2.ts`](lib/r2.ts) | S3 client, `uploadBufferToR2`, `deleteR2Object`, `buildR2ObjectKey` |
 | [`lib/r2-public.ts`](lib/r2-public.ts) | Client-safe `getR2PublicUrl` / `buildR2PublicUrl` (no secrets) |
 | [`lib/media.ts`](lib/media.ts) | `resolveMediaUrl()` — prefer R2, fall back to legacy |
-| [`lib/media-sizes.ts`](lib/media-sizes.ts) | `MEDIA` presets + `MEDIA_DEVICE_SIZES` / `MEDIA_IMAGE_SIZES` (sync with next.config) |
+| [`lib/media-sizes.ts`](lib/media-sizes.ts) | `MEDIA` presets + `MEDIA_DEVICE_SIZES` / `MEDIA_IMAGE_SIZES` |
 | [`lib/upload-r2-client.ts`](lib/upload-r2-client.ts) | Browser helpers `uploadFileToR2` / `deleteFileFromR2` |
-| [`components/image/media-image.tsx`](components/image/media-image.tsx) | `next/image` wrapper (no ImageKit/Cloudinary loaders) |
+| [`components/image/media-image.tsx`](components/image/media-image.tsx) | `next/image` wrapper (Vercel optimizer) |
 
-**`resolveMediaUrl` contract (must keep fallbacks until backfill + ImageKit delete):**
+**`resolveMediaUrl` contract (keep fallbacks until ImageKit delete):**
 
 ```ts
 fields.r2_url
@@ -236,36 +243,32 @@ Update every upload/delete to use `uploadFileToR2` / `deleteFileFromR2` and pers
 | Doctors | `form-add-doctor.tsx`, `form-edit-doctor.tsx`, `data-table-row-actions.tsx` |
 | Areas/states | `form-edit-area.tsx`, `form-edit-state.tsx` |
 | Apify | [`tasks/insert-apify-data.ts`](tasks/insert-apify-data.ts) → `/api/upload-r2` |
-| Selects | helpers + dashboard pages — include `r2_key, r2_url` (and keep ImageKit cols in RPC consumers via fallback) |
+| Selects | helpers + dashboard pages — include `r2_key, r2_url` |
 
-**Delete rules:** if row has `r2_key`, call `/api/delete-r2`; do not call ImageKit delete from app write paths anymore. Track removals by DB row `id`.
+**Delete rules:** if row has `r2_key`, call `/api/delete-r2`; do not call ImageKit delete from app write paths. Track removals by DB row `id`.
+
+**Gotcha:** never write `images` onto `clinics` / `clinic_doctors` inserts/updates — that column does not exist (`PGRST204`).
 
 ### 7. Serving cleanup + image size presets
 
 - Replace all `<ImageKit>` / `<ImageCloudinary>` with `<MediaImage>` + `resolveMediaUrl(...)`.
 - Delete `components/image/image-kit.tsx`, `image-cloudinary.tsx`, Cloudinary loaders in `lib/utils.ts`, unused `services/cloudinary.service.ts`.
-- [`next.config.ts`](next.config.ts): add `media.<site>` to `remotePatterns`; **keep** `ik.imagekit.io` + `res.cloudinary.com` until backfill + static cutover, then remove.
+- [`next.config.ts`](next.config.ts): add `media.<site>` to `remotePatterns`; **keep** `ik.imagekit.io` + `res.cloudinary.com` until static cutover + ImageKit delete, then remove.
+- **No** `images.loader` / `loaderFile` — default Vercel optimizer only.
 
 #### Image size presets (required for dental port)
 
-Use shared presets from [`lib/media-sizes.ts`](lib/media-sizes.ts) at every `MediaImage` call site — do **not** invent one-off widths.
-
-**Resizing:** Next.js / **Vercel Image Optimization** (default `next/image`). Do **not** use a Cloudflare `/cdn-cgi/image` custom loader — CF unique-transform pricing is more expensive for this traffic pattern.
-
-**`next.config.ts`:**
+Use [`lib/media-sizes.ts`](lib/media-sizes.ts) at every `MediaImage` call site.
 
 ```ts
 import { MEDIA_DEVICE_SIZES, MEDIA_IMAGE_SIZES } from './lib/media-sizes';
 
 images: {
-  // Default Vercel optimizer — no loader / loaderFile
-  deviceSizes: [...MEDIA_DEVICE_SIZES], // [640, 1080, 1920]
+  deviceSizes: [...MEDIA_DEVICE_SIZES], // [640, 1080, 1200, 1920]
   imageSizes: [...MEDIA_IMAGE_SIZES],   // [128, 256, 384]
   remotePatterns: [ /* media.<site> + legacy hosts */ ],
 }
 ```
-
-**`MEDIA` presets:**
 
 | Preset | W×H | Typical use |
 |--------|-----|-------------|
@@ -276,7 +279,7 @@ images: {
 | `gallery` | 800×800 | Main gallery, profiles, dashboard |
 | `featured` | 1080×810 | Featured partner spotlight |
 | `lightbox` | 1080×1080 | Lightbox / large grids |
-| `hero` | 1920×640 | State/area page banners |
+| `hero` | **1200×400** | State/area page banners |
 | `landscapeMd` | 640×360 | Explore-states tiles |
 | `landscapeLg` | 1080×463 | Browse state banners |
 | `areaThumb` | 384×384 | Explore-areas grid |
@@ -287,13 +290,13 @@ import { MEDIA } from '@/lib/media-sizes';
 <MediaImage
   src={src}
   alt={alt}
-  width={MEDIA.card.width}
-  height={MEDIA.card.height}
-  sizes={MEDIA.card.sizes}
+  width={MEDIA.hero.width}
+  height={MEDIA.hero.height}
+  sizes={MEDIA.hero.sizes}
 />
 ```
 
-Legacy ImageKit/Cloudinary URLs and local `/images/...` still work via `remotePatterns` / static files.
+**Decision log — Cloudflare Image Transformations:** briefly enabled via custom `image-loader.ts` (`/cdn-cgi/image/...`). Unique-transform counts rose quickly with Next `srcset` (homepage ~24, state ~32, clinic scroll ~52). Reverted to Vercel Image Optimization; delete any leftover `image-loader.ts` / `NEXT_PUBLIC_CF_IMAGE_TRANSFORMS` on dental — do not reintroduce.
 
 **Temporary legacy absolute URLs (aesthetic, until static upload to R2):**
 
@@ -361,6 +364,7 @@ npm run backfill-r2 -- --execute --table=clinic_images --limit=100 --batch-size=
 
 - Dashboard upload → file on `media.<site>` + `r2_*` in DB.
 - Clinic/doctor/area/state pages: images load via `r2_url` after backfill; unmigrated rows still load via ImageKit fallback.
+- Images served through `/_next/image?url=https://media.<site>/…` (Vercel), not `/cdn-cgi/image`.
 - Nearby / ranged listing RPCs still return images after dual-column RPC apply.
 - Delete image removes R2 object.
 - Re-run backfill dry-run: pending counts near zero (except rows with no source URL).
@@ -389,8 +393,9 @@ flowchart LR
   Forms --> DB["Postgres r2_key + r2_url"]
   DB --> Resolve["resolveMediaUrl"]
   Resolve --> MediaImg["MediaImage"]
-  MediaImg --> CDN["media.site next/image"]
-  Legacy["image_url / imagekit_file_id"] -.->|"fallback until backfill"| Resolve
+  MediaImg --> VercelOpt["Vercel /_next/image"]
+  VercelOpt --> CDN["media.site origin"]
+  Legacy["image_url / imagekit_file_id"] -.->|"fallback until delete"| Resolve
   RPC["RPCs return both column sets"] --> Resolve
 ```
 
@@ -413,6 +418,7 @@ flowchart LR
 - `components/image/image-kit.tsx`
 - `components/image/image-cloudinary.tsx`
 - `services/cloudinary.service.ts` (if unused)
+- Do **not** ship `image-loader.ts` / CF transform env (reverted on aesthetic)
 
 ### Still present until final cutover
 
@@ -427,7 +433,7 @@ flowchart LR
 |------|--------|
 | 1. R2 + env + schema SQL | Done |
 | 2. RPC SQL (dual columns) | Confirm applied in Supabase (files ready) |
-| 3. App code (APIs, callers, MediaImage, fallback, media-sizes presets) | Done |
+| 3. App code (APIs, callers, MediaImage, media-sizes, Vercel resize) | Done |
 | 4. Full backfill `--execute` | Done |
 | 5. Verify listings + dashboard upload/delete | **You are here** |
 | 6. Point static logo/ads/placeholders at R2 | Pending |
@@ -439,13 +445,14 @@ flowchart LR
 
 ## dental-clinics-close-to-me — replication notes
 
-1. Copy the **file set** above from aesthetic (libs, API routes, MediaImage, tasks, migration SQL).
+1. Copy the **file set** above from aesthetic (libs, API routes, MediaImage, media-sizes, tasks, migration SQL).
 2. Swap domain/bucket/env for dental (`NEXT_PUBLIC_R2_PUBLIC_URL`, `R2_BUCKET`, `next.config.ts` hostname).
 3. Grep dental for: `ImageKit`, `ImageCloudinary`, `upload-imagekit`, `imagekit_file_id`, `ik.imagekit.io`, `res.cloudinary.com`.
 4. Dump dental RPC defs; port dual-column image payloads (do not assume identical function bodies).
 5. Apply schema + RPC SQL on **dental** Supabase project (separate DB).
 6. Run backfill against dental ImageKit/Cloudinary URLs in that DB.
-7. Keep buckets separate from aesthetic production media.
+7. Use **Vercel** image optimization — skip Cloudflare Image Transformations.
+8. Keep buckets separate from aesthetic production media.
 
 Optional: after aesthetic is fully verified, treat this plan + the aesthetic commit as the source of truth and port as a focused PR on dental.
 
@@ -457,3 +464,4 @@ Optional: after aesthetic is fully verified, treat this plan + the aesthetic com
 - No in-place rewrite of historical ImageKit URLs (new columns only).
 - No change to Vercel Blob editor uploads.
 - No auto-applying production SQL via MCP (manual Supabase SQL editor).
+- No Cloudflare `/cdn-cgi/image` custom loader for app media (Vercel only).

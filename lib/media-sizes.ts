@@ -6,7 +6,7 @@
  */
 
 /** Responsive srcset (`sizes` with vw/%). */
-export const MEDIA_DEVICE_SIZES = [640, 1080, 1920] as const;
+export const MEDIA_DEVICE_SIZES = [640, 1080, 1200, 1920] as const;
 
 /** Fixed / small `sizes` (avatars, cards). */
 export const MEDIA_IMAGE_SIZES = [128, 256, 384] as const;
@@ -58,8 +58,8 @@ export const MEDIA = {
   },
   /** State / area page banners */
   hero: {
-    width: 1920,
-    height: 640,
+    width: 1200,
+    height: 400,
     sizes: '100vw',
   },
   /** Explore-states 16:9 tiles */
