@@ -25,7 +25,7 @@ todos:
     status: pending
   - id: verify
     content: "aesthetic: smoke-test upload + listings after RPC + backfill"
-    status: pending
+    status: completed
   - id: static-to-r2
     content: "aesthetic: upload logo/ads/placeholders to R2 and point code off ik.imagekit/cloudinary absolutes"
     status: pending
@@ -78,7 +78,7 @@ Source of truth for finishing **aesthetic-clinics-my** and replicating on **dent
 | R2 bucket | `aesthetic-clinic-media-production` | new bucket (e.g. `dental-clinic-media-production`) |
 | Image resize | Vercel `next/image` → `/_next/image?url=…` | same |
 | ImageKit id (legacy) | `yuurrific` | check that project's `NEXT_PUBLIC_IMAGEKIT_ID` |
-| Status | Code + backfill done; verify → static → delete ImageKit | Not started — follow this runbook |
+| Status | Verified; next: static assets → delete ImageKit → cleanup | Not started — follow this runbook |
 
 Keep aesthetic and dental R2 buckets **separate**.
 
@@ -376,13 +376,15 @@ npm run backfill-r2 -- --execute --table=clinic_images --limit=100 --batch-size=
 ```bash
 npm run delete-imagekit-assets
 npm run delete-imagekit-assets -- --execute
+npm run delete-imagekit-assets -- --execute --batch-size=50
 ```
 
-Selects rows where `r2_key` and `imagekit_file_id` both set; does **not** null DB columns.
+- Selects rows where `r2_key` and `imagekit_file_id` both set.
+- **Paginated** in batches (default 100) — does not stop at Supabase’s 1000-row default.
+- **Resume-safe:** after a successful ImageKit delete (or 404), nulls `imagekit_file_id` so re-runs skip completed rows. Leaves `image_url` intact.
+- Static ImageKit assets (logo, lost-boy, etc.) are **not** covered — migrate those to R2 + update code separately, then delete in the ImageKit UI.
 
 Then remove `/api/upload-imagekit`, `/api/delete-imagekit`, ImageKit env, and legacy remotePatterns. Optionally uninstall `imagekit` npm package.
-
----
 
 ## Architecture (after migration)
 
@@ -435,9 +437,9 @@ flowchart LR
 | 2. RPC SQL (dual columns) | Confirm applied in Supabase (files ready) |
 | 3. App code (APIs, callers, MediaImage, media-sizes, Vercel resize) | Done |
 | 4. Full backfill `--execute` | Done |
-| 5. Verify listings + dashboard upload/delete | **You are here** |
-| 6. Point static logo/ads/placeholders at R2 | Pending |
-| 7. Delete ImageKit assets (dry-run → execute) | Pending (after verify) |
+| 5. Verify listings + dashboard upload/delete | Done |
+| 6. Point static logo/ads/placeholders at R2 | **You are here** |
+| 7. Delete ImageKit assets (dry-run → execute) | Pending |
 | 8. Remove legacy ImageKit API routes + env + remotePatterns | Pending |
 | Dental replication | After aesthetic cutover |
 
