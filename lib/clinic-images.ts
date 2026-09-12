@@ -53,7 +53,7 @@ export function entriesToClinicImages(entries: ClinicImageEntry[]): ClinicImage[
     }));
 }
 
-export type UploadResult = { url: string; key: string };
+export type UploadResult = { url: string; fileId: string };
 
 export async function uploadOrderedNewImages(
   orderedImages: ClinicImageEntry[],
@@ -99,7 +99,7 @@ export async function persistClinicImageOrder(
   }
 
   const savedImages: ClinicImage[] = [];
-  const selectCols = 'id, r2_key, r2_url, display_order';
+  const selectCols = 'id, image_url, imagekit_file_id, r2_key, r2_url, display_order';
 
   for (let index = 0; index < orderedImages.length; index++) {
     const entry = orderedImages[index];
@@ -131,8 +131,8 @@ export async function persistClinicImageOrder(
         .from('clinic_images')
         .insert({
           clinic_id: clinicId,
-          r2_url: uploaded.url,
-          r2_key: uploaded.key,
+          image_url: uploaded.url,
+          imagekit_file_id: uploaded.fileId,
           display_order,
         })
         .select(selectCols)

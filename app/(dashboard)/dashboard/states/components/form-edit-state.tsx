@@ -13,9 +13,10 @@ import { RefreshCwIcon, XIcon } from 'lucide-react';
 import * as z from 'zod';
 
 // Lib imports
+import { resolveMediaUrl } from '@/lib/media';
 import { createClient } from '@/lib/supabase/client';
-import { uploadFileToR2, deleteFileFromR2 } from '@/lib/upload-r2-client';
-import { sanitizeHtmlField } from '@/lib/utils';
+import { uploadFileToImageKit, deleteFileFromImageKit } from '@/lib/upload-imagekit-client';
+import { generateUniqueFilename, sanitizeHtmlField } from '@/lib/utils';
 
 import { FileInput } from '@/components/form-fields/file';
 import { Input } from '@/components/form-fields/input';
@@ -50,10 +51,14 @@ export default function FormEditState({ state }: EditStateFormProps) {
   const router = useRouter();
   const supabase = createClient();
 
-  const [currentImage, setCurrentImage] = useState<string | undefined>(state.r2_url || '');
-  const [currentR2Key, setCurrentR2Key] = useState<string | undefined>(state.r2_key || '');
+  const [currentImage, setCurrentImage] = useState<string | undefined>(
+    resolveMediaUrl(state) || state.image || '',
+  );
+  const [currentImagekitFileId, setCurrentImagekitFileId] = useState<string | undefined>(
+    state.imagekit_file_id || '',
+  );
   const [shouldRemoveImage, setShouldRemoveImage] = useState(false);
-  const [r2KeyToRemove, setR2KeyToRemove] = useState<string | null>(null);
+  const [imageToRemove, setImageToRemove] = useState<string | null>(null);
 
   const form = useForm<ClinicStateFormData>({
     resolver: zodResolver(clinicProfileSchema),
@@ -83,14 +88,14 @@ export default function FormEditState({ state }: EditStateFormProps) {
 
   const handleExistingImageRemove = (e: React.MouseEvent) => {
     e.preventDefault();
-    const keyToRemove = currentR2Key;
+    const fileIdToRemove = currentImagekitFileId;
     setCurrentImage(undefined);
-    setCurrentR2Key(undefined);
+    setCurrentImagekitFileId(undefined);
     setShouldRemoveImage(true);
     form.setValue('image', '');
 
-    if (keyToRemove) {
-      setR2KeyToRemove(keyToRemove);
+    if (fileIdToRemove) {
+      setImageToRemove(fileIdToRemove);
     }
   };
 
@@ -131,28 +136,32 @@ export default function FormEditState({ state }: EditStateFormProps) {
     console.log('onSubmit ~ data');
     console.log(data);
     try {
-      let newR2Url: string | undefined;
-      let newR2Key: string | undefined;
+      let newImageUrl: string | undefined;
+      let newImagekitFileId: string | undefined;
 
-      if (shouldRemoveImage && r2KeyToRemove) {
-        await deleteFileFromR2(r2KeyToRemove);
+      if (shouldRemoveImage && imageToRemove) {
+        await deleteFileFromImageKit(imageToRemove);
         setCurrentImage(undefined);
-        setCurrentR2Key(undefined);
+        setCurrentImagekitFileId(undefined);
       }
 
-      if (watchImage && currentR2Key && !shouldRemoveImage) {
-        await deleteFileFromR2(currentR2Key);
+      if (watchImage && currentImagekitFileId && !shouldRemoveImage) {
+        await deleteFileFromImageKit(currentImagekitFileId);
       }
 
       if (watchImage && watchImage instanceof globalThis.File) {
         try {
-          const result = await uploadFileToR2(watchImage, 'location');
+          const result = await uploadFileToImageKit(
+            watchImage,
+            'aesthetic-clinics-my/location',
+            generateUniqueFilename(watchImage.name),
+          );
           if (!result) {
             throw new Error('Failed to upload image');
           }
-          newR2Url = result.url;
-          newR2Key = result.key;
-          setCurrentR2Key(result.key);
+          newImageUrl = result.url;
+          newImagekitFileId = result.fileId;
+          setCurrentImagekitFileId(result.fileId);
           setCurrentImage(result.url);
         } catch (error) {
           console.error('Image upload error:', error);
@@ -171,8 +180,8 @@ export default function FormEditState({ state }: EditStateFormProps) {
         description: string | null | undefined;
         short_description: string | null | undefined;
         slug: string;
-        r2_url?: string | null;
-        r2_key?: string | null;
+        image?: string | null;
+        imagekit_file_id?: string | null;
       } = {
         id: state.id,
         name: data.name,
@@ -181,12 +190,12 @@ export default function FormEditState({ state }: EditStateFormProps) {
         slug: data.slug,
       };
 
-      if (newR2Url && newR2Key) {
-        updatePayload.r2_url = newR2Url;
-        updatePayload.r2_key = newR2Key;
+      if (newImageUrl && newImagekitFileId) {
+        updatePayload.image = newImageUrl;
+        updatePayload.imagekit_file_id = newImagekitFileId;
       } else if (shouldRemoveImage && !watchImage) {
-        updatePayload.r2_url = null;
-        updatePayload.r2_key = null;
+        updatePayload.image = null;
+        updatePayload.imagekit_file_id = null;
       }
 
       console.log('finalData');
@@ -211,8 +220,8 @@ export default function FormEditState({ state }: EditStateFormProps) {
           image: '',
         });
 
-        setCurrentImage(updatedState.r2_url || '');
-        setCurrentR2Key(updatedState.r2_key || '');
+        setCurrentImage(resolveMediaUrl(updatedState) || updatedState.image || '');
+        setCurrentImagekitFileId(updatedState.imagekit_file_id || '');
       }
 
       toast({
@@ -221,7 +230,7 @@ export default function FormEditState({ state }: EditStateFormProps) {
       });
 
       setShouldRemoveImage(false);
-      setR2KeyToRemove(null);
+      setImageToRemove(null);
       router.refresh();
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to update state';

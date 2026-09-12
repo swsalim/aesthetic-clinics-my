@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import pluralize from 'pluralize';
 
+import { imageKitUrl } from '@/lib/imagekit-url';
 import { resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';
 
@@ -15,6 +16,8 @@ interface AreaWithCount {
   id: string;
   name: string;
   slug: string;
+  image?: string | null;
+  imagekit_file_id?: string | null;
   r2_url?: string | null;
   state: { slug: string } | null;
   clinics: { count: number }[];
@@ -47,9 +50,9 @@ export function ExploreAreasClient({ areas }: ExploreAreasClientProps) {
       {filteredAreas?.map((area) => {
         const imageSrc =
           resolveMediaUrl({
+            image: area.image,
             r2_url: area.r2_url,
-          }) ??
-          'https://res.cloudinary.com/typeeighty/image/upload/f_auto,q_auto/dental-clinics-my/placeholder-location.jpg';
+          }) ?? imageKitUrl('aesthetic-clinics-my/placeholder-location.jpg');
 
         return (
           <div key={area.id}>

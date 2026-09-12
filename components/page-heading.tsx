@@ -28,13 +28,9 @@ export default function PageHeading({
   return (
     <div className={cn('mb-8 md:mb-12', className)}>
       <Container className="min-w-0">
-        <header className="relative min-w-0 overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-blue-100/40 px-6 py-9 shadow-sm sm:px-10 sm:py-11 dark:border-gray-700 dark:from-gray-800 dark:via-gray-800 dark:to-blue-950/50 dark:shadow-none">
+        <header className="dark:to-blue-950/50 relative min-w-0 overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-blue-100/40 px-6 py-9 shadow-sm sm:px-10 sm:py-11 dark:border-gray-700 dark:from-gray-800 dark:via-gray-800 dark:shadow-none">
           <div
             className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-blue-300/20 blur-3xl dark:bg-blue-600/10"
-            aria-hidden="true"
-          />
-          <div
-            className="pointer-events-none absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-blue-500 via-blue-400/60 to-transparent dark:from-blue-400 dark:via-blue-500/50 dark:to-transparent"
             aria-hidden="true"
           />
 

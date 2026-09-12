@@ -64,7 +64,7 @@ export default async function EditClinicToBeReviewedPage({
 
   const { data: clinic } = await supabase
     .from('clinics')
-    .select('*, images:clinic_images(id, r2_key, r2_url, display_order)')
+    .select('*, images:clinic_images(id, image_url, imagekit_file_id, r2_key, r2_url, display_order)')
     .match({ id })
     .single();
 

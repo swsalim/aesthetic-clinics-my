@@ -8,6 +8,7 @@ import {
   SproutIcon,
 } from 'lucide-react';
 
+import { imageKitUrl } from '@/lib/imagekit-url';
 import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
@@ -29,7 +30,7 @@ const seo = {
   company: 'AestheticClinics.my',
 };
 
-const ogImage = 'https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/images/og-advertise.png';
+const ogImage = imageKitUrl('aesthetic-clinics-my/images/og-advertise.png');
 
 export const metadata = {
   title: seo.title,

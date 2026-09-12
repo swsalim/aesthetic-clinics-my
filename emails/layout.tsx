@@ -14,6 +14,8 @@ import {
   Text,
 } from '@react-email/components';
 
+import { imageKitUrl } from '../lib/imagekit-url';
+
 interface LayoutProps {
   preview: string;
   children: React.ReactNode;
@@ -56,9 +58,9 @@ export const EmailLayout: React.FC<LayoutProps> = ({ preview, children }) => {
                 <tr className="w-full">
                   <td align="center">
                     <Img
-                      alt="Dental Clinic Malaysia"
+                      alt="Aesthetic Clinics Malaysia"
                       height="42"
-                      src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/logos/aesthetic-clinics-my-v3.png"
+                      src={imageKitUrl('aesthetic-clinics-my/logos/aesthetic-clinics-my-v3.png')}
                     />
                   </td>
                 </tr>
