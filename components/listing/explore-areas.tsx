@@ -9,7 +9,7 @@ export async function ExploreAreas() {
   const supabase = await createServerClient();
   const { data: areas } = await supabase
     .from('areas')
-    .select('id, name, slug, r2_url, state:states (slug), clinics(count)')
+    .select('id, name, slug, image, imagekit_file_id, r2_url, state:states (slug), clinics(count)')
     .eq('clinics.status', 'approved');
 
   const sortedAreas = areas

@@ -3,13 +3,13 @@
 import Image, { type ImageProps } from 'next/image';
 
 import { imageKitLoader, isImageKitUrl } from '@/lib/imagekit-loader';
+import { getImageKitId } from '@/lib/imagekit-url';
 import { MEDIA } from '@/lib/media-sizes';
-import { getR2PublicUrl } from '@/lib/r2-public';
 
 interface MediaImageProps extends Omit<ImageProps, 'src'> {
   src: string;
   alt: string;
-  /** Optional key under the public R2 host (when src is not absolute). */
+  /** Optional path prefix under the ImageKit account (when src is not absolute). */
   directory?: string | null;
 }
 
@@ -18,15 +18,15 @@ function resolveSrc(src: string, directory?: string | null): string {
     return src;
   }
 
-  const publicBase = getR2PublicUrl();
+  const id = getImageKitId();
   const prefix = directory ? `${directory.replace(/\/$/, '')}/` : '';
-  return `${publicBase}/${prefix}${src.replace(/^\//, '')}`;
+  return `https://ik.imagekit.io/${id}/${prefix}${src.replace(/^\//, '')}`;
 }
 
 /**
- * next/image wrapper for R2 + remaining static ImageKit URLs.
- * - R2 / relative / other hosts → default Vercel Image Optimization
+ * next/image wrapper for ImageKit + remaining absolute URLs (R2, Cloudinary, local).
  * - ik.imagekit.io → ImageKit `tr=` loader (no Vercel proxy for those)
+ * - other hosts / relative → default Vercel Image Optimization
  */
 export function MediaImage({
   src = 'placeholder.jpg',

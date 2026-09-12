@@ -9,6 +9,7 @@ import pluralize from 'pluralize';
 
 import { siteConfig } from '@/config/site';
 
+import { imageKitUrl } from '@/lib/imagekit-url';
 import { createAdminClient } from '@/lib/supabase';
 import { resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';
@@ -73,7 +74,9 @@ export const metadata: Metadata = {
   },
 };
 
-type BrowseState = Pick<ClinicState, 'id' | 'name' | 'slug' | 'r2_url'> & { clinicCount: number };
+type BrowseState = Pick<ClinicState, 'id' | 'name' | 'slug' | 'image' | 'imagekit_file_id' | 'r2_url'> & {
+  clinicCount: number;
+};
 type BrowseArea = Pick<ClinicArea, 'id' | 'name' | 'slug' | 'state_id'> & { clinicCount: number };
 
 const getBrowseData = unstable_cache(
@@ -83,7 +86,7 @@ const getBrowseData = unstable_cache(
     const [{ data: statesData }, { data: areasData }, { count: clinicCount }] = await Promise.all([
       supabase
         .from('states')
-        .select('id, name, slug, r2_url, clinics(count)')
+        .select('id, name, slug, image, imagekit_file_id, r2_url, clinics(count)')
         .eq('clinics.status', 'approved')
         .eq('clinics.is_active', true),
       supabase
@@ -102,6 +105,8 @@ const getBrowseData = unstable_cache(
         id: state.id,
         name: state.name,
         slug: state.slug,
+        image: state.image,
+        imagekit_file_id: state.imagekit_file_id,
         r2_url: state.r2_url,
         clinicCount: state.clinics?.[0]?.count ?? 0,
       }))
@@ -230,8 +235,8 @@ export default async function BrowsePage() {
                       className="group relative block aspect-[16/9] overflow-hidden no-underline md:aspect-[21/9]">
                       <MediaImage
                         src={
-                          resolveMediaUrl({ r2_url: state.r2_url }) ??
-                          'https://res.cloudinary.com/typeeighty/image/upload/f_auto,q_auto/dental-clinics-my/placeholder-location.jpg'
+                          resolveMediaUrl(state) ??
+                          imageKitUrl('aesthetic-clinics-my/placeholder-location.jpg')
                         }
                         alt={state.name}
                         width={MEDIA.landscapeLg.width}

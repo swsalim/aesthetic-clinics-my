@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { imageKitUrl } from '@/lib/imagekit-url';
 import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
@@ -17,7 +18,7 @@ const Logo: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...pr
         aria-hidden="true"
         {...props}>
         <MediaImage
-          src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/logos/aesthetic-clinics-my-v3.png"
+          src={imageKitUrl('aesthetic-clinics-my/logos/aesthetic-clinics-my-v3.png')}
           alt="Aesthetic Clinics Malaysia"
           width={MEDIA.avatar.width}
           height={MEDIA.avatar.height}

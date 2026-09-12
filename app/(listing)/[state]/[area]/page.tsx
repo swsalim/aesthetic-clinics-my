@@ -11,6 +11,7 @@ import { ArrowRightIcon } from 'lucide-react';
 import { isFeatured, isFeaturedPartner } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
+import { imageKitUrl } from '@/lib/imagekit-url';
 import { resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';
 import { absoluteUrl, cn, getPagination } from '@/lib/utils';
@@ -205,8 +206,13 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
 
   const areaBackgroundSrc =
     resolveMediaUrl({
+      image: areaData.image,
       r2_url: areaData.r2_url,
-    }) || resolveMediaUrl({ r2_url: areaData.state?.r2_url });
+    }) ||
+    resolveMediaUrl({
+      image: areaData.state?.image,
+      r2_url: areaData.state?.r2_url,
+    });
 
   return (
     <>
@@ -379,7 +385,7 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
               <div className="flex flex-col items-center justify-center">
                 <div className="relative size-64 md:size-96">
                     <MediaImage
-                      src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/lost-boy.png"
+                      src={imageKitUrl('aesthetic-clinics-my/lost-boy.png')}
                     alt="No aesthetic clinics found"
                     width={MEDIA.gallery.width}
                     height={MEDIA.gallery.height}

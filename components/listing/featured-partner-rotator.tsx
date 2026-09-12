@@ -113,12 +113,12 @@ export function FeaturedPartnerRotator({ partners }: { partners: FeaturedPartner
       aria-label={`View ${partner.name}`}
       className="group block overflow-hidden rounded-2xl border border-amber-300/70 bg-white no-underline shadow-[0_20px_50px_-24px_rgba(245,158,11,0.45)] ring-1 ring-amber-200/70 transition duration-300 hover:border-amber-400 hover:shadow-[0_28px_60px_-22px_rgba(245,158,11,0.5)] motion-reduce:transition-none dark:border-amber-700/50 dark:bg-gray-900 dark:ring-amber-800/40">
       <div className="grid min-w-0 grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-        <div className="relative min-h-[220px] overflow-hidden lg:min-h-[320px]">
+        <div className="relative max-h-[240px] min-h-[220px] overflow-hidden lg:max-h-[350px] lg:min-h-[320px]">
           <PartnerImage partner={partner} />
         </div>
 
         <div className="flex min-w-0 flex-col gap-4 p-6 sm:p-8">
-          <div className="flex flex-col items-center gap-2 md:flex-row">
+          <div className="flex flex-row items-center gap-2">
             <div className="flex flex-wrap gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/60 bg-gradient-to-r from-amber-500 to-amber-600 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white shadow-sm">
                 <SparklesIcon className="size-3.5 shrink-0" aria-hidden="true" />

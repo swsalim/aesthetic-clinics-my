@@ -98,10 +98,10 @@ class ClinicDataProcessor {
     return `${cleanSlug}_${timestamp}.${extension}`;
   }
 
-  private async uploadImageToR2(
+  private async uploadImageToImageKit(
     imageUrl: string,
     clinicSlug: string,
-  ): Promise<{ url: string; key: string } | null> {
+  ): Promise<{ url: string; fileId: string } | null> {
     try {
       const response = await fetch(imageUrl);
       if (!response.ok) {
@@ -116,10 +116,10 @@ class ClinicDataProcessor {
         filename: `clinic_${Date.now()}.jpg`,
         contentType: 'image/jpeg',
       });
-      formData.append('folder', 'places');
+      formData.append('folder', 'aesthetic-clinics-my/places');
       formData.append('fileName', this.generateUniqueFilename(imageUrl, clinicSlug));
 
-      const uploadResponse = await fetch(`${this.baseUrl}/api/upload-r2`, {
+      const uploadResponse = await fetch(`${this.baseUrl}/api/upload-imagekit`, {
         method: 'POST',
         body: formData,
       });
@@ -135,14 +135,14 @@ class ClinicDataProcessor {
 
       const data = (await uploadResponse.json()) as {
         success: boolean;
-        r2_url: string;
-        r2_key: string;
+        url: string;
+        imagekit_file_id: string;
       };
 
-      if (data.success && data.r2_key && data.r2_url) {
+      if (data.success && data.imagekit_file_id && data.url) {
         return {
-          url: data.r2_url,
-          key: data.r2_key,
+          url: data.url,
+          fileId: data.imagekit_file_id,
         };
       } else {
         throw new Error('Invalid response from image upload');
@@ -286,8 +286,8 @@ class ClinicDataProcessor {
 
       if (error) throw error;
 
-      // Upload images to R2 if available
-      const processedImages: Array<{ url: string; key: string }> = [];
+      // Upload images to ImageKit if available
+      const processedImages: Array<{ url: string; fileId: string }> = [];
       if (listing.images) {
         console.log(`  Processing ${listing.images.length} images for ${listing.title}...`);
 
@@ -300,9 +300,9 @@ class ClinicDataProcessor {
               console.log(
                 `    Uploading image ${i + 1}/${listing.images.length}: ${trimmedUrl.substring(0, 50)}...`,
               );
-              const r2Result = await this.uploadImageToR2(trimmedUrl, listing.slug);
-              if (r2Result) {
-                processedImages.push(r2Result);
+              const uploadResult = await this.uploadImageToImageKit(trimmedUrl, listing.slug);
+              if (uploadResult) {
+                processedImages.push(uploadResult);
                 console.log(`    ✓ Image ${i + 1} uploaded successfully`);
               } else {
                 console.log(`    ⚠ Image ${i + 1} failed to upload`);
@@ -320,8 +320,8 @@ class ClinicDataProcessor {
       if (processedImages.length > 0 && data?.id) {
         const clinicImageRecords = processedImages.map((image, index) => ({
           clinic_id: data.id,
-          r2_url: image.url,
-          r2_key: image.key,
+          image_url: image.url,
+          imagekit_file_id: image.fileId,
           display_order: index + 1,
         }));
 

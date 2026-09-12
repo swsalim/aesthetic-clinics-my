@@ -23,8 +23,8 @@ import {
   type ClinicImageEntry,
 } from '@/lib/clinic-images';
 import { createClient } from '@/lib/supabase/client';
-import { uploadFileToR2, deleteFileFromR2 } from '@/lib/upload-r2-client';
-import { cn, sanitizeHtmlField } from '@/lib/utils';
+import { uploadFileToImageKit, deleteFileFromImageKit } from '@/lib/upload-imagekit-client';
+import { cn, generateUniqueFilename, sanitizeHtmlField } from '@/lib/utils';
 
 import {
   Command,
@@ -326,7 +326,9 @@ export default function FormAddClinic({ services, areas, states }: AddClinicForm
     setImagesToRemove((prev) => [...prev, imageId]);
   };
 
-  const uploadImageToR2 = async (imageFile: File): Promise<{ url: string; key: string } | null> => {
+  const uploadImageToImageKit = async (
+    imageFile: File,
+  ): Promise<{ url: string; fileId: string } | null> => {
     try {
       const maxSize = 3 * 1024 * 1024; // 3MB
       if (imageFile.size > maxSize) {
@@ -337,7 +339,11 @@ export default function FormAddClinic({ services, areas, states }: AddClinicForm
         throw new Error('Please select a valid image file');
       }
 
-      const result = await uploadFileToR2(imageFile, 'places');
+      const result = await uploadFileToImageKit(
+        imageFile,
+        'aesthetic-clinics-my/places',
+        generateUniqueFilename(imageFile.name),
+      );
       if (!result) {
         throw new Error('Failed to upload image');
       }
@@ -367,7 +373,7 @@ export default function FormAddClinic({ services, areas, states }: AddClinicForm
         try {
           const { data: imageRecord } = await supabase
             .from('clinic_images')
-            .select('r2_key')
+            .select('imagekit_file_id')
             .eq('id', imageId)
             .single();
 
@@ -380,8 +386,8 @@ export default function FormAddClinic({ services, areas, states }: AddClinicForm
             console.error('Error deleting image record:', deleteError);
           }
 
-          if (imageRecord?.r2_key) {
-            await deleteFileFromR2(imageRecord.r2_key);
+          if (imageRecord?.imagekit_file_id) {
+            await deleteFileFromImageKit(imageRecord.imagekit_file_id);
           }
         } catch (error) {
           console.error('Error marking image for removal:', error);
@@ -442,7 +448,7 @@ export default function FormAddClinic({ services, areas, states }: AddClinicForm
           supabase,
           newClinic.id,
           orderedImages,
-          uploadImageToR2,
+          uploadImageToImageKit,
         );
       }
 

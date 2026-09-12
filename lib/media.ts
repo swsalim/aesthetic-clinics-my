@@ -8,15 +8,15 @@ export type MediaFields = {
 };
 
 /**
- * Prefer R2; fall back to legacy ImageKit / Cloudinary URLs when r2_url is missing.
+ * Prefer ImageKit / legacy URLs; fall back to R2 when ImageKit columns are empty.
  */
 export function resolveMediaUrl(fields: MediaFields | null | undefined): string | null {
   if (!fields) return null;
   return (
-    fields.r2_url ||
     fields.image_url ||
     fields.image ||
     fields.thumbnail_image ||
+    fields.r2_url ||
     fields.original_cloudinary_url ||
     null
   );

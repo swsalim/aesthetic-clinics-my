@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowRightIcon } from 'lucide-react';
 import pluralize from 'pluralize';
 
+import { imageKitUrl } from '@/lib/imagekit-url';
 import { resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';
 import { createAdminClient } from '@/lib/supabase';
@@ -17,6 +18,8 @@ type PopularState = {
   id: string;
   name: string;
   slug: string;
+  image: string | null;
+  imagekit_file_id: string | null;
   r2_url: string | null;
   clinicCount: number;
 };
@@ -27,7 +30,7 @@ const getPopularStates = unstable_cache(
 
     const { data: statesData, error: statesError } = await supabase
       .from('states')
-      .select('id, name, slug, r2_url, clinics(count)')
+      .select('id, name, slug, image, imagekit_file_id, r2_url, clinics(count)')
       .eq('clinics.status', 'approved')
       .eq('clinics.is_active', true);
 
@@ -41,6 +44,8 @@ const getPopularStates = unstable_cache(
         id: state.id,
         name: state.name,
         slug: state.slug,
+        image: state.image,
+        imagekit_file_id: state.imagekit_file_id,
         r2_url: state.r2_url,
         clinicCount: state.clinics?.[0]?.count ?? 0,
       }))
@@ -90,8 +95,8 @@ export async function ExploreStates() {
         <ul className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {states.map((state) => {
             const imageSrc =
-              resolveMediaUrl({ r2_url: state.r2_url }) ??
-              'https://res.cloudinary.com/typeeighty/image/upload/f_auto,q_auto/dental-clinics-my/placeholder-location.jpg';
+              resolveMediaUrl(state) ??
+              imageKitUrl('aesthetic-clinics-my/placeholder-location.jpg');
 
             return (
               <li key={state.id} className="min-w-0">

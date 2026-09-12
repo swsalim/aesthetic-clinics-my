@@ -8,7 +8,7 @@ import { Row } from '@tanstack/react-table';
 import { MenuIcon } from 'lucide-react';
 
 import { createClient } from '@/lib/supabase/client';
-import { deleteFileFromR2 } from '@/lib/upload-r2-client';
+import { deleteFileFromImageKit } from '@/lib/upload-imagekit-client';
 
 import {
   AlertDialog,
@@ -59,7 +59,7 @@ export function DataTableRowActions<TData extends DoctorTableData>({
       // First, fetch images from clinic_doctor_images table
       const { data: doctorImages, error: fetchError } = await supabase
         .from('clinic_doctor_images')
-        .select('r2_key')
+        .select('imagekit_file_id')
         .eq('doctor_id', doctor.id);
 
       if (fetchError) {
@@ -71,17 +71,17 @@ export function DataTableRowActions<TData extends DoctorTableData>({
 
       if (error) throw error;
 
-      // Delete images from R2 if they exist
+      // Delete images from ImageKit if they exist
       if (doctorImages && doctorImages.length > 0) {
         for (const imageRecord of doctorImages) {
-          if (imageRecord.r2_key) {
+          if (imageRecord.imagekit_file_id) {
             try {
-              const deleted = await deleteFileFromR2(imageRecord.r2_key);
+              const deleted = await deleteFileFromImageKit(imageRecord.imagekit_file_id);
               if (!deleted) {
-                console.warn('Failed to delete image from R2:', imageRecord.r2_key);
+                console.warn('Failed to delete image from ImageKit:', imageRecord.imagekit_file_id);
               }
             } catch (error) {
-              console.error('Error deleting image from R2:', error);
+              console.error('Error deleting image from ImageKit:', error);
             }
           }
         }

@@ -11,6 +11,7 @@ import { ArrowRightIcon, PersonStandingIcon } from 'lucide-react';
 import { isFeatured, isFeaturedPartner } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
+import { imageKitUrl } from '@/lib/imagekit-url';
 import { resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';
 import { absoluteUrl, cn, getPagination } from '@/lib/utils';
@@ -193,6 +194,7 @@ export default async function StatePage({ params, searchParams }: StatePageProps
   ];
 
   const stateBackgroundSrc = resolveMediaUrl({
+    image: stateData.image,
     r2_url: stateData.r2_url,
   });
 
@@ -400,7 +402,7 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                 <div className="flex flex-col items-center justify-center">
                   <div className="relative size-64 md:size-96">
                     <MediaImage
-                      src="https://ik.imagekit.io/yuurrific/aesthetic-clinics-my/lost-boy.png"
+                      src={imageKitUrl('aesthetic-clinics-my/lost-boy.png')}
                       alt="No aesthetic clinics found"
                       width={MEDIA.gallery.width}
                       height={MEDIA.gallery.height}

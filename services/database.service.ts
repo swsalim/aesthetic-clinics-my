@@ -26,7 +26,7 @@ export interface ClinicData {
 
 export interface ClinicImageData {
   url: string;
-  key: string;
+  fileId: string;
 }
 
 export class DatabaseService {
@@ -75,8 +75,8 @@ export class DatabaseService {
 
     const imageRecords = images.map((image, index) => ({
       clinic_id: clinicId,
-      r2_url: image.url,
-      r2_key: image.key,
+      image_url: image.url,
+      imagekit_file_id: image.fileId,
       display_order: index + 1,
     }));
 
