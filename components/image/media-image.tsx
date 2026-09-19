@@ -2,7 +2,7 @@
 
 import Image, { type ImageProps } from 'next/image';
 
-import { imageKitLoader, isImageKitUrl } from '@/lib/imagekit-loader';
+import { imageKitLoader, isImageKitSrc } from '@/lib/imagekit-loader';
 import { getImageKitId } from '@/lib/imagekit-url';
 import { MEDIA } from '@/lib/media-sizes';
 
@@ -38,7 +38,7 @@ export function MediaImage({
   ...props
 }: MediaImageProps) {
   const imageSrc = resolveSrc(src, directory);
-  const resolvedLoader = loader ?? (isImageKitUrl(imageSrc) ? imageKitLoader : undefined);
+  const resolvedLoader = loader ?? (isImageKitSrc(imageSrc) ? imageKitLoader : undefined);
 
   return (
     <Image
