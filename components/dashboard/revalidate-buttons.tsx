@@ -4,6 +4,7 @@ import {
   revalidateAreas,
   revalidateClinics,
   revalidateDoctors,
+  revalidateReviews,
   revalidateStates,
 } from '@/lib/actions/revalidate';
 
@@ -31,7 +32,7 @@ export default function RevalidateButtons() {
   };
 
   return (
-    <div className="my-12 flex flex-row gap-6">
+    <div className="my-12 flex flex-row flex-wrap gap-6">
       <Button variant="outline" onClick={() => handleRevalidate(revalidateClinics, 'Clinics')}>
         Revalidate Clinics
       </Button>
@@ -43,6 +44,9 @@ export default function RevalidateButtons() {
       </Button>
       <Button variant="outline" onClick={() => handleRevalidate(revalidateDoctors, 'Doctors')}>
         Revalidate Doctors
+      </Button>
+      <Button variant="outline" onClick={() => handleRevalidate(revalidateReviews, 'Reviews')}>
+        Revalidate Reviews
       </Button>
     </div>
   );

@@ -71,13 +71,15 @@ export interface ClinicDoctor {
   specialty: string | null;
   qualification: string | null;
   status: string | null;
-  images: {
-    id: string;
-    image_url?: string | null;
-    imagekit_file_id?: string | null;
-    r2_key?: string | null;
-    r2_url?: string | null;
-  }[] | null;
+  images:
+    | {
+        id: string;
+        image_url?: string | null;
+        imagekit_file_id?: string | null;
+        r2_key?: string | null;
+        r2_url?: string | null;
+      }[]
+    | null;
   featured_video: string | null;
   is_active: boolean | null;
   is_featured: boolean | null;
@@ -99,13 +101,15 @@ export interface ClinicDoctor {
         review_count: number | null;
         is_permanently_closed: boolean | null;
         open_on_public_holidays: boolean | null;
-        images: {
-    id: string;
-    image_url?: string | null;
-    imagekit_file_id?: string | null;
-    r2_key?: string | null;
-    r2_url?: string | null;
-  }[] | null;
+        images:
+          | {
+              id: string;
+              image_url?: string | null;
+              imagekit_file_id?: string | null;
+              r2_key?: string | null;
+              r2_url?: string | null;
+            }[]
+          | null;
         area?: { name: string } | null;
         state?: { name: string } | null;
       }[]
@@ -176,6 +180,16 @@ export interface ClinicReview {
 export type ClinicReviewInsert = Omit<ClinicReview, 'id' | 'created_at' | 'modified_at'>;
 export type ClinicReviewUpdate = Partial<ClinicReviewInsert>;
 
+export interface ReviewClinicSummary {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface ReviewWithClinic extends ClinicReview {
+  clinic: ReviewClinicSummary | null;
+}
+
 export interface Clinic {
   id: string;
   name: string;
@@ -245,13 +259,15 @@ export interface ClinicDetails {
   longitude: number;
   rating: number;
   review_count: number;
-  images: {
-    id: string;
-    image_url?: string | null;
-    imagekit_file_id?: string | null;
-    r2_key?: string | null;
-    r2_url?: string | null;
-  }[] | null;
+  images:
+    | {
+        id: string;
+        image_url?: string | null;
+        imagekit_file_id?: string | null;
+        r2_key?: string | null;
+        r2_url?: string | null;
+      }[]
+    | null;
   featured_video: string;
   youtube_url: string;
   facebook_url: string;

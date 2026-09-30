@@ -30,6 +30,7 @@ const DashboardHeader = () => {
     { label: 'Areas', href: '/dashboard/areas' },
     { label: 'Clinics', href: '/dashboard/clinics' },
     { label: 'Doctors', href: '/dashboard/doctors' },
+    { label: 'Reviews', href: '/dashboard/reviews' },
     { label: 'Review Clinics', href: '/dashboard/clinics/review' },
   ];
 
@@ -67,7 +68,8 @@ const DashboardHeader = () => {
       className={cn('sticky inset-x-0 top-[-1px] z-50 bg-white duration-200 ease-in', {
         'shadow-lg': isSticky,
       })}
-      ref={headerRef}>
+      ref={headerRef}
+    >
       <Container className="flex items-center justify-between py-4">
         <div className="z-10 px-2 md:px-0">
           <Link href="/dashboard">
@@ -75,36 +77,43 @@ const DashboardHeader = () => {
           </Link>
         </div>
         <nav className="hidden md:ml-4 md:flex md:items-center md:gap-8">
-          {links.map(({ label, href }, index) => (
-            <React.Fragment key={label}>
-              <Link
-                href={href}
-                className={cn(
-                  'relative -mx-3 -my-2 rounded-lg border-none px-3 py-2 text-base font-medium transition-colors delay-150 hover:border-none hover:delay-0',
-                  {
-                    'text-gray-700 hover:text-gray-800': pathname !== href,
-                    'text-blue-600 hover:text-blue-900': pathname === href,
-                  },
-                )}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}>
-                {hoveredIndex === index && (
-                  <motion.div
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      borderRadius: '0.5rem',
-                      backgroundColor: 'rgb(243 244 246)',
-                    }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1, transition: { duration: 0.15 } }}
-                    exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                  />
-                )}
-                <span className="relative z-10">{label}</span>
-              </Link>
-            </React.Fragment>
-          ))}
+          {links.map(({ label, href }, index) => {
+            const isActive =
+              pathname === href ||
+              (href !== '/dashboard/clinics' && pathname.startsWith(`${href}/`));
+
+            return (
+              <React.Fragment key={label}>
+                <Link
+                  href={href}
+                  className={cn(
+                    'relative -mx-3 -my-2 rounded-lg border-none px-3 py-2 text-base font-medium transition-colors delay-150 hover:border-none hover:delay-0',
+                    {
+                      'text-gray-700 hover:text-gray-800': !isActive,
+                      'text-blue-600 hover:text-blue-900': isActive,
+                    },
+                  )}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                >
+                  {hoveredIndex === index && (
+                    <motion.div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        borderRadius: '0.5rem',
+                        backgroundColor: 'rgb(243 244 246)',
+                      }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1, transition: { duration: 0.15 } }}
+                      exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                    />
+                  )}
+                  <span className="relative z-10">{label}</span>
+                </Link>
+              </React.Fragment>
+            );
+          })}
           <Link href="#" onClick={handleLogout} className="ml-auto">
             Sign Out
           </Link>
