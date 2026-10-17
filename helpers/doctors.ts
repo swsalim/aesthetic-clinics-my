@@ -2,6 +2,7 @@ import { unstable_cache } from 'next/cache';
 
 import { ClinicDoctor } from '@/types/clinic';
 
+import { hasAdminCredentials } from '@/lib/supabase/admin-guard';
 import { createAdminClient, createServerClient } from '@/lib/supabase';
 
 /**
@@ -125,6 +126,10 @@ function transformDoctorsData(doctorsData: RawDoctorWithClinics[]): ClinicDoctor
 }
 
 export const getDoctorListings = async (status: string = 'approved') => {
+  if (!hasAdminCredentials()) {
+    return [];
+  }
+
   const supabase = createAdminClient();
 
   const { data: doctorData } = (await supabase
@@ -135,7 +140,8 @@ export const getDoctorListings = async (status: string = 'approved') => {
         name,
         slug,
         is_active,
-        status
+        status,
+        modified_at
       `,
     )
     .match({ is_active: true, status })) as {
@@ -145,6 +151,7 @@ export const getDoctorListings = async (status: string = 'approved') => {
       slug: string;
       is_active: boolean | null;
       status: string | null;
+      modified_at: string | null;
     }[];
   };
 
@@ -160,6 +167,10 @@ export const getDoctorBySlug = async (
 ): Promise<ClinicDoctor | null> => {
   const getCachedDoctor = unstable_cache(
     async () => {
+      if (!hasAdminCredentials()) {
+        return null;
+      }
+
       const supabase = createAdminClient();
 
       const { data, error } = await supabase
@@ -211,6 +222,10 @@ export async function getDoctors(
 
   const getCachedDoctors = unstable_cache(
     async () => {
+      if (!hasAdminCredentials()) {
+        return { data: [], count: 0 };
+      }
+
       const supabase = createAdminClient();
       let query = supabase
         .from('clinic_doctors')
@@ -377,6 +392,10 @@ export const getDoctorsByState = async (
 
   return unstable_cache(
     async () => {
+      if (!hasAdminCredentials()) {
+        return { data: [], count: 0 };
+      }
+
       const supabase = createAdminClient();
 
       const { data: result, error } = await supabase.rpc('get_ranged_doctor_by_state_slug', {

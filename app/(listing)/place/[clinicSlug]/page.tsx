@@ -21,6 +21,7 @@ import { isFeaturedListing } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
 import { resolveMediaUrl } from '@/lib/media';
+import { clinicPageTitle } from '@/lib/clinic-title';
 import { absoluteUrl, cn } from '@/lib/utils';
 
 import { getClinicBySlug, getClinicListings } from '@/helpers/clinics';
@@ -187,7 +188,7 @@ export async function generateMetadata({ params }: ClinicPageProps): Promise<Met
     notFound();
   }
 
-  const title = `${clinic.name} - Aesthetic Clinic in ${clinic.area?.name}, ${clinic.state?.name}`;
+  const title = clinicPageTitle(clinic.name, clinic.area?.name, clinic.state?.name);
   const description = `Learn about ${clinic.name}, a trusted aesthetic clinic located in ${clinic.area?.name}, ${clinic.state?.name}. See services, prices, opening hours, and patient reviews before booking an appointment.`;
 
   // Build the OG image URL with optional background image
