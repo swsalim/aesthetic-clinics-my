@@ -50,14 +50,13 @@ type BookingFormData = z.infer<typeof schema>;
 
 const TREATMENT_OPTIONS = [
   { value: 'general', label: 'General' },
-  { value: 'tooth_extraction', label: 'Tooth Extraction' },
-  { value: 'tooth_whitening', label: 'Tooth Whitening' },
-  { value: 'dental_filling', label: 'Dental Filling' },
-  { value: 'scaling_polishing', label: 'Scaling and Polishing' },
-  { value: 'wisdom_teeth_removal', label: 'Wisdom Teeth Removal' },
-  { value: 'dental_implant', label: 'Dental Implant' },
-  { value: 'root_canal_treatment', label: 'Root Canal Treatment' },
-  { value: 'crowning_bridges', label: 'Crowning and Bridges' },
+  { value: 'facial_rejuvenation', label: 'Facial rejuvenation' },
+  { value: 'body_contouring', label: 'Body contouring' },
+  { value: 'hair_restoration', label: 'Hair restoration' },
+  { value: 'laser_treatments', label: 'Laser treatments' },
+  { value: 'botox', label: 'Botox' },
+  { value: 'fillers', label: 'Fillers' },
+  { value: 'facials', label: 'Facials' },
 ];
 
 type Props = {
@@ -300,7 +299,7 @@ export default function AddBookingForm({ clinicName, currentUrl, area }: Props) 
                     <FormLabel>Message*</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Please provide details about your dental needs, preferred appointment time, or any specific concerns..."
+                        placeholder="Please provide details about the treatment, a preferred appointment time, or any specific concerns..."
                         rows={5}
                         {...field}
                       />

@@ -40,7 +40,6 @@ import MapWrapper from '@/components/mapbox-map/map-wrapper';
 import { StickyBookButton } from '@/components/sticky-book-button';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import BusinessJsonLd from '@/components/structured-data/business-json-ld';
-import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
 import { Badge } from '@/components/ui/badge';
 import Breadcrumb from '@/components/ui/breadcrumb';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -297,7 +296,6 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
 
   return (
     <>
-      <WebsiteJsonLd />
       <BusinessJsonLd
         name={parsedClinic.name}
         url={absoluteUrl(`/place/${parsedClinic.slug}`)}

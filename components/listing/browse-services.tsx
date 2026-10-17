@@ -44,7 +44,7 @@ export async function BrowseServices() {
               aria-label="Browse Services"
               className="rounded-full"
               size="large">
-              <Link href="/services/general-dentistry">
+              <Link href="/browse">
                 Browse Services
                 <span className="ml-2" aria-hidden="true">
                   →

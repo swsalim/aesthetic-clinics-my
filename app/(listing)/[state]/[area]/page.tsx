@@ -26,7 +26,6 @@ import AddBookingForm from '@/components/forms/add-booking-form';
 import { MediaImage } from '@/components/image/media-image';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import CollectionPageJsonLd from '@/components/structured-data/collection-page-json-ld';
-import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
 import Breadcrumb from '@/components/ui/breadcrumb';
 import { buttonVariants } from '@/components/ui/button';
 import Container from '@/components/ui/container';
@@ -216,7 +215,6 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
 
   return (
     <>
-      <WebsiteJsonLd />
       <BreadcrumbJsonLd itemListElements={JSONLDbreadcrumbs} />
       <CollectionPageJsonLd
         name={`Aesthetic Clinics in ${areaData.name}, ${areaData.state?.name}`}

@@ -4,7 +4,7 @@ import { absoluteUrl } from '@/lib/utils';
 
 import { getAreaListings } from '@/helpers/areas';
 import { getClinicListings } from '@/helpers/clinics';
-import { getDoctorListings } from '@/helpers/doctors';
+import { getDoctorListings, getDoctorsByState } from '@/helpers/doctors';
 import { getStateListings } from '@/helpers/states';
 
 export const revalidate = 86_400;
@@ -51,6 +51,14 @@ export async function GET() {
     getDoctorListings(),
   ]);
 
+  const doctorCounts = await Promise.all(
+    states.map(async (state) => {
+      const result = await getDoctorsByState(state.slug, 1, 0);
+      return [state.slug, result.count || 0] as const;
+    }),
+  );
+  const doctorCountBySlug = new Map(doctorCounts);
+
   const indexableStates = states.filter((state) => state.clinic_count > 0);
   const indexableAreas = areas.filter(
     (area) => area.clinic_count > 0 && indexableStates.some((state) => state.slug === area.state.slug),
@@ -72,7 +80,12 @@ export async function GET() {
   indexableStates.forEach((state) => {
     const lastmod = toLastmod(state.modified_at) ?? contentLastmod;
     fields.push(entry(`/${state.slug}`, lastmod));
-    fields.push(entry(`/${state.slug}/doctors`, lastmod));
+  });
+
+  states.forEach((state) => {
+    if ((doctorCountBySlug.get(state.slug) ?? 0) > 0) {
+      fields.push(entry(`/${state.slug}/doctors`, toLastmod(state.modified_at) ?? contentLastmod));
+    }
   });
 
   indexableAreas.forEach((area) => {

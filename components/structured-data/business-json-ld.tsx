@@ -67,7 +67,7 @@ export default function BusinessJsonLd({
     <JsonLd id="business-jsonld">
       {{
         '@context': 'https://schema.org',
-        '@type': 'Dentist',
+        '@type': ['MedicalClinic', 'MedicalBusiness'],
         name,
         '@id': url,
         image,
@@ -97,7 +97,6 @@ export default function BusinessJsonLd({
         email,
         url,
         smokingAllowed: false,
-        medicalSpecialty: 'Dentistry',
         ...(memberOf && { memberOf }),
         ...(openingHoursSpecification.length > 0 && { openingHoursSpecification }),
         ...(reviewSchema.length > 0 && { review: reviewSchema }),

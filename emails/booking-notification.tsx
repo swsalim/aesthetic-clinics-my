@@ -16,14 +16,13 @@ interface BookingNotificationEmailProps {
 
 const TREATMENT_LABELS: Record<string, string> = {
   general: 'General',
-  tooth_extraction: 'Tooth Extraction',
-  tooth_whitening: 'Tooth Whitening',
-  dental_filling: 'Aesthetic Filling',
-  scaling_polishing: 'Scaling and Polishing',
-  wisdom_teeth_removal: 'Wisdom Teeth Removal',
-  dental_implant: 'Aesthetic Implant',
-  root_canal_treatment: 'Root Canal Treatment',
-  crowning_bridges: 'Crowning and Bridges',
+  facial_rejuvenation: 'Facial rejuvenation',
+  body_contouring: 'Body contouring',
+  hair_restoration: 'Hair restoration',
+  laser_treatments: 'Laser treatments',
+  botox: 'Botox',
+  fillers: 'Fillers',
+  facials: 'Facials',
 };
 
 export const BookingNotificationEmail = ({

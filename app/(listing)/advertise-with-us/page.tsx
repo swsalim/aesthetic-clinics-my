@@ -16,7 +16,6 @@ import { MediaImage } from '@/components/image/media-image';
 import { PricingPlan } from '@/components/listing/pricing-plan';
 import PageHeading from '@/components/page-heading';
 import WebPageJsonLd from '@/components/structured-data/web-page-json-ld';
-import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
 import { Button } from '@/components/ui/button';
 import Container from '@/components/ui/container';
 import { Wrapper } from '@/components/ui/wrapper';
@@ -254,7 +253,6 @@ function FeaturedListingPreview() {
 export default async function AdvertisePage() {
   return (
     <>
-      <WebsiteJsonLd name={seo.company} />
       <WebPageJsonLd
         description={seo.description}
         id={seo.url}
