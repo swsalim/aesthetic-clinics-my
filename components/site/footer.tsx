@@ -17,7 +17,8 @@ function FooterCopyright() {
             href="https://www.yuurrific.com?ref=aestheticclinics.my"
             className="inline-block font-medium text-blue-400 underline underline-offset-4 transition-colors duration-200 hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-100 focus:ring-offset-2 focus:ring-offset-gray-900"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+          >
             Yuurrific
           </a>
           .
@@ -28,7 +29,8 @@ function FooterCopyright() {
             href="https://go.yuurrific.com/seline"
             className="inline-block rotate-0 rounded-md bg-blue-500 px-2 py-1 text-gray-100 transition duration-100 ease-out hover:-rotate-3 hover:bg-blue-600 hover:text-gray-100 hover:ease-in focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+          >
             Seline
           </a>
         </span>
@@ -54,7 +56,8 @@ function FooterBadges() {
         <a
           href="https://turbo0.com/item/aesthetic-clinics-malaysia"
           target="_blank"
-          rel="noopener noreferrer">
+          rel="noopener noreferrer"
+        >
           <img
             src="https://img.turbo0.com/badge-listed-light.svg"
             alt="Listed on Turbo0"
@@ -73,7 +76,8 @@ function FooterLogo() {
       href="/"
       className="inline-block hover:border-transparent hover:no-underline focus:outline-none focus:ring-2 focus:ring-gray-100 focus:ring-offset-2 focus:ring-offset-gray-900"
       prefetch={false}
-      aria-label="Home">
+      aria-label="Home"
+    >
       <Logo className="relative h-12 w-12 sm:h-14 sm:w-14" />
     </Link>
   );
@@ -96,6 +100,10 @@ export default function Footer() {
     {
       name: 'Browse All States',
       href: '/browse',
+    },
+    {
+      name: 'Guides',
+      href: '/guides',
     },
   ];
   return (
@@ -120,7 +128,8 @@ export default function Footer() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="leading-6 text-gray-300 transition-colors duration-200 hover:text-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-50/50 focus:ring-offset-2 focus:ring-offset-gray-900">
+                        className="leading-6 text-gray-300 transition-colors duration-200 hover:text-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-50/50 focus:ring-offset-2 focus:ring-offset-gray-900"
+                      >
                         {link.name}
                       </Link>
                     </li>
@@ -137,7 +146,8 @@ export default function Footer() {
                       className="leading-6 text-gray-300 transition-colors duration-200 hover:text-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-50/50 focus:ring-offset-2 focus:ring-offset-gray-900"
                       href="https://www.clinicgeek.com/"
                       target="_blank"
-                      rel="noopener noreferrer">
+                      rel="noopener noreferrer"
+                    >
                       Clinic Geek
                     </a>
                   </li>
@@ -146,7 +156,8 @@ export default function Footer() {
                       className="leading-6 text-gray-300 transition-colors duration-200 hover:text-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-50/50 focus:ring-offset-2 focus:ring-offset-gray-900"
                       href="https://www.dentalclinicclosetome.my/"
                       target="_blank"
-                      rel="noopener noreferrer">
+                      rel="noopener noreferrer"
+                    >
                       Dental Clinics Malaysia
                     </a>
                   </li>
