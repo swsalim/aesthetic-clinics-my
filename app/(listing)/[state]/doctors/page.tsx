@@ -19,7 +19,6 @@ import { DoctorCard } from '@/components/cards/doctor-card';
 import PageHeading from '@/components/page-heading';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import WebPageJsonLd from '@/components/structured-data/web-page-json-ld';
-import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
 import Breadcrumb from '@/components/ui/breadcrumb';
 import Container from '@/components/ui/container';
 import { Pagination } from '@/components/ui/pagination';
@@ -54,8 +53,14 @@ export async function generateMetadata({
   const doctorsResult = await getDoctorsByState(state, 1, 0);
   const totalDoctors = doctorsResult.count || 0;
 
-  const title = `Top ${totalDoctors} LCP-Certified Aesthetic Doctors in ${stateData.name}`;
-  const description = `Discover ${totalDoctors} aesthetic doctors in ${stateData.name}. Browse by city or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details.`;
+  const title =
+    totalDoctors > 0
+      ? `Top ${totalDoctors} LCP-Certified Aesthetic Doctors in ${stateData.name}`
+      : `LCP-Certified Aesthetic Doctors in ${stateData.name}`;
+  const description =
+    totalDoctors > 0
+      ? `Discover ${totalDoctors} aesthetic doctors in ${stateData.name}. Browse by city or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details.`
+      : `Discover aesthetic doctors in ${stateData.name}. Browse by city or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details.`;
   const url = !page
     ? absoluteUrl(`/${state}/doctors`)
     : page === '1'
@@ -72,6 +77,7 @@ export async function generateMetadata({
     alternates: {
       canonical: url,
     },
+    robots: totalDoctors > 0 ? { index: true, follow: true } : { index: false, follow: true },
     openGraph: {
       title,
       description,
@@ -193,11 +199,13 @@ export default async function DentistsByStatePage({
   };
 
   const title = `Browse LCP-Certified Aesthetic Doctors in ${stateData.name}`;
-  const description = `Discover ${totalDoctors} aesthetic doctors in ${stateData.name}. Browse by city or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details.`;
+  const description =
+    totalDoctors > 0
+      ? `Discover ${totalDoctors} aesthetic doctors in ${stateData.name}. Browse by city or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details.`
+      : `Discover aesthetic doctors in ${stateData.name}. Browse by city or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details.`;
 
   return (
     <>
-      <WebsiteJsonLd />
       <WebPageJsonLd
         description={description}
         id={`/${state}/doctors`}
@@ -220,8 +228,9 @@ export default async function DentistsByStatePage({
       <Wrapper className="pt-0 md:pt-0">
         <PageHeading label={stateData.name} title={title}>
           <p>
-            Discover {totalDoctors} aesthetic doctors in {stateData.name}. Browse by city or clinic
-            to find a aesthetic doctor near you.
+            {totalDoctors > 0
+              ? `Discover ${totalDoctors} aesthetic doctors in ${stateData.name}. Browse by city or clinic to find a aesthetic doctor near you.`
+              : `Discover aesthetic doctors in ${stateData.name}. Browse by city or clinic to find a aesthetic doctor near you.`}
           </p>
         </PageHeading>
 

@@ -29,7 +29,6 @@ import {
 } from '@/components/listing/featured-clinic-spotlight';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import CollectionPageJsonLd from '@/components/structured-data/collection-page-json-ld';
-import WebsiteJsonLd from '@/components/structured-data/website-json-ld';
 import Breadcrumb from '@/components/ui/breadcrumb';
 import { buttonVariants } from '@/components/ui/button';
 import Container from '@/components/ui/container';
@@ -206,7 +205,6 @@ export default async function StatePage({ params, searchParams }: StatePageProps
 
   return (
     <>
-      <WebsiteJsonLd />
       <BreadcrumbJsonLd itemListElements={JSONLDbreadcrumbs} />
       <CollectionPageJsonLd
         name={`Aesthetic Clinics in ${stateData.name}`}

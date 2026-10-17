@@ -36,7 +36,7 @@ export class GoogleSearchService {
 
   async searchClinic(clinicName: string, location: string): Promise<GoogleSearchResult[]> {
     try {
-      const query = `${clinicName} ${location} dental clinic reviews services`;
+      const query = `${clinicName} ${location} aesthetic clinic reviews services`;
 
       const response = await axios.get<GoogleSearchResponse>(
         'https://www.googleapis.com/customsearch/v1',
@@ -86,7 +86,7 @@ export class GoogleSearchService {
 
   async searchClinicServices(clinicName: string, location: string): Promise<GoogleSearchResult[]> {
     try {
-      const query = `${clinicName} ${location} dental services treatments`;
+      const query = `${clinicName} ${location} aesthetic services treatments`;
 
       const response = await axios.get<GoogleSearchResponse>(
         'https://www.googleapis.com/customsearch/v1',

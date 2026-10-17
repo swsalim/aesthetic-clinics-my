@@ -42,10 +42,10 @@ export default function DentistJsonLd({
   email,
 }: DentistJsonLdProps) {
   return (
-    <JsonLd id="dentist-jsonld">
+    <JsonLd id="physician-jsonld">
       {{
         '@context': 'https://schema.org',
-        '@type': 'Dentist',
+        '@type': 'Physician',
         name,
         image: photo,
         url,

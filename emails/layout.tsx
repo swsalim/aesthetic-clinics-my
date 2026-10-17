@@ -67,10 +67,10 @@ export const EmailLayout: React.FC<LayoutProps> = ({ preview, children }) => {
                 <tr className="w-full">
                   <td align="center">
                     <Text className="my-[8px] text-[16px] font-semibold leading-[24px] text-gray-900">
-                      Dental Clinic Malaysia
+                      Aesthetic Clinics MY
                     </Text>
                     <Text className="mb-0 mt-[4px] text-[16px] leading-[24px] text-gray-500">
-                      Malaysia&apos;s Most Trusted Dental Clinic Directory
+                      Discover top aesthetic clinics across Malaysia.
                     </Text>
                   </td>
                 </tr>
