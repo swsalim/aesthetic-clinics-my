@@ -2,12 +2,8 @@ import { unstable_cache } from 'next/cache';
 
 import { siteConfig } from '@/config/site';
 
-import {
-  joinSections,
-  listItem,
-  LLMS_REVALIDATE_SECONDS,
-  mdUrl,
-} from '@/lib/llms/format';
+import { getAllGuides } from '@/lib/guides';
+import { joinSections, listItem, LLMS_REVALIDATE_SECONDS, mdUrl } from '@/lib/llms/format';
 import {
   markdownAbout,
   markdownAdvertise,
@@ -17,6 +13,8 @@ import {
   markdownClinicReviews,
   markdownDoctor,
   markdownDoctors,
+  markdownGuide,
+  markdownGuides,
   markdownHome,
   markdownState,
   markdownStateDoctors,
@@ -32,6 +30,7 @@ const RESERVED = new Set([
   'browse',
   'doctors',
   'doctor',
+  'guides',
   'submit',
   'advertise-with-us',
   'about',
@@ -43,7 +42,7 @@ const RESERVED = new Set([
 ]);
 
 async function buildLlmsIndex() {
-  const states = await getStateListings();
+  const [states, guides] = await Promise.all([getStateListings(), Promise.resolve(getAllGuides())]);
   const sortedStates = states
     .filter((state) => state.clinic_count > 0)
     .slice()
@@ -56,9 +55,18 @@ async function buildLlmsIndex() {
     '## Pages',
     [
       listItem('Home', mdUrl('/'), 'Directory of aesthetic clinics in Malaysia'),
-      listItem('Browse by location', mdUrl('/browse'), 'States and cities with aesthetic clinic listings'),
+      listItem(
+        'Browse by location',
+        mdUrl('/browse'),
+        'States and cities with aesthetic clinic listings',
+      ),
       listItem('Doctors', mdUrl('/doctors'), 'Aesthetic doctors practising in Malaysia'),
       listItem('About', mdUrl('/about'), 'What this directory covers'),
+      listItem(
+        'Guides',
+        mdUrl('/guides'),
+        'How to compare aesthetic clinics, check an LCP, and read a botulinum toxin listing',
+      ),
       listItem(
         'Full content',
         absoluteUrl('/llms-full.txt'),
@@ -77,6 +85,12 @@ async function buildLlmsIndex() {
           )
           .join('\n')
       : '- No state listings yet.',
+    '## Guides',
+    guides.length
+      ? guides
+          .map((guide) => listItem(guide.title, mdUrl(`/guides/${guide.slug}`), guide.description))
+          .join('\n')
+      : '- No guides yet.',
     '## Optional',
     [
       listItem('List your clinic', mdUrl('/submit'), 'Free clinic listing form'),
@@ -100,7 +114,7 @@ async function buildLlmsFull() {
   return [home, browse, doctors, about, markdownSubmit(), markdownAdvertise()].join('\n\n---\n\n');
 }
 
-export const getLlmsIndex = unstable_cache(buildLlmsIndex, ['llms-index-v1'], {
+export const getLlmsIndex = unstable_cache(buildLlmsIndex, ['llms-index-v2'], {
   revalidate: LLMS_REVALIDATE_SECONDS,
   tags: ['clinics', 'states', 'areas', 'doctors'],
 });
@@ -131,12 +145,18 @@ export async function getPageMarkdown(slug: string[]): Promise<string | null> {
         return markdownAdvertise();
       case 'about':
         return markdownAbout();
+      case 'guides':
+        return markdownGuides();
       default:
         if (RESERVED.has(first)) {
           return null;
         }
         return markdownState(first);
     }
+  }
+
+  if (first === 'guides' && second && segments.length === 2) {
+    return markdownGuide(second);
   }
 
   if (first === 'place' && second && segments.length === 2) {

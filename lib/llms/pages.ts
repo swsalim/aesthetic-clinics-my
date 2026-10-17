@@ -2,6 +2,7 @@ import { Clinic, ClinicDetails } from '@/types/clinic';
 
 import { siteConfig } from '@/config/site';
 
+import { getAllGuides, getGuideBySlug } from '@/lib/guides';
 import {
   escapeMd,
   formatHours,
@@ -69,7 +70,11 @@ export async function markdownHome() {
       : 'Compare reviews, hours, and contact details for aesthetic clinics in Malaysia.',
     '## Browse',
     [
-      listItem('Browse by location', mdUrl('/browse'), 'Aesthetic clinics grouped by state and city'),
+      listItem(
+        'Browse by location',
+        mdUrl('/browse'),
+        'Aesthetic clinics grouped by state and city',
+      ),
       listItem('Doctors', mdUrl('/doctors'), 'Aesthetic doctors practising in Malaysia'),
       listItem('About', mdUrl('/about'), 'What this directory covers'),
     ].join('\n'),
@@ -213,6 +218,44 @@ export function markdownAbout() {
     'The directory lists LCP-certified aesthetic clinics and aesthetic doctors, with contact details, treatments, doctor credentials, and customer reviews where those are available.',
     'Clinics are listed across Malaysia, including Kuala Lumpur, Johor Bahru, Penang, Ipoh, and Kota Kinabalu.',
     `HTML version: ${absoluteUrl('/about')}`,
+  ]);
+}
+
+export function markdownGuides() {
+  const guides = getAllGuides();
+
+  return joinSections([
+    '# Guides',
+    '> Practical notes on comparing aesthetic clinics in Malaysia, checking an LCP, and reading a botulinum toxin listing before you book.',
+    'These pages are general information, not medical advice. Confirm a doctor with the clinic and the public registers before you book.',
+    guides
+      .map((guide) => listItem(guide.title, mdUrl(`/guides/${guide.slug}`), guide.description))
+      .join('\n'),
+    `HTML version: ${absoluteUrl('/guides')}`,
+  ]);
+}
+
+export function markdownGuide(slug: string) {
+  const guide = getGuideBySlug(slug);
+
+  if (!guide) {
+    return null;
+  }
+
+  return joinSections([
+    `# ${guide.title}`,
+    `> ${guide.description}`,
+    'This is general information, not medical advice. Consult a registered practitioner.',
+    '## The short version',
+    guide.summary.map((item) => `- ${item}`).join('\n'),
+    guide.body,
+    '## Common questions',
+    guide.faq.map((item) => `### ${item.question}\n\n${item.answer}`).join('\n\n'),
+    '## Find a clinic',
+    guide.relatedLinks
+      .map((link) => listItem(link.title, mdUrl(link.href), link.description))
+      .join('\n'),
+    `HTML version: ${absoluteUrl(`/guides/${guide.slug}`)}`,
   ]);
 }
 
@@ -393,7 +436,9 @@ export async function markdownClinic(clinicSlug: string) {
     htmlToText(clinic.description)
       ? joinSections(['## About', htmlToText(clinic.description)])
       : null,
-    serviceNames.length ? joinSections(['## Services', serviceNames.map((name) => `- ${name}`).join('\n')]) : null,
+    serviceNames.length
+      ? joinSections(['## Services', serviceNames.map((name) => `- ${name}`).join('\n')])
+      : null,
     clinic.doctors?.length
       ? joinSections([
           '## Doctors',
@@ -475,7 +520,9 @@ export async function markdownDoctor(slug: string) {
           doctor.clinics
             .filter((item) => item?.slug && item.name)
             .map((item) => {
-              const note = [item.area?.name, item.state?.name, item.phone].filter(Boolean).join(' · ');
+              const note = [item.area?.name, item.state?.name, item.phone]
+                .filter(Boolean)
+                .join(' · ');
               return listItem(item.name, mdUrl(`/place/${item.slug}`), note || undefined);
             })
             .join('\n'),

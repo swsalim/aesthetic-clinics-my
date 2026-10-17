@@ -42,7 +42,8 @@ const ListItem = React.forwardRef<
           )}
           target={isExternal ? '_blank' : '_self'}
           rel={isExternal ? 'noopener noreferrer' : undefined}
-          {...props}>
+          {...props}
+        >
           {!logo && <div className="text-sm font-medium leading-none">{title}</div>}
           {logo && (
             <div className="flex flex-row gap-2 text-sm font-medium leading-none">
@@ -91,6 +92,10 @@ export const navItems: {
     name: 'Browse Doctors',
     href: '/doctors',
   },
+  {
+    name: 'Guides',
+    href: '/guides',
+  },
   // {
   //   name: 'Submit',
   //   href: '/submit',
@@ -107,13 +112,15 @@ export default function Navbar() {
       className={cn(
         'sticky top-0 z-10 w-full border-b bg-white/50 backdrop-blur-md transition-all duration-75 dark:bg-gray-900/90',
         scrolled ? 'border-gray-200 dark:border-gray-700' : 'border-transparent',
-      )}>
+      )}
+    >
       <div className="flex items-center justify-center gap-x-1 bg-blue-500 px-4 py-3 text-white">
         <StoreIcon className="h-4 w-4" />
         Own an aesthetic clinic? Get{' '}
         <Link
           href="/advertise-with-us"
-          className="border-white font-bold text-white hover:border-white hover:text-white/80">
+          className="border-white font-bold text-white hover:border-white hover:text-white/80"
+        >
           premium visibility.
         </Link>
       </div>
@@ -135,7 +142,8 @@ export default function Navbar() {
                         className={cn(
                           'font-regular focus:bg-blue-50/hover:bg-blue-50 data-[active=true]:bg-blue-50/hover:bg-blue-50 data-[state=open]:bg-blue-50/hover:bg-blue-50 data-[active=true]:focus:bg-blue-50/hover:bg-blue-50 group inline-flex h-10 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-base text-gray-700 transition-colors hover:border-transparent hover:bg-blue-50 hover:text-blue-600 focus:text-blue-600 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active=true]:text-blue-600 data-[state=open]:text-blue-600 data-[active=true]:hover:bg-blue-50 data-[state=open]:hover:bg-blue-50 data-[state=open]:focus:bg-blue-50 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-300',
                         )}
-                        asChild>
+                        asChild
+                      >
                         <Link href={href} prefetch={false}>
                           <span>{name}</span>
                           {Icon && <Icon className="ml-2 size-4" />}
@@ -161,7 +169,8 @@ export default function Navbar() {
                                   data-active={pathname === item.href}
                                   className={cn(
                                     pathname === item.href && 'bg-blue-50 text-blue-600',
-                                  )}>
+                                  )}
+                                >
                                   {item.description}
                                 </ListItem>
                               );

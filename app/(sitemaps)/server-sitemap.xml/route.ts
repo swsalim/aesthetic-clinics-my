@@ -1,5 +1,6 @@
 import { getServerSideSitemap, type ISitemapField } from 'next-sitemap';
 
+import { getAllGuides } from '@/lib/guides';
 import { absoluteUrl } from '@/lib/utils';
 
 import { getAreaListings } from '@/helpers/areas';
@@ -61,7 +62,8 @@ export async function GET() {
 
   const indexableStates = states.filter((state) => state.clinic_count > 0);
   const indexableAreas = areas.filter(
-    (area) => area.clinic_count > 0 && indexableStates.some((state) => state.slug === area.state.slug),
+    (area) =>
+      area.clinic_count > 0 && indexableStates.some((state) => state.slug === area.state.slug),
   );
 
   const contentLastmod = latest([
@@ -102,6 +104,13 @@ export async function GET() {
 
   staticPages.forEach((page) => {
     fields.push(entry(page, contentLastmod));
+  });
+
+  const guides = getAllGuides();
+  const guidesLastmod = latest(guides.map((guide) => guide.updatedAt));
+  fields.push(entry('/guides', guidesLastmod));
+  guides.forEach((guide) => {
+    fields.push(entry(`/guides/${guide.slug}`, toLastmod(guide.updatedAt)));
   });
 
   const sitemap = await getServerSideSitemap(fields);
