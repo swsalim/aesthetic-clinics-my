@@ -1,7 +1,5 @@
 import React from 'react';
 
-import Script from 'next/script';
-
 type JsonLdData = {
   '@context': string;
   '@type': string | string[];
@@ -13,12 +11,18 @@ interface JsonLdProps {
   children: JsonLdData;
 }
 
+/**
+ * A plain script tag is part of the server HTML. next/script only attaches
+ * this payload on the client, so crawlers never saw the JSON-LD.
+ */
 const JsonLd = ({ id, children }: JsonLdProps): React.ReactElement => {
   return (
-    <Script
+    <script
       id={id}
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(children) }}
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(children).replace(/</g, '\\u003c'),
+      }}
     />
   );
 };

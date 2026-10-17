@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowRightIcon } from 'lucide-react';
 import pluralize from 'pluralize';
 
+import { hasAdminCredentials } from '@/lib/supabase/admin-guard';
 import { createAdminClient } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
 
@@ -17,6 +18,10 @@ import { Wrapper } from '@/components/ui/wrapper';
 
 const getHeroStats = unstable_cache(
   async () => {
+    if (!hasAdminCredentials()) {
+      return { clinicCount: 0, doctorCount: 0, stateCount: 0 };
+    }
+
     const supabase = createAdminClient();
 
     const [{ count: clinicCount }, { count: doctorCount }, { data: statesData }] =

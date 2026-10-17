@@ -63,6 +63,10 @@ export async function generateMetadata({ params }: ReviewsPageProps): Promise<Me
     alternates: {
       canonical: absoluteUrl(`/place/${clinicSlug}/reviews`),
     },
+    robots: {
+      index: false,
+      follow: true,
+    },
     openGraph: {
       title,
       description,

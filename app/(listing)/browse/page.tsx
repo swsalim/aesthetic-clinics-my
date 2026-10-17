@@ -10,6 +10,7 @@ import pluralize from 'pluralize';
 import { siteConfig } from '@/config/site';
 
 import { imageKitUrl } from '@/lib/imagekit-url';
+import { hasAdminCredentials } from '@/lib/supabase/admin-guard';
 import { createAdminClient } from '@/lib/supabase';
 import { resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';
@@ -81,6 +82,16 @@ type BrowseArea = Pick<ClinicArea, 'id' | 'name' | 'slug' | 'state_id'> & { clin
 
 const getBrowseData = unstable_cache(
   async () => {
+    if (!hasAdminCredentials()) {
+      return {
+        states: [] as BrowseState[],
+        areas: [] as BrowseArea[],
+        clinicCount: 0,
+        stateCount: 0,
+        areaCount: 0,
+      };
+    }
+
     const supabase = createAdminClient();
 
     const [{ data: statesData }, { data: areasData }, { count: clinicCount }] = await Promise.all([

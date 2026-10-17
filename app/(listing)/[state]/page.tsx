@@ -36,6 +36,8 @@ import Container from '@/components/ui/container';
 import { Pagination } from '@/components/ui/pagination';
 import { Wrapper } from '@/components/ui/wrapper';
 
+export const dynamic = 'force-dynamic';
+
 type StatePageProps = {
   params: Promise<{
     state: string;
@@ -65,8 +67,11 @@ export async function generateMetadata({
     notFound();
   }
 
-  const LAST_UPDATED = 'November 2025';
-  const title = `Best ${stateData.total_clinics} Aesthetic Clinics in ${stateData.name} [${LAST_UPDATED}]`;
+  const clinicCount = stateData.total_clinics || 0;
+  const title =
+    clinicCount > 0
+      ? `Best ${clinicCount} Aesthetic Clinics in ${stateData.name}`
+      : `Aesthetic Clinics in ${stateData.name}`;
   const description = `Explore ${stateData.name}'s best aesthetic clinics. View ratings, services, and treatment options to find the right clinic for your skincare or cosmetic goals.`;
   const url = !page
     ? absoluteUrl(`/${state}`)
@@ -87,6 +92,7 @@ export async function generateMetadata({
     alternates: {
       canonical: url,
     },
+    robots: clinicCount > 0 ? { index: true, follow: true } : { index: false, follow: true },
     openGraph: {
       title,
       description,

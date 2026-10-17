@@ -34,6 +34,8 @@ import { Pagination } from '@/components/ui/pagination';
 import Prose from '@/components/ui/prose';
 import { Wrapper } from '@/components/ui/wrapper';
 
+export const dynamic = 'force-dynamic';
+
 type AreaPageProps = {
   params: Promise<{
     state: string;
@@ -55,7 +57,7 @@ export async function generateMetadata({ params, searchParams }: AreaPageProps):
   const parsedPage = page ? Number(page) : 1;
   const currentPage = isNaN(parsedPage) || parsedPage < 1 ? 1 : Math.floor(parsedPage);
   const { from, to } = getPagination(currentPage, limit);
-  const areaData = await getAreaBySlug(area, from, to);
+  const areaData = await getAreaBySlug(area, from, to, state);
 
   if (!areaData) {
     notFound();
@@ -67,8 +69,11 @@ export async function generateMetadata({ params, searchParams }: AreaPageProps):
     notFound();
   }
 
-  const LAST_UPDATED = 'November 2025';
-  const title = `Top ${areaData.total_clinics} Aesthetic Clinics in ${areaData.name}, ${areaData.state.name} [${LAST_UPDATED}]`;
+  const clinicCount = areaData.total_clinics || 0;
+  const title =
+    clinicCount > 0
+      ? `Top ${clinicCount} Aesthetic Clinics in ${areaData.name}, ${areaData.state.name}`
+      : `Aesthetic Clinics in ${areaData.name}, ${areaData.state.name}`;
   const description = `Find trusted aesthetic clinics in ${areaData.name}, ${areaData.state.name}.Read verified reviews, check services and contact details to book your next beauty treatment nearby.`;
   const url = !page
     ? absoluteUrl(`/${state}/${area}`)
@@ -89,6 +94,7 @@ export async function generateMetadata({ params, searchParams }: AreaPageProps):
     alternates: {
       canonical: url,
     },
+    robots: clinicCount > 0 ? { index: true, follow: true } : { index: false, follow: true },
     openGraph: {
       title,
       description,
@@ -147,17 +153,11 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
 
   // Fetch area metadata and clinics data in parallel
   const [areaData, stateData] = await Promise.all([
-    getAreaBySlug(area, from, to),
+    getAreaBySlug(area, from, to, state),
     getStateBySlug(state, from, to),
   ]);
 
-  // Early validation
-  if (!areaData || !stateData) {
-    notFound();
-  }
-
-  const validState = areaData.state?.slug === state;
-  if (!validState) {
+  if (!areaData || areaData.state?.slug !== state) {
     notFound();
   }
 
@@ -425,7 +425,7 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
               Aesthetic Clinics near {areaData.name}, {areaData.state?.name}
             </h2>
             <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
-              {stateData.areas?.map((area) => (
+              {stateData?.areas?.map((area) => (
                 <h3 className="text-balance text-base font-medium" key={area.slug}>
                   <Link
                     href={absoluteUrl(`/${state}/${area.slug}`)}

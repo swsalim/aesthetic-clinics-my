@@ -7,6 +7,7 @@ import pluralize from 'pluralize';
 import { imageKitUrl } from '@/lib/imagekit-url';
 import { resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';
+import { hasAdminCredentials } from '@/lib/supabase/admin-guard';
 import { createAdminClient } from '@/lib/supabase';
 
 import Container from '@/components/ui/container';
@@ -26,6 +27,10 @@ type PopularState = {
 
 const getPopularStates = unstable_cache(
   async (): Promise<PopularState[]> => {
+    if (!hasAdminCredentials()) {
+      return [];
+    }
+
     const supabase = createAdminClient();
 
     const { data: statesData, error: statesError } = await supabase

@@ -4,11 +4,23 @@ import type { NextRequest } from 'next/server';
 import { createMiddlewareClient } from '@/lib/supabase';
 
 export const config = {
-  // Auth is only required under /dashboard; avoid running edge middleware on public pages.
-  matcher: ['/dashboard/:path*'],
+  // Auth is only required under /dashboard. Markdown rewrites are public.
+  matcher: ['/dashboard/:path*', '/:path*.md'],
 };
 
 export async function middleware(req: NextRequest): Promise<NextResponse> {
+  const { pathname } = req.nextUrl;
+
+  if (pathname.endsWith('.md')) {
+    const url = req.nextUrl.clone();
+    const withoutExtension = pathname.slice(0, -3);
+    url.pathname =
+      withoutExtension === '' || withoutExtension === '/'
+        ? '/api/markdown'
+        : `/api/markdown${withoutExtension}`;
+    return NextResponse.rewrite(url);
+  }
+
   const { supabase, response } = createMiddlewareClient(req);
 
   const {
@@ -16,7 +28,6 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
   } = await supabase.auth.getUser();
 
   if (!user && req.nextUrl.pathname.startsWith('/dashboard')) {
-    // Auth condition not met, redirect to login page
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = '/login';
     redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname);

@@ -1,10 +1,104 @@
 # All user agents
 User-agent: *
-Disallow: /*.json
 Disallow: /*_buildManifest.js
 Disallow: /*_middlewareManifest.js
 Disallow: /*_ssgManifest.js
-Disallow: /*.js
+Disallow: /dashboard
+Disallow: /404
+Disallow: /api
+Disallow: /login
+Disallow: /submit/success
+
+# GPTBot
+User-agent: GPTBot
+Allow: /
+Disallow: /*_buildManifest.js
+Disallow: /*_middlewareManifest.js
+Disallow: /*_ssgManifest.js
+Disallow: /dashboard
+Disallow: /404
+Disallow: /api
+Disallow: /login
+Disallow: /submit/success
+
+# CCBot
+User-agent: CCBot
+Allow: /
+Disallow: /*_buildManifest.js
+Disallow: /*_middlewareManifest.js
+Disallow: /*_ssgManifest.js
+Disallow: /dashboard
+Disallow: /404
+Disallow: /api
+Disallow: /login
+Disallow: /submit/success
+
+# Bytespider
+User-agent: Bytespider
+Allow: /
+Disallow: /*_buildManifest.js
+Disallow: /*_middlewareManifest.js
+Disallow: /*_ssgManifest.js
+Disallow: /dashboard
+Disallow: /404
+Disallow: /api
+Disallow: /login
+Disallow: /submit/success
+
+# Amazonbot
+User-agent: Amazonbot
+Allow: /
+Disallow: /*_buildManifest.js
+Disallow: /*_middlewareManifest.js
+Disallow: /*_ssgManifest.js
+Disallow: /dashboard
+Disallow: /404
+Disallow: /api
+Disallow: /login
+Disallow: /submit/success
+
+# FacebookBot
+User-agent: FacebookBot
+Allow: /
+Disallow: /*_buildManifest.js
+Disallow: /*_middlewareManifest.js
+Disallow: /*_ssgManifest.js
+Disallow: /dashboard
+Disallow: /404
+Disallow: /api
+Disallow: /login
+Disallow: /submit/success
+
+# meta-externalagent
+User-agent: meta-externalagent
+Allow: /
+Disallow: /*_buildManifest.js
+Disallow: /*_middlewareManifest.js
+Disallow: /*_ssgManifest.js
+Disallow: /dashboard
+Disallow: /404
+Disallow: /api
+Disallow: /login
+Disallow: /submit/success
+
+# ClaudeBot
+User-agent: ClaudeBot
+Allow: /
+Disallow: /*_buildManifest.js
+Disallow: /*_middlewareManifest.js
+Disallow: /*_ssgManifest.js
+Disallow: /dashboard
+Disallow: /404
+Disallow: /api
+Disallow: /login
+Disallow: /submit/success
+
+# PerplexityBot
+User-agent: PerplexityBot
+Allow: /
+Disallow: /*_buildManifest.js
+Disallow: /*_middlewareManifest.js
+Disallow: /*_ssgManifest.js
 Disallow: /dashboard
 Disallow: /404
 Disallow: /api

@@ -14,6 +14,7 @@ import {
 
 import { getFeaturedListingSlugs } from '@/config/featured';
 
+import { hasAdminCredentials } from '@/lib/supabase/admin-guard';
 import { createAdminClient, createServerClient } from '@/lib/supabase';
 
 /**
@@ -25,7 +26,7 @@ export const getFeaturedListings = unstable_cache(
   async () => {
     const slugs = getFeaturedListingSlugs();
 
-    if (slugs.length === 0) return [];
+    if (slugs.length === 0 || !hasAdminCredentials()) return [];
 
     const supabase = createAdminClient();
 
@@ -71,6 +72,8 @@ export const getFeaturedListings = unstable_cache(
 
 export const getRecentClinics = unstable_cache(
   async (limit: number = 20) => {
+    if (!hasAdminCredentials()) return [];
+
     const supabase = createAdminClient();
 
     const { data, error } = await supabase
@@ -110,6 +113,10 @@ export const getRecentClinics = unstable_cache(
 );
 
 export async function getClinicListings(status: string = 'approved') {
+  if (!hasAdminCredentials()) {
+    return [];
+  }
+
   const supabase = createAdminClient();
 
   const { data: clinicData } = (await supabase
@@ -118,7 +125,8 @@ export async function getClinicListings(status: string = 'approved') {
       `
       id,
       name,
-      slug
+      slug,
+      modified_at
     `,
     )
     .match({ is_active: true, status })) as {
@@ -126,6 +134,7 @@ export async function getClinicListings(status: string = 'approved') {
       id: string;
       name: string;
       slug: string;
+      modified_at: string | null;
     }[];
   };
 
@@ -139,6 +148,10 @@ export async function getClinicBySlug(
   slug: string,
   status: string = 'approved',
 ): Promise<ClinicDetails | null> {
+  if (!hasAdminCredentials()) {
+    return null;
+  }
+
   const supabase = createAdminClient();
 
   const { data, error } = await supabase.rpc('get_clinic_by_slug', {

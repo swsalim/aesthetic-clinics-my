@@ -25,6 +25,8 @@ import Container from '@/components/ui/container';
 import { Pagination } from '@/components/ui/pagination';
 import { Wrapper } from '@/components/ui/wrapper';
 
+export const dynamic = 'force-dynamic';
+
 type DentistsByStatePageProps = {
   params: Promise<{
     state: string;

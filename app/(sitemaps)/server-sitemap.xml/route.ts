@@ -1,80 +1,97 @@
-import { getServerSideSitemap } from 'next-sitemap';
+import { getServerSideSitemap, type ISitemapField } from 'next-sitemap';
 
 import { absoluteUrl } from '@/lib/utils';
 
 import { getAreaListings } from '@/helpers/areas';
 import { getClinicListings } from '@/helpers/clinics';
 import { getDoctorListings } from '@/helpers/doctors';
-// import { getAllServices } from '@/helpers/services';
 import { getStateListings } from '@/helpers/states';
 
-interface SitemapEntry {
-  loc: string;
-  lastmod: string;
+export const revalidate = 86_400;
+
+function toLastmod(value?: string | null): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return undefined;
+  }
+
+  return parsed.toISOString();
+}
+
+function latest(values: Array<string | null | undefined>): string | undefined {
+  let max = 0;
+
+  for (const value of values) {
+    const iso = toLastmod(value);
+    if (!iso) {
+      continue;
+    }
+    const time = new Date(iso).getTime();
+    if (time > max) {
+      max = time;
+    }
+  }
+
+  return max ? new Date(max).toISOString() : undefined;
+}
+
+function entry(path: string, lastmod?: string): ISitemapField {
+  return lastmod ? { loc: absoluteUrl(path), lastmod } : { loc: absoluteUrl(path) };
 }
 
 export async function GET() {
-  const states = await getStateListings();
-  const areas = await getAreaListings();
-  const clinics = await getClinicListings();
-  const doctors = await getDoctorListings();
-  // const services = await getAllServices();
+  const [states, areas, clinics, doctors] = await Promise.all([
+    getStateListings(),
+    getAreaListings(),
+    getClinicListings(),
+    getDoctorListings(),
+  ]);
 
-  const fields: SitemapEntry[] = [];
+  const indexableStates = states.filter((state) => state.clinic_count > 0);
+  const indexableAreas = areas.filter(
+    (area) => area.clinic_count > 0 && indexableStates.some((state) => state.slug === area.state.slug),
+  );
+
+  const contentLastmod = latest([
+    ...clinics.map((clinic) => clinic.modified_at),
+    ...doctors.map((doctor) => doctor.modified_at),
+    ...states.map((state) => state.modified_at),
+    ...areas.map((area) => area.modified_at),
+  ]);
+
+  const fields: ISitemapField[] = [];
 
   clinics.forEach((clinic) => {
-    fields.push({
-      loc: absoluteUrl(`/place/${clinic.slug}`),
-      lastmod: new Date().toISOString(),
-    });
-    fields.push({
-      loc: absoluteUrl(`/place/${clinic.slug}/reviews`),
-      lastmod: new Date().toISOString(),
-    });
+    fields.push(entry(`/place/${clinic.slug}`, toLastmod(clinic.modified_at) ?? contentLastmod));
   });
 
-  states.forEach((state) => {
-    fields.push({
-      loc: absoluteUrl(`/${state.slug}`),
-      lastmod: new Date().toISOString(),
-    });
-    fields.push({
-      loc: absoluteUrl(`/${state.slug}/dentists`),
-      lastmod: new Date().toISOString(),
-    });
+  indexableStates.forEach((state) => {
+    const lastmod = toLastmod(state.modified_at) ?? contentLastmod;
+    fields.push(entry(`/${state.slug}`, lastmod));
+    fields.push(entry(`/${state.slug}/doctors`, lastmod));
   });
 
-  areas.forEach((area) => {
-    fields.push({
-      loc: absoluteUrl(`/${area.state.slug}/${area.slug}`),
-      lastmod: new Date().toISOString(),
-    });
+  indexableAreas.forEach((area) => {
+    fields.push(
+      entry(`/${area.state.slug}/${area.slug}`, toLastmod(area.modified_at) ?? contentLastmod),
+    );
   });
 
   doctors.forEach((doctor) => {
-    fields.push({
-      loc: absoluteUrl(`/doctor/${doctor.slug}`),
-      lastmod: new Date().toISOString(),
-    });
+    fields.push(entry(`/doctor/${doctor.slug}`, toLastmod(doctor.modified_at) ?? contentLastmod));
   });
 
-  // TODO: add doctors and services
-  // services.forEach((service) => {
-  //   fields.push({
-  //     loc: absoluteUrl(`/services/${service.slug}`),
-  //     lastmod: new Date().toISOString(),
-  //   });
-  // });
+  const staticPages = ['/', '/browse', '/about', '/doctors', '/advertise-with-us', '/submit'];
 
-  // Add static pages
-  // const staticPages = ['/', '/browse', '/dentists', '/submit'];
-  const staticPages = ['/', '/browse', '/about', '/doctors', '/advertise-with-us'];
+  staticPages.forEach((page) => {
+    fields.push(entry(page, contentLastmod));
+  });
 
-  return getServerSideSitemap([
-    ...fields,
-    ...staticPages.map((page) => ({
-      loc: absoluteUrl(page),
-      lastmod: new Date().toISOString(),
-    })),
-  ]);
+  const sitemap = await getServerSideSitemap(fields);
+  sitemap.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=86400');
+  return sitemap;
 }
