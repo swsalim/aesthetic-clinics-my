@@ -114,7 +114,7 @@ export default function Navbar() {
         scrolled ? 'border-gray-200 dark:border-gray-700' : 'border-transparent',
       )}
     >
-      <div className="flex items-center justify-center gap-x-1 bg-blue-500 px-4 py-3 text-white">
+      <div className="flex items-center justify-center gap-x-1 bg-blue-500 px-4 py-3 text-white max-lg:pr-16">
         <StoreIcon className="h-4 w-4" />
         Own an aesthetic clinic? Get{' '}
         <Link
