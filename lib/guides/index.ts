@@ -12,6 +12,9 @@ const GUIDE_ORDER = [
   'the-complete-guide-to-finding-an-aesthetic-clinic-in-malaysia',
   'how-to-compare-lcp-certified-aesthetic-clinics',
   'botox-clinics-how-to-compare-them',
+  'microneedling-treatment-malaysia',
+  'non-invasive-skin-tightening-treatments',
+  'dermal-filler-injections-malaysia',
 ];
 
 const WORDS_PER_MINUTE = 200;
