@@ -57,6 +57,24 @@ function isListLine(line: string) {
   return /^-\s+/.test(line) || /^\d+\.\s+/.test(line);
 }
 
+function isTableLine(line: string) {
+  const trimmed = line.trim();
+  return trimmed.startsWith('|') && trimmed.endsWith('|');
+}
+
+function isTableSeparator(line: string) {
+  return /^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?$/.test(line.trim());
+}
+
+function parseTableRow(line: string) {
+  return line
+    .trim()
+    .replace(/^\|/, '')
+    .replace(/\|$/, '')
+    .split('|')
+    .map((cell) => cell.trim());
+}
+
 export function GuideMarkdown({ markdown }: { markdown: string }) {
   const lines = markdown.replace(/\r\n/g, '\n').split('\n');
   const blocks: ReactNode[] = [];
@@ -112,6 +130,48 @@ export function GuideMarkdown({ markdown }: { markdown: string }) {
       continue;
     }
 
+    if (isTableLine(trimmed)) {
+      const rows: string[][] = [];
+      while (index < lines.length && isTableLine(lines[index].trim())) {
+        const row = lines[index].trim();
+        if (!isTableSeparator(row)) {
+          rows.push(parseTableRow(row));
+        }
+        index += 1;
+      }
+
+      const [header, ...bodyRows] = rows;
+      if (header) {
+        blocks.push(
+          <div key={`table-${index}`} className="overflow-x-auto">
+            <table>
+              <thead>
+                <tr>
+                  {header.map((cell, cellIndex) => (
+                    <th key={`th-${index}-${cellIndex}`}>
+                      {renderInline(cell, `th-${index}-${cellIndex}`)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {bodyRows.map((row, rowIndex) => (
+                  <tr key={`tr-${index}-${rowIndex}`}>
+                    {row.map((cell, cellIndex) => (
+                      <td key={`td-${index}-${rowIndex}-${cellIndex}`}>
+                        {renderInline(cell, `td-${index}-${rowIndex}-${cellIndex}`)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>,
+        );
+      }
+      continue;
+    }
+
     if (isListLine(trimmed)) {
       const ordered = /^\d+\.\s+/.test(trimmed);
       const items: string[] = [];
@@ -136,7 +196,8 @@ export function GuideMarkdown({ markdown }: { markdown: string }) {
       lines[index].trim() &&
       !lines[index].trim().startsWith('#') &&
       !lines[index].trim().startsWith('> ') &&
-      !isListLine(lines[index].trim())
+      !isListLine(lines[index].trim()) &&
+      !isTableLine(lines[index].trim())
     ) {
       paragraph.push(lines[index].trim());
       index += 1;

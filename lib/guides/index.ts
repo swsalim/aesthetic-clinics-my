@@ -13,6 +13,9 @@ const GUIDE_ORDER = [
   'how-to-compare-lcp-certified-aesthetic-clinics',
   'botox-clinics-how-to-compare-them',
   'microneedling-treatment-malaysia',
+  'chemical-peel-treatment-malaysia',
+  'dermaplane-treatment',
+  'melasma-treatment-malaysia',
   'non-invasive-skin-tightening-treatments',
   'dermal-filler-injections-malaysia',
 ];
