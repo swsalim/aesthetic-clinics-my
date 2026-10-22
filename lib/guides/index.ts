@@ -16,6 +16,8 @@ const GUIDE_ORDER = [
   'chemical-peel-treatment-malaysia',
   'dermaplane-treatment',
   'melasma-treatment-malaysia',
+  'laser-treatment-malaysia',
+  'acne-scar-laser-treatment',
   'non-invasive-skin-tightening-treatments',
   'dermal-filler-injections-malaysia',
 ];
