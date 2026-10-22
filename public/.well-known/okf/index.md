@@ -33,6 +33,8 @@ As of 21 October 2026 the homepage shows 474 listed clinics across 15 states and
 - [Microneedling treatment in Malaysia](articles/microneedling-treatment.md)
 - [Non-invasive skin tightening treatments](articles/non-invasive-skin-tightening.md)
 - [Dermal filler injections in Malaysia](articles/dermal-filler-injections.md)
+- [Laser treatment in Malaysia](articles/laser-treatment-malaysia.md)
+- [Laser treatment for pimple scars](articles/acne-scar-laser-treatment.md)
 
 ## Change history
 

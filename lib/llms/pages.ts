@@ -1,5 +1,6 @@
 import { Clinic, ClinicDetails } from '@/types/clinic';
 
+import { locationSeoOverride } from '@/config/location-seo';
 import { siteConfig } from '@/config/site';
 
 import { getAllGuides, getGuideBySlug } from '@/lib/guides';
@@ -358,12 +359,25 @@ export async function markdownArea(stateSlug: string, areaSlug: string) {
 
   const stateName = areaData.state.name ?? stateSlug;
   const total = areaData.total_clinics ?? 0;
+  const seo = locationSeoOverride({
+    stateSlug,
+    areaSlug,
+    clinicCount: total,
+    clinicNames: (areaData.clinics ?? [])
+      .map((clinic) => clinic.name?.trim())
+      .filter((name): name is string => Boolean(name))
+      .slice(0, 3),
+  });
 
   return joinSections([
-    total > 0
-      ? `# ${total} aesthetic clinics in ${areaData.name}, ${stateName}`
-      : `# Aesthetic clinics in ${areaData.name}, ${stateName}`,
-    `> Explore ${total} trusted aesthetic clinics located in ${areaData.name}, ${stateName}. Find services, reviews, and opening hours.`,
+    seo
+      ? `# ${seo.h1}`
+      : total > 0
+        ? `# ${total} aesthetic clinics in ${areaData.name}, ${stateName}`
+        : `# Aesthetic clinics in ${areaData.name}, ${stateName}`,
+    seo
+      ? `> ${seo.intro}`
+      : `> Explore ${total} trusted aesthetic clinics located in ${areaData.name}, ${stateName}. Find services, reviews, and opening hours.`,
     listItem(`All clinics in ${stateName}`, mdUrl(`/${stateSlug}`)),
     '## Clinics',
     areaData.clinics?.length

@@ -9,6 +9,7 @@ import { Clinic, ClinicImage } from '@/types/clinic';
 import { ArrowRightIcon } from 'lucide-react';
 
 import { isFeatured, isFeaturedPartner } from '@/config/featured';
+import { listedClinicNames, locationSeoOverride } from '@/config/location-seo';
 import { siteConfig } from '@/config/site';
 
 import { imageKitUrl } from '@/lib/imagekit-url';
@@ -69,11 +70,20 @@ export async function generateMetadata({ params, searchParams }: AreaPageProps):
   }
 
   const clinicCount = areaData.total_clinics || 0;
+  const seo = locationSeoOverride({
+    stateSlug: state,
+    areaSlug: area,
+    clinicCount,
+    clinicNames: listedClinicNames(areaData.clinics),
+  });
   const title =
-    clinicCount > 0
+    seo?.title ??
+    (clinicCount > 0
       ? `Top ${clinicCount} Aesthetic Clinics in ${areaData.name}, ${areaData.state.name}`
-      : `Aesthetic Clinics in ${areaData.name}, ${areaData.state.name}`;
-  const description = `Find trusted aesthetic clinics in ${areaData.name}, ${areaData.state.name}.Read verified reviews, check services and contact details to book your next beauty treatment nearby.`;
+      : `Aesthetic Clinics in ${areaData.name}, ${areaData.state.name}`);
+  const description =
+    seo?.description ??
+    `Find trusted aesthetic clinics in ${areaData.name}, ${areaData.state.name}.Read verified reviews, check services and contact details to book your next beauty treatment nearby.`;
   const url = !page
     ? absoluteUrl(`/${state}/${area}`)
     : page === '1'
@@ -172,8 +182,20 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
     (clinic) => !featuredSlugs.has(clinic.slug),
   );
 
-  const title = `Top Aesthetic Clinics in ${areaData.name}, ${areaData.state?.name}`;
-  const description = `Explore ${totalClinics} trusted aesthetic clinics across cities in ${areaData.state?.name}. Read verified reviews, check services and contact details to book your next beauty treatment nearby.`;
+  const pageClinicNames = listedClinicNames([
+    ...(currentPage === 1 ? featuredListings : []),
+    ...listingClinics,
+  ]);
+  const seo = locationSeoOverride({
+    stateSlug: state,
+    areaSlug: area,
+    clinicCount: totalClinics,
+    clinicNames: pageClinicNames,
+  });
+  const title = seo?.h1 ?? `Top Aesthetic Clinics in ${areaData.name}, ${areaData.state?.name}`;
+  const description =
+    seo?.description ??
+    `Explore ${totalClinics} trusted aesthetic clinics across cities in ${areaData.state?.name}. Read verified reviews, check services and contact details to book your next beauty treatment nearby.`;
 
   const breadcrumbItems = [
     {
@@ -217,7 +239,7 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
     <>
       <BreadcrumbJsonLd itemListElements={JSONLDbreadcrumbs} />
       <CollectionPageJsonLd
-        name={`Aesthetic Clinics in ${areaData.name}, ${areaData.state?.name}`}
+        name={seo?.jsonLdName ?? `Aesthetic Clinics in ${areaData.name}, ${areaData.state?.name}`}
         url={`/${state}/${area}`}
         description={description}
         clinics={(areaData.clinics?.slice(0, 20) as Partial<Clinic>[]) || []}
@@ -245,14 +267,20 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
             <Breadcrumb items={breadcrumbItems} theme="dark" />
             <h1 className="text-balance text-4xl font-black text-white">{title}</h1>
             <p className="text-balance text-lg font-medium text-white">
-              Explore {totalClinics} trusted aesthetic clinics across cities in{' '}
-              <Link
-                href={absoluteUrl(`/${areaData.state?.slug}`)}
-                className="text-blue-300 hover:border-blue-300 hover:text-blue-300"
-                prefetch={false}>
-                {areaData.state?.name}
-              </Link>
-              . Find services, reviews, and opening hours.
+              {seo ? (
+                seo.intro
+              ) : (
+                <>
+                  Explore {totalClinics} trusted aesthetic clinics across cities in{' '}
+                  <Link
+                    href={absoluteUrl(`/${areaData.state?.slug}`)}
+                    className="text-blue-300 hover:border-blue-300 hover:text-blue-300"
+                    prefetch={false}>
+                    {areaData.state?.name}
+                  </Link>
+                  . Find services, reviews, and opening hours.
+                </>
+              )}
             </p>
           </div>
         </Container>
@@ -286,7 +314,8 @@ export default async function AreaPage({ params, searchParams }: AreaPageProps) 
             </Prose>
           )}
           <h2 className="mb-6 text-balance text-xl font-bold md:text-2xl">
-            {totalClinics} Aesthetic Clinics in {areaData.name}, {areaData.state?.name}
+            {seo?.listingHeading ??
+              `${totalClinics} Aesthetic Clinics in ${areaData.name}, ${areaData.state?.name}`}
           </h2>
           {listingClinics.length > 0 || featuredListings.length > 0 ? (
             <>
