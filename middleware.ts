@@ -5,11 +5,16 @@ import { createMiddlewareClient } from '@/lib/supabase';
 
 export const config = {
   // Auth is only required under /dashboard. Markdown rewrites are public.
-  matcher: ['/dashboard/:path*', '/:path*.md'],
+  // /.well-known/*.md is static (the Open Knowledge Format bundle) and must not be rewritten.
+  matcher: ['/dashboard/:path*', '/((?!\\.well-known(?:/|$)).*)\\.md'],
 };
 
 export async function middleware(req: NextRequest): Promise<NextResponse> {
   const { pathname } = req.nextUrl;
+
+  if (pathname === '/.well-known' || pathname.startsWith('/.well-known/')) {
+    return NextResponse.next();
+  }
 
   if (pathname.endsWith('.md')) {
     const url = req.nextUrl.clone();

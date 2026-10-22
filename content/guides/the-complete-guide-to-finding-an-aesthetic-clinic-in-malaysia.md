@@ -3,7 +3,7 @@ title: "The Complete Guide to Finding an Aesthetic Clinic in Malaysia"
 description: "How to find an aesthetic clinic in Malaysia, compare clinics in KL and Selangor, and check a doctor's LCP against the Ministry of Health registers."
 slug: the-complete-guide-to-finding-an-aesthetic-clinic-in-malaysia
 publishedAt: "2026-10-17"
-updatedAt: "2026-10-17"
+updatedAt: "2026-10-21"
 image: /images/guides/finding-a-clinic.svg
 imageAlt: "Illustrated checklist and map pin for shortlisting an aesthetic clinic in Malaysia."
 primaryKeyword: "aesthetic clinic malaysia"
@@ -46,6 +46,15 @@ relatedLinks:
   - title: "Browse all states"
     href: /browse
     description: "States and cities with clinic listings."
+  - title: "Chemical peel treatment in Malaysia"
+    href: /guides/chemical-peel-treatment-malaysia
+    description: "What to compare before booking a chemical peel, including the doctor and the fee."
+  - title: "Dermaplane treatment"
+    href: /guides/dermaplane-treatment
+    description: "What a dermaplane facial involves, and questions to ask before you book."
+  - title: "Melasma treatment in Malaysia"
+    href: /guides/melasma-treatment-malaysia
+    description: "Options a doctor may discuss, risks, and why melasma can return."
 ---
 
 An aesthetic clinic in Malaysia is a place where a registered medical practitioner offers aesthetic medical procedures. The Ministry of Health treats that work as medical practice. The document that says which procedures a doctor may perform is the Letter of Credentialing and Privileging, usually shortened to LCP.
@@ -138,6 +147,8 @@ When you enquire, send a short note so the replies are comparable:
 Compare the replies. A clinic that names a device brand and will not name the doctor has answered the wrong question. A clinic that tells you the procedure category, the doctor, and what the quote will include has given you something you can take to a second clinic.
 
 Botulinum toxin is a common facial enquiry and a common source of confusion, because advertisements call it Botox. Botox is a brand. The medicine is botulinum toxin, it is a prescription medicine, and a registered medical practitioner must administer it. The guideline places the injection on the minimally invasive list. The separate note on [comparing botox clinics](/guides/botox-clinics-how-to-compare-them) covers the questions to ask about the product and the injector.
+
+Other notes on this site cover [chemical peel treatment](/guides/chemical-peel-treatment-malaysia), [dermaplane treatment](/guides/dermaplane-treatment) and [melasma treatment](/guides/melasma-treatment-malaysia). Each one is general information about what to ask and what to check. None of them recommends a procedure or a clinic.
 
 Prices for facial treatments are not listed here. They change with the procedure, the product, the areas treated, who performs it, and the follow-up. Ask each clinic for a written quote. If a promotion is on a poster, ask for that promotion in the same document, including what happens if you do not continue a package.
 
