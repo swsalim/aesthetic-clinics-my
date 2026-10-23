@@ -16,6 +16,8 @@ export type GuideHeading = {
 
 export type Guide = {
   title: string;
+  /** Document title when it differs from the visible article title. */
+  metaTitle?: string;
   description: string;
   slug: string;
   publishedAt: string;

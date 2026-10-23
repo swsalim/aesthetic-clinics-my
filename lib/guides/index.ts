@@ -20,9 +20,20 @@ const GUIDE_ORDER = [
   'acne-scar-laser-treatment',
   'non-invasive-skin-tightening-treatments',
   'dermal-filler-injections-malaysia',
+  'face-lifting-treatment-malaysia',
+  'filler-nasolabial-folds',
+  'whitehead-removal',
 ];
 
 const WORDS_PER_MINUTE = 200;
+
+function optionalString(value: unknown) {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
 
 function requireString(value: unknown, file: string, field: string) {
   if (typeof value !== 'string' || value.trim().length === 0) {
@@ -107,6 +118,7 @@ function readGuideFile(filePath: string): Guide {
 
   return {
     title: requireString(data.title, file, 'title'),
+    metaTitle: optionalString(data.metaTitle),
     description: requireString(data.description, file, 'description'),
     slug,
     publishedAt: requireString(data.publishedAt, file, 'publishedAt'),

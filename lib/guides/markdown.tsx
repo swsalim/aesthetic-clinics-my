@@ -143,8 +143,8 @@ export function GuideMarkdown({ markdown }: { markdown: string }) {
       const [header, ...bodyRows] = rows;
       if (header) {
         blocks.push(
-          <div key={`table-${index}`} className="overflow-x-auto">
-            <table>
+          <div key={`table-${index}`} className="my-6 overflow-x-auto overscroll-x-contain">
+            <table className="my-0 w-full min-w-[42rem]">
               <thead>
                 <tr>
                   {header.map((cell, cellIndex) => (
