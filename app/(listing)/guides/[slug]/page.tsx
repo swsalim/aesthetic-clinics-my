@@ -37,15 +37,16 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
   }
 
   const url = `/guides/${guide.slug}`;
+  const pageTitle = guide.metaTitle ?? guide.title;
 
   return {
-    title: guide.title,
+    title: pageTitle,
     description: guide.description,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: guide.title,
+      title: pageTitle,
       description: guide.description,
       url,
       type: 'article',
@@ -62,7 +63,7 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
       locale: 'en_US',
     },
     twitter: {
-      title: guide.title,
+      title: pageTitle,
       description: guide.description,
       card: 'summary_large_image',
       creator: siteConfig.creator,
