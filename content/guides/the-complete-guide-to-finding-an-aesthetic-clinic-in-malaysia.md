@@ -3,7 +3,7 @@ title: "The Complete Guide to Finding an Aesthetic Clinic in Malaysia"
 description: "How to find an aesthetic clinic in Malaysia, compare clinics in KL and Selangor, and check a doctor's LCP against the Ministry of Health registers."
 slug: the-complete-guide-to-finding-an-aesthetic-clinic-in-malaysia
 publishedAt: "2026-10-17"
-updatedAt: "2026-10-21"
+updatedAt: "2026-10-26"
 image: /images/guides/finding-a-clinic.svg
 imageAlt: "Illustrated checklist and map pin for shortlisting an aesthetic clinic in Malaysia."
 primaryKeyword: "aesthetic clinic malaysia"
@@ -61,7 +61,7 @@ An aesthetic clinic in Malaysia is a place where a registered medical practition
 
 If you are looking for an aesthetic clinic in KL, a skin clinic, or a place for a facial treatment, start with the area you will actually travel to. Then check the doctor. A polished website does not answer either question.
 
-The rules below come from the [Guidelines on Aesthetic Medical Practice for Registered Medical Practitioners](https://www.moh.gov.my/images/04-penerbitan/penerbitan-klinikal/pengurusan-kesihatan-dan-kawalan-penyakit/Guidelines_on_Aesthetic_Medical_Practice_for_Registered_Medical_Practitioners_2nd_edition.pdf) (second edition, Medical Practice Division, Ministry of Health Malaysia, 2020) and from the Ministry's public registry pages. They describe how to look. They are not a diagnosis and not a recommendation of a procedure.
+The rules below come from the [Guidelines on Aesthetic Medical Practice for Registered Medical Practitioners](https://hq.moh.gov.my/medicalprac/wp-content/uploads/2022/02/Guidelines_on_Aesthetic_Medical_Practice_for_Registered_Medical_Practitioners_2nd_edition.pdf) (second edition, Medical Practice Division, Ministry of Health Malaysia, 2020) and from the Ministry's public registry pages. They describe how to look. They are not a diagnosis and not a recommendation of a procedure.
 
 ## How to Compare an Aesthetic Clinic in KL
 

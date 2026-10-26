@@ -3,7 +3,7 @@ title: "Laser Treatment in Malaysia: Types and What to Check"
 description: "What laser treatment is, how facial, pigmentation and hair-removal lasers differ, and how to check a doctor and LCP before you book in Malaysia."
 slug: laser-treatment-malaysia
 publishedAt: "2026-10-22"
-updatedAt: "2026-10-22"
+updatedAt: "2026-10-26"
 image: /images/guides/laser-treatment.svg
 imageAlt: "Illustrated beam and target, a stand-in for a clinic laser device rather than a specific machine."
 primaryKeyword: "laser treatment"
@@ -16,7 +16,7 @@ faq:
   - question: "What is laser treatment?"
     answer: "Laser treatment uses a focused beam of light on the skin. Clinics use different devices for concerns such as pigmentation, texture, some scars and unwanted hair. The device, the settings and your skin decide what is suitable, so a consultation comes before a booking."
   - question: "Is laser facial treatment the same as laser treatment for hyperpigmentation?"
-    answer: "No single facial laser treats every mark. A doctor should first say whether a dark patch is melasma, a mark left after inflammation, sun-related pigment or something else. The device discussed for one of those is not automatically suitable for the others."
+    answer: "No single facial laser treats every mark. A doctor should first say whether a dark patch is melasma, a mark left after inflammation, sun-related pigment or something else. The device discussed for one of those is not automatically suitable for the others. [Laser treatment for hyperpigmentation](/guides/laser-treatment-hyperpigmentation) lists what to ask before a pigment laser."
   - question: "Does laser treatment hurt, and is there downtime?"
     answer: "Sensation and downtime vary with the device and the person. Some treatments leave brief redness. Others involve peeling or a longer recovery. Ask what you may feel, what the skin can look like afterwards, and which changes mean you should contact the clinic."
   - question: "Who can perform laser treatment in Malaysia?"
@@ -24,6 +24,12 @@ faq:
   - question: "How many laser sessions will I need?"
     answer: "There is no single session count. A course can involve more than one visit, and the doctor should explain how they will review your skin before suggesting another session. A prepaid package is not a guarantee of clearance."
 relatedLinks:
+  - title: "Laser treatment for hyperpigmentation"
+    href: /guides/laser-treatment-hyperpigmentation
+    description: "What to ask before a pigment laser, including cause, downtime and the treating doctor."
+  - title: "Check a registered medical practitioner"
+    href: /guides/check-registered-medical-practitioner-malaysia
+    description: "How to match a doctor's name to the Malaysian Medical Council register."
   - title: "Laser treatment for pimple scars"
     href: /guides/acne-scar-laser-treatment
     description: "Scar types, approaches clinics discuss, and risks such as darker marks after treatment."
@@ -74,7 +80,7 @@ Fractional lasers are commonly discussed for uneven texture and for some depress
 
 Q-switched lasers and picosecond, or pico, lasers deliver very short pulses. Clinics discuss them for pigment, including some brown marks and tattoo ink, because a short pulse can affect a small target with less heat spreading to the surrounding skin. Pico pulses are shorter than Q-switched pulses. Shorter is not automatically safer or more suitable.
 
-Laser treatment for hyperpigmentation still starts with the type of pigment. A device used for a tattoo or a small sun spot is a different conversation from a device used across a wide patch of melasma. Heat and inflammation can darken skin, especially in darker skin tones. Ask why this device fits your diagnosis, what a test spot would show, and what the plan is if the colour deepens.
+Laser treatment for hyperpigmentation still starts with the type of pigment. A device used for a tattoo or a small sun spot is a different conversation from a device used across a wide patch of melasma. [Laser treatment for hyperpigmentation](/guides/laser-treatment-hyperpigmentation) sets out what to check before that visit. Heat and inflammation can darken skin, especially in darker skin tones. Ask why this device fits your diagnosis, what a test spot would show, and what the plan is if the colour deepens.
 
 ## Hair removal and other uses
 
@@ -89,6 +95,12 @@ Other visits you may see on a menu include treatment of redness, small benign le
 | Fractional | Treats tiny columns, leaves skin between them | Texture and some depressed scars |
 | Q-switched or pico | Very short pulses aimed at pigment | Selected brown marks or tattoo ink |
 | Hair-removal lasers | Longer pulses aimed at the follicle | Unwanted hair, when hair and skin colour suit the device |
+
+## Face laser removal: what clinics mean
+
+A clinic may advertise face laser removal, or facial laser removal, without saying which problem it is selling. The same words are used for laser hair removal on the face, for removal of pigment spots or marks, and for removal of some benign lesions or tattoos. Those are not one device. Hair-removal lasers are aimed at the follicle. Pigment and tattoo work is usually discussed with short-pulse devices such as Q-switched or pico lasers. A mark that is changing, bleeding or unlike the others needs a diagnosis before anyone talks about removing it.
+
+Face laser removal still needs that doctor's assessment before a booking. Ask which of those meanings they intend, and whether that device suits your skin. [Laser treatment for hyperpigmentation](/guides/laser-treatment-hyperpigmentation) is the page for pigment marks. [Melasma treatment in Malaysia](/guides/melasma-treatment-malaysia) applies when the patch may be melasma. [Laser treatment for pimple scars](/guides/acne-scar-laser-treatment) is about scar shape, not facial hair or a single spot.
 
 ## Suitability, risks and downtime
 
@@ -108,7 +120,7 @@ Contact the clinic promptly if pain is increasing, blisters spread, the skin wee
 
 Two checks come before price.
 
-**Registration.** The person assessing and treating you should be a registered medical practitioner. The [Malaysian Medical Council](https://mmc.gov.my) register is the place to confirm the name. Ask who will be in the room and who will operate the device. A therapist's presence does not replace the doctor's responsibility for an aesthetic medical procedure.
+**Registration.** The person assessing and treating you should be a registered medical practitioner. The [Malaysian Medical Council](https://mmc.gov.my) register is the place to confirm the name. [How to check a registered medical practitioner in Malaysia](/guides/check-registered-medical-practitioner-malaysia) sets out how to match the name on a clinic page to that register. Ask who will be in the room and who will operate the device. A therapist's presence does not replace the doctor's responsibility for an aesthetic medical procedure.
 
 **LCP.** LCP means Letter of Credentialing and Privileging. The Medical Practice Division of the Ministry of Health Malaysia issues it for stated aesthetic procedures. The letter names procedures and it expires. The national registry is published in three chapters: general practitioners, medical specialists and surgical specialists. [How to compare LCP-certified aesthetic clinics](/guides/how-to-compare-lcp-certified-aesthetic-clinics) explains how to read the letter and the [Ministry of Health registry](https://www.moh.gov.my/en/core/health-information/national-registry-of-rmp-practising-aesthetic-medical-practice). The rules are set out in the [Guidelines on Aesthetic Medical Practice for Registered Medical Practitioners](https://hq.moh.gov.my/medicalprac/wp-content/uploads/2022/02/Guidelines_on_Aesthetic_Medical_Practice_for_Registered_Medical_Practitioners_2nd_edition.pdf) (second edition, 2020). This directory does not verify an LCP. Ask the clinic for the letter and check the public registers yourself.
 

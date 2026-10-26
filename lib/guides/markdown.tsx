@@ -75,6 +75,10 @@ function parseTableRow(line: string) {
     .map((cell) => cell.trim());
 }
 
+export function GuideInline({ text }: { text: string }) {
+  return <>{renderInline(text, 'inline')}</>;
+}
+
 export function GuideMarkdown({ markdown }: { markdown: string }) {
   const lines = markdown.replace(/\r\n/g, '\n').split('\n');
   const blocks: ReactNode[] = [];

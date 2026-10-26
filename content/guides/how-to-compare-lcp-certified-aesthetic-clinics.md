@@ -3,7 +3,7 @@ title: "How to Compare LCP-Certified Aesthetic Clinics"
 description: "How to compare LCP-certified aesthetic clinics in Malaysia using the Ministry of Health chapters, the national registry, and the same questions at each clinic."
 slug: how-to-compare-lcp-certified-aesthetic-clinics
 publishedAt: "2026-10-17"
-updatedAt: "2026-10-17"
+updatedAt: "2026-10-26"
 image: /images/guides/compare-lcp.svg
 imageAlt: "Two clinic cards side by side, a simple illustration of comparing LCP details rather than slogans."
 primaryKeyword: "lcp-certified aesthetic clinic"
@@ -24,6 +24,9 @@ faq:
   - question: "Does aestheticclinics.my verify the LCP?"
     answer: "The directory lists clinics and doctor profiles so you can build a shortlist. It does not claim a method for verifying LCP status. Ask the clinic for the letter and check the Malaysian Medical Council register and the Ministry registry."
 relatedLinks:
+  - title: "Check a registered medical practitioner"
+    href: /guides/check-registered-medical-practitioner-malaysia
+    description: "How to match a doctor's name to the Malaysian Medical Council register before you compare letters."
   - title: "Aesthetic doctors in Malaysia"
     href: /doctors
     description: "Open a doctor profile, then confirm the LCP with the clinic."
@@ -46,7 +49,7 @@ relatedLinks:
 
 An LCP-certified aesthetic clinic is only as clear as the letter behind the sign. LCP means Letter of Credentialing and Privileging. In Malaysia the Medical Practice Division of the Ministry of Health issues that letter to a registered medical practitioner for aesthetic medical practice. Comparing clinics means comparing those letters, the procedures they name, and the doctors who hold them.
 
-The rules sit in the [Guidelines on Aesthetic Medical Practice for Registered Medical Practitioners](https://www.moh.gov.my/images/04-penerbitan/penerbitan-klinikal/pengurusan-kesihatan-dan-kawalan-penyakit/Guidelines_on_Aesthetic_Medical_Practice_for_Registered_Medical_Practitioners_2nd_edition.pdf), second edition, published by the Medical Practice Division in 2020. This page follows that document. It is not a substitute for reading it, and it is not medical advice.
+The rules sit in the [Guidelines on Aesthetic Medical Practice for Registered Medical Practitioners](https://hq.moh.gov.my/medicalprac/wp-content/uploads/2022/02/Guidelines_on_Aesthetic_Medical_Practice_for_Registered_Medical_Practitioners_2nd_edition.pdf), second edition, published by the Medical Practice Division in 2020. This page follows that document. It is not a substitute for reading it, and it is not medical advice.
 
 ## What the letter actually says
 
@@ -79,7 +82,7 @@ The Medical Practice Division's [aesthetic practice page](https://hq.moh.gov.my/
 Use one row per clinic. Same columns every time.
 
 1. Clinic name, area, and the page you found it on. [Kuala Lumpur](/kuala-lumpur), [Selangor](/selangor), [Bangsar](/kuala-lumpur/bangsar), [Bukit Bintang](/kuala-lumpur/bukit-bintang), [Cheras](/kuala-lumpur/cheras), [Petaling Jaya](/selangor/petaling-jaya), [Subang Jaya](/selangor/subang-jaya), and [Shah Alam](/selangor/shah-alam) are separate lists. A clinic in Petaling Jaya will not appear on the Kuala Lumpur page.
-2. The doctor who will see you, their MMC registration number, and whether the MMC register shows a current practising certificate.
+2. The doctor who will see you, their MMC registration number, and whether the MMC register shows a current practising certificate. [How to check a registered medical practitioner in Malaysia](/guides/check-registered-medical-practitioner-malaysia) covers the register search.
 3. LCP chapter, procedures named, and expiry. Match the procedure you are asking about, not a neighbouring one.
 4. The premises. The guideline expects aesthetic medical services in a facility licensed or registered under the Private Healthcare Facilities and Services Act 1998 and its regulations. Ask which licence the premises holds and whose name is on it.
 5. A written quote. Ask what changes the fee: the procedure, who performs it, the product, the number of areas, and whether a review is included. This guide does not publish prices. The clinic's quote is the figure that counts.
@@ -105,7 +108,7 @@ Ask what the written quote will itemise. A usable quote names the procedure, the
 
 Then check the premises against the address on the area page. [Mont Kiara](/kuala-lumpur/mont-kiara), [Sri Hartamas](/kuala-lumpur/sri-hartamas), [Subang Jaya](/selangor/subang-jaya), and [Klang](/selangor/klang) are far enough apart that a review visit at a different branch is a different plan. Ask "if I need to be seen again, which door do I come back to, and which doctor is there?" Write the answer next to the quote.
 
-It helps to keep the public sources next to the notes: the [2020 guideline PDF](https://www.moh.gov.my/images/04-penerbitan/penerbitan-klinikal/pengurusan-kesihatan-dan-kawalan-penyakit/Guidelines_on_Aesthetic_Medical_Practice_for_Registered_Medical_Practitioners_2nd_edition.pdf), the [national registry](https://www.moh.gov.my/en/core/health-information/national-registry-of-rmp-practising-aesthetic-medical-practice), and the [MMC site](https://mmc.gov.my). You are matching three documents to one doctor. When they match, you can compare waiting time, travel, and the quote. When they do not match, travel and the quote are irrelevant.
+It helps to keep the public sources next to the notes: the [2020 guideline PDF](https://hq.moh.gov.my/medicalprac/wp-content/uploads/2022/02/Guidelines_on_Aesthetic_Medical_Practice_for_Registered_Medical_Practitioners_2nd_edition.pdf), the [national registry](https://www.moh.gov.my/en/core/health-information/national-registry-of-rmp-practising-aesthetic-medical-practice), and the [MMC site](https://mmc.gov.my). You are matching three documents to one doctor. When they match, you can compare waiting time, travel, and the quote. When they do not match, travel and the quote are irrelevant.
 
 ## When the paperwork does not match
 
