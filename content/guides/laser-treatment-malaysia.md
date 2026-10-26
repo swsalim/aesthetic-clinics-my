@@ -100,7 +100,7 @@ Other visits you may see on a menu include treatment of redness, small benign le
 
 A clinic may advertise face laser removal, or facial laser removal, without saying which problem it is selling. The same words are used for laser hair removal on the face, for removal of pigment spots or marks, and for removal of some benign lesions or tattoos. Those are not one device. Hair-removal lasers are aimed at the follicle. Pigment and tattoo work is usually discussed with short-pulse devices such as Q-switched or pico lasers. A mark that is changing, bleeding or unlike the others needs a diagnosis before anyone talks about removing it.
 
-Face laser removal still needs that doctor's assessment before a booking. Ask which of those meanings they intend, and whether that device suits your skin. [Laser treatment for hyperpigmentation](/guides/laser-treatment-hyperpigmentation) is the page for pigment marks. [Melasma treatment in Malaysia](/guides/melasma-treatment-malaysia) applies when the patch may be melasma. [Laser treatment for pimple scars](/guides/acne-scar-laser-treatment) is about scar shape, not facial hair or a single spot.
+Ask the doctor which of those meanings they intend, and whether that device suits your skin. [Laser treatment for hyperpigmentation](/guides/laser-treatment-hyperpigmentation) is the page for pigment marks. [Melasma treatment in Malaysia](/guides/melasma-treatment-malaysia) applies when the patch may be melasma. [Laser treatment for pimple scars](/guides/acne-scar-laser-treatment) is about scar shape, not facial hair or a single spot.
 
 ## Suitability, risks and downtime
 
