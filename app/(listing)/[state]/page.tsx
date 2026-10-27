@@ -9,6 +9,7 @@ import { Clinic, ClinicImage } from '@/types/clinic';
 import { ArrowRightIcon, PersonStandingIcon } from 'lucide-react';
 
 import { isFeatured, isFeaturedPartner } from '@/config/featured';
+import { stateSeoOverride } from '@/config/location-seo';
 import { siteConfig } from '@/config/site';
 
 import { imageKitUrl } from '@/lib/imagekit-url';
@@ -67,11 +68,15 @@ export async function generateMetadata({
   }
 
   const clinicCount = stateData.total_clinics || 0;
+  const seo = stateSeoOverride({ stateSlug: state, clinicCount });
   const title =
-    clinicCount > 0
+    seo?.title ??
+    (clinicCount > 0
       ? `Best ${clinicCount} Aesthetic Clinics in ${stateData.name}`
-      : `Aesthetic Clinics in ${stateData.name}`;
-  const description = `Explore ${stateData.name}'s best aesthetic clinics. View ratings, services, and treatment options to find the right clinic for your skincare or cosmetic goals.`;
+      : `Aesthetic Clinics in ${stateData.name}`);
+  const description =
+    seo?.description ??
+    `Explore ${stateData.name}'s best aesthetic clinics. View ratings, services, and treatment options to find the right clinic for your skincare or cosmetic goals.`;
   const url = !page
     ? absoluteUrl(`/${state}`)
     : page === '1'
@@ -168,6 +173,7 @@ export default async function StatePage({ params, searchParams }: StatePageProps
 
   const totalClinics = stateData.total_clinics || 0;
   const totalPages = Math.ceil(totalClinics / limit);
+  const seo = stateSeoOverride({ stateSlug: state, clinicCount: totalClinics });
 
   const nearbyAreas = stateData.areas
     ?.slice(0, 3)
@@ -177,7 +183,9 @@ export default async function StatePage({ params, searchParams }: StatePageProps
   const nearbyAreasWithLinks = stateData.areas?.slice(0, 3);
 
   const title = `Top Aesthetic Clinics in ${stateData.name}`;
-  const description = `Explore ${totalClinics} trusted aesthetic clinics across cities like ${nearbyAreas} in ${stateData?.name}. View ratings, services, and treatment options to find the right clinic for your skincare or cosmetic goals.`;
+  const description =
+    seo?.description ??
+    `Explore ${totalClinics} trusted aesthetic clinics across cities like ${nearbyAreas} in ${stateData?.name}. View ratings, services, and treatment options to find the right clinic for your skincare or cosmetic goals.`;
 
   const breadcrumbItems = [
     {
@@ -207,7 +215,7 @@ export default async function StatePage({ params, searchParams }: StatePageProps
     <>
       <BreadcrumbJsonLd itemListElements={JSONLDbreadcrumbs} />
       <CollectionPageJsonLd
-        name={`Aesthetic Clinics in ${stateData.name}`}
+        name={seo?.jsonLdName ?? `Aesthetic Clinics in ${stateData.name}`}
         url={`/${state}`}
         description={description}
         clinics={(stateData.clinics?.slice(0, 20) as Partial<Clinic>[]) || []}
@@ -235,20 +243,50 @@ export default async function StatePage({ params, searchParams }: StatePageProps
             <Breadcrumb items={breadcrumbItems} theme="dark" />
             <h1 className="text-balance text-4xl font-black text-white">{title}</h1>
             <p className="text-balance text-lg font-medium text-white">
-              Explore {totalClinics} trusted aesthetic clinics across cities like{' '}
-              {nearbyAreasWithLinks?.map((area, index) => (
-                <React.Fragment key={area.slug}>
-                  <Link
-                    href={absoluteUrl(`/${area.state?.slug}/${area.slug}`)}
-                    className="text-blue-300 hover:border-blue-300 hover:text-blue-300"
-                    prefetch={false}>
-                    {area.name}
-                  </Link>
-                  {index < nearbyAreasWithLinks.length - 2 && ', '}
-                  {index === nearbyAreasWithLinks.length - 2 && ', and '}
-                </React.Fragment>
-              ))}{' '}
-              in {stateData?.name}. Find services, reviews, and opening hours.
+              {seo ? (
+                <>
+                  Looking for a skin clinic in Kuala Lumpur? This directory lists {totalClinics}{' '}
+                  aesthetic clinics in Kuala Lumpur
+                  {nearbyAreasWithLinks && nearbyAreasWithLinks.length > 0 ? (
+                    <>
+                      , across areas such as{' '}
+                      {nearbyAreasWithLinks.map((area, index) => (
+                        <React.Fragment key={area.slug}>
+                          <Link
+                            href={absoluteUrl(`/${area.state?.slug}/${area.slug}`)}
+                            className="text-blue-300 hover:border-blue-300 hover:text-blue-300"
+                            prefetch={false}
+                          >
+                            {area.name}
+                          </Link>
+                          {index < nearbyAreasWithLinks.length - 2 && ', '}
+                          {index === nearbyAreasWithLinks.length - 2 && ', and '}
+                        </React.Fragment>
+                      ))}
+                    </>
+                  ) : null}
+                  . Compare listings when you are choosing the best aesthetic clinic for your visit,
+                  then confirm services, reviews and the doctor with the clinic.
+                </>
+              ) : (
+                <>
+                  Explore {totalClinics} trusted aesthetic clinics across cities like{' '}
+                  {nearbyAreasWithLinks?.map((area, index) => (
+                    <React.Fragment key={area.slug}>
+                      <Link
+                        href={absoluteUrl(`/${area.state?.slug}/${area.slug}`)}
+                        className="text-blue-300 hover:border-blue-300 hover:text-blue-300"
+                        prefetch={false}
+                      >
+                        {area.name}
+                      </Link>
+                      {index < nearbyAreasWithLinks.length - 2 && ', '}
+                      {index === nearbyAreasWithLinks.length - 2 && ', and '}
+                    </React.Fragment>
+                  ))}{' '}
+                  in {stateData?.name}. Find services, reviews, and opening hours.
+                </>
+              )}
             </p>
           </div>
         </Container>
@@ -268,7 +306,8 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                       <Link
                         href={`/doctor/${doctor.slug}`}
                         className="relative size-16 overflow-hidden rounded-full outline -outline-offset-1 outline-blue-200 ring-2 ring-blue-300"
-                        key={`${doctor.id}-${index}`}>
+                        key={`${doctor.id}-${index}`}
+                      >
                         {resolveMediaUrl(doctor.images?.[0]) && (
                           <MediaImage
                             src={resolveMediaUrl(doctor.images?.[0]) ?? ''}
@@ -294,7 +333,8 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                       buttonVariants({ variant: 'secondary' }),
                       'w-full border-blue-300 bg-blue-200/40 text-sm text-blue-800 hover:border-blue-400 hover:bg-blue-200/60 hover:text-blue-900 active:border-blue-400 active:bg-blue-200/80 active:text-blue-900 sm:w-auto',
                     )}
-                    prefetch={false}>
+                    prefetch={false}
+                  >
                     View All Aesthetic Doctors
                   </Link>
                 </div>
@@ -308,7 +348,8 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                 <div
                   className={cn(
                     'grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8 lg:grid-cols-4',
-                  )}>
+                  )}
+                >
                   {currentPage === 1 &&
                     (featuredListings.length > 0 ? (
                       featuredListings.map((clinic) => (
@@ -359,7 +400,8 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                               <a
                                 href="https://invl.me/clnm6di"
                                 target="_blank"
-                                className="hover:!border-b-transparent">
+                                className="hover:!border-b-transparent"
+                              >
                                 <Image
                                   src="/images/banner-total-image-2.jpg"
                                   alt="Total Image Whita Glo"
@@ -423,14 +465,16 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                   <Link
                     href="/submit"
                     className={cn(buttonVariants({ variant: 'primary' }), 'flex flex-row gap-x-2')}
-                    prefetch={false}>
+                    prefetch={false}
+                  >
                     Add a clinic
                     <ArrowRightIcon className="size-4" />
                   </Link>
                   <Link
                     href="/"
                     className={cn(buttonVariants({ variant: 'ghost' }), 'flex flex-row gap-x-2')}
-                    prefetch={false}>
+                    prefetch={false}
+                  >
                     Get back to homepage
                     <ArrowRightIcon className="size-4" />
                   </Link>
@@ -453,7 +497,8 @@ export default async function StatePage({ params, searchParams }: StatePageProps
                   <Link
                     href={absoluteUrl(`/${state}/${area.slug}`)}
                     className="py-1 hover:border-transparent"
-                    prefetch={false}>
+                    prefetch={false}
+                  >
                     {area.name}, {area.state?.name}
                   </Link>
                 </h3>

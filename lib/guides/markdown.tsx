@@ -4,7 +4,8 @@ import Link from 'next/link';
 
 import { headingId } from '@/lib/guides/headings';
 
-const INLINE = /(\*\*[^*]+?\*\*|\*[^*]+?\*|\[[^\]]+?\]\((?:https?:\/\/|\/|mailto:)[^)\s]+\))/g;
+// `[^)\s]*` allows a site-root link such as [Home](/). A `+` quantifier left that markdown as literal text.
+const INLINE = /(\*\*[^*]+?\*\*|\*[^*]+?\*|\[[^\]]+?\]\((?:https?:\/\/|\/|mailto:)[^)\s]*\))/g;
 
 function renderInline(text: string, keyPrefix: string): ReactNode[] {
   const nodes: ReactNode[] = [];

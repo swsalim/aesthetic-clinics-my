@@ -57,11 +57,11 @@ function kepongSeo(clinicCount: number, clinicNames: string[]): LocationSeo {
       ? `Skin specialist Kepong: compare ${clinicCount} aesthetic clinics in Kepong, Kuala Lumpur. Read reviews, services and contact details, then confirm the doctor.`
       : 'Skin specialist Kepong: compare aesthetic clinics in Kepong, Kuala Lumpur. Read reviews, services and contact details, then confirm the doctor.';
   const listed =
-    clinicCount === 1 ? '1 aesthetic clinic is listed' : `${clinicCount} aesthetic clinics are listed`;
+    clinicCount === 1
+      ? '1 aesthetic clinic is listed'
+      : `${clinicCount} aesthetic clinics are listed`;
   const nameSentence =
-    clinicNames.length > 0
-      ? ` Clinics on this page include ${joinNames(clinicNames)}.`
-      : '';
+    clinicNames.length > 0 ? ` Clinics on this page include ${joinNames(clinicNames)}.` : '';
 
   return {
     title,
@@ -81,6 +81,44 @@ export function locationSeoOverride(input: {
 }): LocationSeo | null {
   if (input.stateSlug === 'kuala-lumpur' && input.areaSlug === 'kepong') {
     return kepongSeo(input.clinicCount, input.clinicNames ?? []);
+  }
+
+  return null;
+}
+
+export type StateSeo = {
+  title: string;
+  description: string;
+  jsonLdName: string;
+};
+
+/**
+ * Copy for one state listing. The public state template is shared; this
+ * override applies only to Kuala Lumpur. The clinic count stays live.
+ */
+function kualaLumpurSeo(clinicCount: number): StateSeo {
+  const title =
+    clinicCount > 0
+      ? `Skin Clinic in Kuala Lumpur | Best ${clinicCount} Aesthetic Clinics`
+      : 'Skin Clinic in Kuala Lumpur | Aesthetic Clinics';
+  const description =
+    clinicCount > 0
+      ? `Skin clinic in Kuala Lumpur: compare ${clinicCount} aesthetic clinics in Kuala Lumpur. Shortlist the best aesthetic clinic using reviews, services and contact details.`
+      : 'Skin clinic in Kuala Lumpur: compare aesthetic clinics in Kuala Lumpur. Shortlist the best aesthetic clinic using reviews, services and contact details.';
+
+  return {
+    title,
+    description,
+    jsonLdName: 'Skin Clinics and Aesthetic Clinics in Kuala Lumpur',
+  };
+}
+
+export function stateSeoOverride(input: {
+  stateSlug: string;
+  clinicCount: number;
+}): StateSeo | null {
+  if (input.stateSlug === 'kuala-lumpur') {
+    return kualaLumpurSeo(input.clinicCount);
   }
 
   return null;
