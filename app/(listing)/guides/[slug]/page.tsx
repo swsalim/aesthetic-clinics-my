@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import { siteConfig } from '@/config/site';
 
 import { formatGuideDate, getAllGuides, getGuideBySlug, readingTimeLabel } from '@/lib/guides';
-import { GuideMarkdown } from '@/lib/guides/markdown';
+import { GuideInline, GuideMarkdown } from '@/lib/guides/markdown';
 import { absoluteUrl } from '@/lib/utils';
 
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
@@ -227,8 +227,8 @@ export default async function GuidePage({ params }: GuidePageProps) {
                       {item.question}
                     </h3>
                   </dt>
-                  <dd className="mt-2 max-w-3xl text-base leading-relaxed text-gray-700 dark:text-gray-300">
-                    {item.answer}
+                  <dd className="mt-2 max-w-3xl text-base leading-relaxed text-gray-700 dark:text-gray-300 [&_a]:font-medium [&_a]:text-blue-700 [&_a]:underline dark:[&_a]:text-blue-300">
+                    <GuideInline text={item.answer} />
                   </dd>
                 </div>
               ))}
