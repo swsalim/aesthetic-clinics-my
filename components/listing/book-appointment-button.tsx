@@ -1,6 +1,6 @@
 'use client';
 
-import { PhoneIcon } from 'lucide-react';
+import { Phone as PhoneIcon } from '@phosphor-icons/react/dist/ssr';
 
 import { selineTrack } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
@@ -35,7 +35,7 @@ export function BookAppointmentButton({
       }}
       variant="primary"
       className={cn('flex w-full items-center gap-x-3')}>
-      <PhoneIcon className="h-5 w-5" /> Book Appointment
+      <PhoneIcon weight="duotone" className="h-5 w-5" /> Book Appointment
     </Button>
   );
 }

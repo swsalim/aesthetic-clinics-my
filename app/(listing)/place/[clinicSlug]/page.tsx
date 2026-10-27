@@ -3,26 +3,23 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { ClinicDetails, ClinicHours, ClinicImage } from '@/types/clinic';
+import { ClinicDetails, ClinicHours } from '@/types/clinic';
 import { YouTubeEmbed } from '@next/third-parties/google';
 import {
-  AwardIcon,
-  CarIcon,
-  FacebookIcon,
-  GlobeIcon,
-  InstagramIcon,
-  MailIcon,
-  MapPinIcon,
-  MapPinXInsideIcon,
-  YoutubeIcon,
-} from 'lucide-react';
+  Medal as AwardIcon,
+  FacebookLogo as FacebookIcon,
+  Globe as GlobeIcon,
+  InstagramLogo as InstagramIcon,
+  Envelope as MailIcon,
+  MapPin as MapPinIcon,
+  YoutubeLogo as YoutubeIcon,
+} from '@phosphor-icons/react/dist/ssr';
 
 import { isFeaturedListing } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
-import { resolveMediaUrl } from '@/lib/media';
 import { clinicPageTitle } from '@/lib/clinic-title';
-import { absoluteUrl, cn } from '@/lib/utils';
+import { absoluteUrl } from '@/lib/utils';
 
 import { getClinicBySlug, getClinicListings } from '@/helpers/clinics';
 import { getServiceIcon } from '@/helpers/services';
@@ -34,6 +31,7 @@ import { ImageGallery } from '@/components/image/image-gallery';
 import { BookAppointmentButton } from '@/components/listing/book-appointment-button';
 import DoctorPractice from '@/components/listing/doctor-practice';
 import DoctorPracticeAvatar from '@/components/listing/doctor-practice-avatar';
+import { GetDirectionButton } from '@/components/listing/get-direction-button';
 import NearbyClinics from '@/components/listing/nearby-clinics';
 import Reviews from '@/components/listing/reviews';
 import MapWrapper from '@/components/mapbox-map/map-wrapper';
@@ -42,7 +40,7 @@ import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import BusinessJsonLd from '@/components/structured-data/business-json-ld';
 import { Badge } from '@/components/ui/badge';
 import Breadcrumb from '@/components/ui/breadcrumb';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import Container from '@/components/ui/container';
 import Prose from '@/components/ui/prose';
 import { StarRating } from '@/components/ui/star-rating';
@@ -314,17 +312,6 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
         openingHoursSpecification={openingHoursSpecification}
         reviews={parsedClinic.reviews?.slice(0, 5) ?? []}
       />
-      {parsedClinic.images && parsedClinic.images.length > 0 && parsedClinic.images[0] && (
-        <Wrapper
-          style={{
-            backgroundImage: `url('${resolveMediaUrl(parsedClinic.images[0] as ClinicImage) ?? ''}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center center',
-            backgroundRepeat: 'no-repeat',
-            position: 'relative',
-          }}
-          className="h-56 md:h-96"></Wrapper>
-      )}
       <BreadcrumbJsonLd itemListElements={JSONLDbreadcrumbs} />
       <Wrapper className="pb-0 md:pb-0">
         <Container>
@@ -344,7 +331,7 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                   <div className="flex items-center gap-x-2">
                     {parsedClinic.is_featured && (
                       <Badge variant="brand">
-                        <AwardIcon className="me-1 h-4 w-4" aria-hidden="true" />
+                        <AwardIcon weight="duotone" className="me-1 h-4 w-4" aria-hidden="true" />
                         Featured
                       </Badge>
                     )}
@@ -363,7 +350,7 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                     )}
                     {parsedClinic.is_permanently_closed && (
                       <Badge variant="red">
-                        <MapPinXInsideIcon className="me-1 h-4 w-4" aria-hidden="true" />
+                        <MapPinIcon weight="duotone" className="me-1 h-4 w-4" aria-hidden="true" />
                         Closed permanently
                       </Badge>
                     )}
@@ -372,20 +359,20 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
               </div>
               <div className="flex flex-col gap-x-4 gap-y-2">
                 <div className="flex items-center gap-x-2">
-                  <MapPinIcon className="h-5 w-5 text-blue-300" />
+                  <MapPinIcon weight="duotone" className="h-5 w-5 text-blue-300" />
                   <span className="text-sm text-gray-500 dark:text-gray-300">{fullAddress}</span>
                 </div>
                 {parsedClinic.email && (
-                  <div className="flex items-center gap-x-2">
-                    <MailIcon className="h-5 w-5 text-blue-300" />
+                  <div className="flex items-center gap-x-2 lg:hidden">
+                    <MailIcon weight="duotone" className="h-5 w-5 text-blue-300" />
                     <Link href={`mailto:${parsedClinic.email}`} prefetch={false}>
                       <span className="text-sm">{parsedClinic.email}</span>
                     </Link>
                   </div>
                 )}
                 {parsedClinic.website && (
-                  <div className="flex items-center gap-x-2">
-                    <GlobeIcon className="h-5 w-5 text-blue-300" />
+                  <div className="flex items-center gap-x-2 lg:hidden">
+                    <GlobeIcon weight="duotone" className="h-5 w-5 text-blue-300" />
                     <Link
                       href={`${parsedClinic.website}?utm_source=aestheticclinics.my`}
                       rel="nofollow"
@@ -395,7 +382,7 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                   </div>
                 )}
               </div>
-              <div className="flex flex-col gap-y-2">
+              <div className="flex flex-col gap-y-2 lg:hidden">
                 <div className="flex flex-col gap-x-2 gap-y-3 sm:flex-row sm:flex-wrap"></div>
                 {hasSocialAccounts && (
                   <div className="flex gap-x-2">
@@ -409,7 +396,7 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                           target="_blank"
                           rel="nofollow noopener noreferrer"
                           aria-label="Visit business Facebook page">
-                          <FacebookIcon className="h-5 w-5" />
+                          <FacebookIcon weight="duotone" className="h-5 w-5" />
                           <span className="sr-only">Visit Facebook</span>
                         </a>
                       </Button>
@@ -424,7 +411,7 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                           target="_blank"
                           rel="nofollow noopener noreferrer"
                           aria-label="Visit business Instagram page">
-                          <InstagramIcon className="h-5 w-5" />
+                          <InstagramIcon weight="duotone" className="h-5 w-5" />
                           <span className="sr-only">Visit Instagram</span>
                         </a>
                       </Button>
@@ -439,7 +426,7 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                           target="_blank"
                           rel="nofollow noopener noreferrer"
                           aria-label="Visit business YouTube channel">
-                          <YoutubeIcon className="h-5 w-5" />
+                          <YoutubeIcon weight="duotone" className="h-5 w-5" />
                           <span className="sr-only">Visit YouTube</span>
                         </a>
                       </Button>
@@ -458,23 +445,7 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                     areaSlug={parsedClinic.area?.slug ?? ''}
                     clinicSlug={clinicSlug}
                   />
-                  {/* add a button with a map icon that opens the map in a new tab and show directions to the clinic */}
-                  <Button
-                    variant="outline"
-                    asChild
-                    className="flex-grow-0 justify-center p-3 text-blue-500 hover:text-blue-400 dark:text-blue-300 dark:hover:text-blue-400">
-                    <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${parsedClinic.name}`}
-                      target="_blank"
-                      rel="nofollow noopener noreferrer"
-                      aria-label="Visit business on Google Maps"
-                      className={cn(
-                        buttonVariants({ variant: 'secondary' }),
-                        'flex items-center gap-x-2',
-                      )}>
-                      <CarIcon className="h-5 w-5" /> Get Directions
-                    </a>
-                  </Button>
+                  <GetDirectionButton clinicSlug={clinicSlug} name={parsedClinic.name} />
                   <StickyBookButton
                     phone={parsedClinic.phone}
                     stateSlug={parsedClinic.state?.slug ?? ''}
@@ -490,114 +461,217 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
 
           {/* content */}
           <div className="py-8 md:gap-8 lg:grid lg:grid-cols-sidebar lg:gap-10">
-            <Prose className="space-y-8">
-              {parsedClinic.description && (
-                <article>
-                  <h2 className="my-0">About {parsedClinic.name}</h2>
-                  <TruncatedHtml html={parsedClinic.description} limit={80} />
-                </article>
-              )}
-
-              {parsedClinic.featured_video && (
-                <div>
-                  <YouTubeEmbed
-                    videoid={parsedClinic.featured_video.split('v=')[1]}
-                    height={400}
-                    params="controls=0"
-                  />
-                </div>
-              )}
-
-              <DoctorPracticeAvatar clinicSlug={clinicSlug} />
-
-              {!hideAds && (
-                <div className="flex flex-col gap-2 text-center">
-                  <a
-                    href="https://invl.me/clnm6di"
-                    target="_blank"
-                    className="hover:!border-b-transparent">
-                    <Image
-                      src="/images/banner-total-image-1.jpg"
-                      alt="Total Image Whita Glo"
-                      width={600}
-                      height={600}
-                      priority
-                      quality={85}
-                      sizes="100vw"
-                      className="mb-0 h-auto w-full object-cover"
-                      style={{
-                        objectPosition: 'center center',
-                      }}
-                    />
-                  </a>
-                </div>
-              )}
-
-              {!hideAds && (
-                <div>
-                  <div ta-ad-container=""></div>
-                </div>
-              )}
-
-              {parsedClinic.services && (
-                <article className="block lg:hidden">
-                  <h2>{parsedClinic.name} Services</h2>
-                  <div className="grid grid-cols-3 gap-4 sm:grid-cols-5 md:grid-cols-6">
-                    {parsedClinic.services.map((service, index) => (
-                      <div
-                        key={service.slug ?? service.name ?? String(index)}
-                        tabIndex={0}
-                        aria-label={service.name}
-                        className="flex cursor-pointer flex-col items-center justify-center rounded-xl bg-white p-3 text-gray-900 shadow-md outline-none transition hover:shadow-lg focus:ring-2 focus:ring-red-400 dark:bg-gray-950 dark:text-gray-50"
-                        role="button">
-                        {getServiceIcon(service.slug ?? '')}
-                        <div className="mt-4 text-center text-xs">{service.name}</div>
-                      </div>
-                    ))}
-                  </div>
-                </article>
-              )}
-
-              {parsedClinic.hours && parsedClinic.hours.length > 0 && (
-                <article>
-                  <h2>{parsedClinic.name}&apos;s Opening Hours</h2>
-                  <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-950/40">
-                    {renderOpeningHours(parsedClinic)}
-                  </div>
-                </article>
-              )}
-
-              {parsedClinic.images && parsedClinic.images.length > 1 && (
-                <article>
-                  <h2>Gallery of {parsedClinic.name}</h2>
+            <div>
+              {parsedClinic.images && parsedClinic.images.length > 0 && (
+                <article className="mb-8">
+                  <h2 className="sr-only">Gallery of {parsedClinic.name}</h2>
                   <ImageGallery images={parsedClinic.images} title={parsedClinic.name || ''} />
                 </article>
               )}
+              <Prose className="space-y-8">
+                {parsedClinic.description && (
+                  <article>
+                    <h2 className="my-0">About {parsedClinic.name}</h2>
+                    <TruncatedHtml html={parsedClinic.description} limit={80} />
+                  </article>
+                )}
 
-              <article className="block lg:hidden">
-                <Map
-                  latitude={parsedClinic.latitude ?? 0}
-                  longitude={parsedClinic.longitude ?? 0}
-                  name={parsedClinic.name ?? ''}
-                />
-              </article>
-              {parsedClinic.id && (
-                <>
-                  <AddReviewForm clinicId={parsedClinic.id} />
-                  <Reviews reviews={parsedClinic.reviews} clinicSlug={clinicSlug} />
-                </>
-              )}
-            </Prose>
-            <aside>
-              <Prose>
-                <article className="hidden lg:block">
+                {parsedClinic.featured_video && (
+                  <div>
+                    <YouTubeEmbed
+                      videoid={parsedClinic.featured_video.split('v=')[1]}
+                      height={400}
+                      params="controls=0"
+                    />
+                  </div>
+                )}
+
+                <DoctorPracticeAvatar clinicSlug={clinicSlug} />
+
+                {!hideAds && (
+                  <div className="flex flex-col gap-2 text-center">
+                    <a
+                      href="https://invl.me/clnm6di"
+                      target="_blank"
+                      className="hover:!border-b-transparent">
+                      <Image
+                        src="/images/banner-total-image-1.jpg"
+                        alt="Total Image Whita Glo"
+                        width={600}
+                        height={600}
+                        priority
+                        quality={85}
+                        sizes="100vw"
+                        className="mb-0 h-auto w-full object-cover"
+                        style={{
+                          objectPosition: 'center center',
+                        }}
+                      />
+                    </a>
+                  </div>
+                )}
+
+                {!hideAds && (
+                  <div>
+                    <div ta-ad-container=""></div>
+                  </div>
+                )}
+
+                {parsedClinic.services && (
+                  <article className="block lg:hidden">
+                    <h2>{parsedClinic.name} Services</h2>
+                    <div className="grid grid-cols-3 gap-4 sm:grid-cols-5 md:grid-cols-6">
+                      {parsedClinic.services.map((service, index) => (
+                        <div
+                          key={service.slug ?? service.name ?? String(index)}
+                          tabIndex={0}
+                          aria-label={service.name}
+                          className="flex cursor-pointer flex-col items-center justify-center rounded-xl bg-white p-3 text-gray-900 shadow-md outline-none transition hover:shadow-lg focus:ring-2 focus:ring-red-400 dark:bg-gray-950 dark:text-gray-50"
+                          role="button">
+                          {getServiceIcon(service.slug ?? '')}
+                          <div className="mt-4 text-center text-xs">{service.name}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                )}
+
+                {parsedClinic.hours && parsedClinic.hours.length > 0 && (
+                  <article>
+                    <h2>{parsedClinic.name}&apos;s Opening Hours</h2>
+                    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-950/40">
+                      {renderOpeningHours(parsedClinic)}
+                    </div>
+                  </article>
+                )}
+
+                <article className="block lg:hidden">
                   <Map
                     latitude={parsedClinic.latitude ?? 0}
                     longitude={parsedClinic.longitude ?? 0}
                     name={parsedClinic.name ?? ''}
                   />
                 </article>
+                {parsedClinic.id && (
+                  <>
+                    <AddReviewForm clinicId={parsedClinic.id} />
+                    <Reviews reviews={parsedClinic.reviews} clinicSlug={clinicSlug} />
+                  </>
+                )}
+              </Prose>
+            </div>
+            <aside className="flex min-w-0 flex-col gap-8 lg:sticky lg:top-20 lg:self-start">
+              <article className="hidden lg:block">
+                <h2 className="mt-0 text-xl font-semibold text-gray-900 dark:text-gray-50">
+                  Location
+                </h2>
+                <div className="overflow-hidden rounded-lg">
+                  <MapWrapper
+                    locations={[
+                      {
+                        lat: parsedClinic.latitude ?? 0,
+                        long: parsedClinic.longitude ?? 0,
+                        name: parsedClinic.name ?? '',
+                      },
+                    ]}
+                  />
+                </div>
+                <p className="mt-3 flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
+                  <MapPinIcon
+                    weight="duotone"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-blue-400"
+                    aria-hidden="true"
+                  />
+                  <span className="min-w-0 break-words">{fullAddress}</span>
+                </p>
+                <GetDirectionButton
+                  clinicSlug={clinicSlug}
+                  name={fullAddress || parsedClinic.name}
+                  variant="primary"
+                  className="mt-3 w-full text-white hover:text-white"
+                />
+              </article>
 
+              {(parsedClinic.email || parsedClinic.website || hasSocialAccounts) && (
+                <article className="hidden flex-col gap-4 lg:flex">
+                  <h2 className="mt-0 text-xl font-semibold text-gray-900 dark:text-gray-50">
+                    Contact
+                  </h2>
+                  <ul className="my-0 flex list-none flex-col gap-3 pl-0">
+                    {parsedClinic.email && (
+                      <li className="flex items-center gap-2 text-sm">
+                        <MailIcon weight="duotone" className="h-4 w-4 shrink-0 text-blue-400" aria-hidden="true" />
+                        <a href={`mailto:${parsedClinic.email}`} className="min-w-0 break-all">
+                          {parsedClinic.email}
+                        </a>
+                      </li>
+                    )}
+                    {parsedClinic.website && (
+                      <li className="flex items-center gap-2 text-sm">
+                        <GlobeIcon weight="duotone" className="h-4 w-4 shrink-0 text-blue-400" aria-hidden="true" />
+                        <a
+                          href={`${parsedClinic.website}?utm_source=aestheticclinics.my`}
+                          target="_blank"
+                          rel="nofollow noopener noreferrer"
+                          className="min-w-0 break-all">
+                          {parsedClinic.website}
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+                  {hasSocialAccounts && (
+                    <div className="flex gap-2">
+                      {parsedClinic.facebook_url && (
+                        <Button
+                          variant="outline"
+                          asChild
+                          className="flex-grow-0 justify-center p-3 text-[#1877f2] hover:text-[#1877f2]">
+                          <a
+                            href={parsedClinic.facebook_url}
+                            target="_blank"
+                            rel="nofollow noopener noreferrer"
+                            aria-label="Visit business Facebook page">
+                            <FacebookIcon weight="duotone" className="h-5 w-5" />
+                            <span className="sr-only">Visit Facebook</span>
+                          </a>
+                        </Button>
+                      )}
+                      {parsedClinic.instagram_url && (
+                        <Button
+                          variant="outline"
+                          asChild
+                          className="flex-grow-0 justify-center p-3 text-[#e1306c] hover:text-[#e1306c]">
+                          <a
+                            href={parsedClinic.instagram_url}
+                            target="_blank"
+                            rel="nofollow noopener noreferrer"
+                            aria-label="Visit business Instagram page">
+                            <InstagramIcon weight="duotone" className="h-5 w-5" />
+                            <span className="sr-only">Visit Instagram</span>
+                          </a>
+                        </Button>
+                      )}
+                      {parsedClinic.youtube_url && (
+                        <Button
+                          variant="outline"
+                          asChild
+                          className="flex-grow-0 justify-center p-3 text-[#ff0000] hover:text-[#ff0000]">
+                          <a
+                            href={parsedClinic.youtube_url}
+                            target="_blank"
+                            rel="nofollow noopener noreferrer"
+                            aria-label="Visit business YouTube channel">
+                            <YoutubeIcon weight="duotone" className="h-5 w-5" />
+                            <span className="sr-only">Visit YouTube</span>
+                          </a>
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </article>
+              )}
+
+              <Prose>
                 <DoctorPractice clinicSlug={clinicSlug} />
 
                 {!hideAds && (

@@ -3,7 +3,12 @@
 import { useEffect, useState } from 'react';
 
 import { ClinicHours, ClinicSpecialHours } from '@/types/clinic';
-import { AlarmClockIcon, ClockAlertIcon, ClockFadingIcon, ClockIcon } from 'lucide-react';
+import {
+  Alarm as AlarmClockIcon,
+  ClockCountdown as ClockAlertIcon,
+  Hourglass as ClockFadingIcon,
+  Clock as ClockIcon,
+} from '@phosphor-icons/react/dist/ssr';
 
 import { Badge } from '@/components/ui/badge';
 
@@ -119,13 +124,13 @@ export function ClinicStatus({ hours, specialHours }: ClinicStatusProps) {
     <>
       {status && (
         <Badge variant={statusConfig[status].variant} className="duration-150 animate-in fade-in">
-          {status === 'open' && <ClockIcon className="me-1 h-4 w-4" aria-hidden="true" />}
-          {status === 'closed' && <ClockFadingIcon className="me-1 h-4 w-4" aria-hidden="true" />}
+          {status === 'open' && <ClockIcon weight="duotone" className="me-1 h-4 w-4" aria-hidden="true" />}
+          {status === 'closed' && <ClockFadingIcon weight="duotone" className="me-1 h-4 w-4" aria-hidden="true" />}
           {status === 'opening-soon' && (
-            <AlarmClockIcon className="me-1 h-4 w-4" aria-hidden="true" />
+            <AlarmClockIcon weight="duotone" className="me-1 h-4 w-4" aria-hidden="true" />
           )}
           {status === 'closing-soon' && (
-            <ClockAlertIcon className="me-1 h-4 w-4" aria-hidden="true" />
+            <ClockAlertIcon weight="duotone" className="me-1 h-4 w-4" aria-hidden="true" />
           )}
           {statusConfig[status].text}
         </Badge>

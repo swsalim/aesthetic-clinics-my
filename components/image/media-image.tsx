@@ -34,11 +34,16 @@ export function MediaImage({
   directory = null,
   width = MEDIA.gallery.width,
   height = MEDIA.gallery.height,
+  fill,
   loader,
   ...props
 }: MediaImageProps) {
   const imageSrc = resolveSrc(src, directory);
   const resolvedLoader = loader ?? (isImageKitSrc(imageSrc) ? imageKitLoader : undefined);
+
+  if (fill) {
+    return <Image {...props} src={imageSrc} alt={alt} fill loader={resolvedLoader} />;
+  }
 
   return (
     <Image

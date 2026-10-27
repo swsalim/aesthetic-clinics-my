@@ -3,6 +3,9 @@ import type { NextConfig } from 'next';
 import { MEDIA_DEVICE_SIZES, MEDIA_IMAGE_SIZES } from './lib/media-sizes';
 
 const nextConfig: NextConfig = {
+  experimental: {
+    optimizePackageImports: ['@phosphor-icons/react'],
+  },
   images: {
     // Default Next.js / Vercel Image Optimization (no custom Cloudflare loader).
     // Keep in sync with lib/media-sizes.ts presets used by MediaImage call sites.

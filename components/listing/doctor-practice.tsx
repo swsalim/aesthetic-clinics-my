@@ -18,7 +18,7 @@ export default async function DoctorPractice({ clinicSlug, className }: DoctorPr
 
   return (
     <div className={cn('flex flex-col gap-6', className)}>
-      <h2 className="text-xl font-semibold">Our Doctors</h2>
+      <h2 className="mb-0 mt-0 text-xl font-semibold">Our Doctors</h2>
 
       <div className="flex flex-wrap gap-4">
         {doctors.map((doctor) => (

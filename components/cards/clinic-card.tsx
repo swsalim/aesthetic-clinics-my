@@ -4,13 +4,12 @@ import Link from 'next/link';
 
 import { ClinicHours, ClinicSpecialHours } from '@/types/clinic';
 import {
-  AwardIcon,
-  ClockIcon,
-  MapPinIcon,
-  MapPinXInsideIcon,
-  PhoneIcon,
-  SparklesIcon,
-} from 'lucide-react';
+  Medal as AwardIcon,
+  Clock as ClockIcon,
+  MapPin as MapPinIcon,
+  Phone as PhoneIcon,
+  Sparkle as SparklesIcon,
+} from '@phosphor-icons/react/dist/ssr';
 
 import { type MediaFields, resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';
@@ -89,13 +88,13 @@ export function ClinicCard({
           {isPlaceholder && <Badge variant="gray">Sample</Badge>}
           {isFeaturedPartner && (
             <span className="inline-flex items-center gap-1 rounded-full border border-amber-300/60 bg-gradient-to-r from-amber-500 to-amber-600 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm">
-              <SparklesIcon className="size-3 shrink-0" aria-hidden="true" />
+              <SparklesIcon weight="duotone" className="size-3 shrink-0" aria-hidden="true" />
               Featured partner
             </span>
           )}
           {isFeatured && !isFeaturedPartner && (
             <span className="dark:bg-blue-950/50 inline-flex items-center gap-1 rounded-md border border-blue-300/50 bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-blue-700 dark:border-blue-800 dark:text-blue-300">
-              <AwardIcon className="size-3" aria-hidden="true" />
+              <AwardIcon weight="duotone" className="size-3" aria-hidden="true" />
               Featured
             </span>
           )}
@@ -103,7 +102,7 @@ export function ClinicCard({
             hours.length === 7 &&
             hours.every((hour) => hour.open_time && hour.close_time) && (
               <Badge variant="blue">
-                <ClockIcon className="me-1 h-4 w-4" aria-hidden="true" />
+                <ClockIcon weight="duotone" className="me-1 h-4 w-4" aria-hidden="true" />
                 Open everyday
               </Badge>
             )}
@@ -113,7 +112,7 @@ export function ClinicCard({
           )}
           {isPermanentlyClosed && (
             <Badge variant="red">
-              <MapPinXInsideIcon className="me-1 h-4 w-4" aria-hidden="true" />
+              <MapPinIcon weight="duotone" className="me-1 h-4 w-4" aria-hidden="true" />
               Closed permanently
             </Badge>
           )}
@@ -133,13 +132,13 @@ export function ClinicCard({
         )}
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
-            <MapPinIcon className="h-4 w-4 flex-shrink-0 text-blue-300" aria-hidden="true" />
+            <MapPinIcon weight="duotone" className="h-4 w-4 flex-shrink-0 text-blue-300" aria-hidden="true" />
             <p className="line-clamp-2 text-sm text-gray-500 dark:text-gray-300">
               {address}, {postalCode}, {area}, {state}
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <PhoneIcon className="h-4 w-4 flex-shrink-0 text-blue-300" aria-hidden="true" />
+            <PhoneIcon weight="duotone" className="h-4 w-4 flex-shrink-0 text-blue-300" aria-hidden="true" />
             <p className="text-sm text-gray-500 dark:text-gray-300">{phone}</p>
           </div>
         </div>

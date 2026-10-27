@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import { StarIcon } from 'lucide-react';
+import { Star as StarIcon } from '@phosphor-icons/react/dist/ssr';
 
 interface PartialStarProps {
   fillPercentage: number;
@@ -12,11 +12,11 @@ interface PartialStarProps {
 function PartialStar({ fillPercentage, className = '' }: PartialStarProps) {
   return (
     <div className="relative h-5 w-5">
-      <StarIcon className={`h-5 w-5 fill-gray-200 stroke-gray-200 ${className}`} />
+      <StarIcon weight="duotone" className={`h-5 w-5 fill-gray-200 stroke-gray-200 ${className}`} />
       <div
         className="absolute inset-0 overflow-hidden"
         style={{ width: `${fillPercentage * 100}%` }}>
-        <StarIcon className="fill-brand h-5 w-5 stroke-transparent" />
+        <StarIcon weight="duotone" className="fill-brand h-5 w-5 stroke-transparent" />
       </div>
     </div>
   );
@@ -42,12 +42,20 @@ export const StarRating = memo(function StarRating({
       <div className="flex">
         {[1, 2, 3, 4, 5].map((star) => {
           if (star <= fullStars) {
-            return <StarIcon key={star} className="fill-brand h-5 w-5 stroke-transparent" />;
+            return (
+              <StarIcon
+                weight="duotone"
+                key={star}
+                className="fill-brand h-5 w-5 stroke-transparent"
+              />
+            );
           }
           if (star === fullStars + 1 && partialStarFill > 0) {
             return <PartialStar key={star} fillPercentage={partialStarFill} />;
           }
-          return <StarIcon key={star} className="h-5 w-5 fill-gray-200 stroke-gray-200" />;
+          return (
+            <StarIcon weight="duotone" key={star} className="h-5 w-5 fill-gray-200 stroke-gray-200" />
+          );
         })}
       </div>
       {showValue && (

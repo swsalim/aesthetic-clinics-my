@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { ClinicReview } from '@/types/clinic';
 import { formatDistanceToNow } from 'date-fns';
-import { ArrowRightIcon } from 'lucide-react';
+import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr';
 
 import { cn } from '@/lib/utils';
 
@@ -53,7 +53,7 @@ export default function Reviews({ reviews, clinicSlug }: ReviewsProps) {
           href={`/place/${clinicSlug}/reviews`}
           className={cn(buttonVariants({ variant: 'primary' }), 'not-prose flex flex-row gap-x-2')}>
           View all reviews
-          <ArrowRightIcon className="size-4" />
+          <ArrowRightIcon weight="duotone" className="size-4" />
         </Link>
       </div>
     </article>

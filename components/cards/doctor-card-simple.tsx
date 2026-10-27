@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import { ClinicDoctor } from '@/types/clinic';
-import { AwardIcon, SquareUserRoundIcon } from 'lucide-react';
+import { Medal as AwardIcon, UserSquare as SquareUserRoundIcon } from '@phosphor-icons/react/dist/ssr';
 
 import { resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';
@@ -41,7 +41,7 @@ export function DoctorCardSimple({ doctor }: DoctorCardProps) {
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-gray-100">
-                <SquareUserRoundIcon className="h-12 w-12 text-gray-400" />
+                <SquareUserRoundIcon weight="duotone" className="h-12 w-12 text-gray-400" />
               </div>
             )}
           </div>
@@ -49,7 +49,7 @@ export function DoctorCardSimple({ doctor }: DoctorCardProps) {
             <CardTitle className="text-base leading-tight">{doctor.name}</CardTitle>
             {doctor.is_featured && (
               <Badge variant="brand">
-                <AwardIcon className="me-1 h-4 w-4" aria-hidden="true" />
+                <AwardIcon weight="duotone" className="me-1 h-4 w-4" aria-hidden="true" />
                 Featured
               </Badge>
             )}

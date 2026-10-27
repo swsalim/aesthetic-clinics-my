@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, StarIcon } from 'lucide-react';
+import { CircleNotch as Loader2, Star as StarIcon } from '@phosphor-icons/react/dist/ssr';
 import * as z from 'zod';
 
 import { Textarea } from '@/components/form-fields/textarea';
@@ -137,6 +137,7 @@ export default function AddReviewForm({ clinicId }: AddReviewFormProps) {
             onClick={() => onChange(star)}
             className="focus:outline-none">
             <StarIcon
+              weight="duotone"
               className={`h-6 w-6 ${
                 star <= value ? 'fill-brand stroke-transparent' : 'fill-gray-200 stroke-gray-200'
               }`}
@@ -262,7 +263,7 @@ export default function AddReviewForm({ clinicId }: AddReviewFormProps) {
                 disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 weight="duotone" className="mr-2 h-4 w-4 animate-spin" />
                     Submitting...
                   </>
                 ) : (
