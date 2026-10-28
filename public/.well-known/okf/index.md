@@ -4,7 +4,7 @@ title: Aesthetic Clinics MY (aestheticclinics.my)
 description: A web directory of aesthetic clinics and aesthetic doctors in Malaysia, searchable by state and city.
 resource: https://www.aestheticclinics.my/
 tags: [overview, aesthetics, directory, malaysia]
-timestamp: 2026-10-23T02:00:00Z
+timestamp: 2026-10-27T02:00:00Z
 ---
 
 # Aesthetic Clinics MY
@@ -37,6 +37,7 @@ As of 21 October 2026 the homepage shows 474 listed clinics across 15 states and
 - [Laser treatment for pimple scars](articles/acne-scar-laser-treatment.md)
 - [Face lifting treatment in Malaysia](articles/face-lifting-treatment-malaysia.md)
 - [Filler for nasolabial folds](articles/filler-nasolabial-folds.md)
+- [Lip filler Juvederm in Malaysia](articles/juvederm-lip-filler-malaysia.md)
 - [Whitehead removal](articles/whitehead-removal.md)
 
 ## Change history

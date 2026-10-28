@@ -1,6 +1,6 @@
 import { Clinic, ClinicDetails } from '@/types/clinic';
 
-import { locationSeoOverride } from '@/config/location-seo';
+import { locationSeoOverride, stateSeoOverride } from '@/config/location-seo';
 import { siteConfig } from '@/config/site';
 
 import { getAllGuides, getGuideBySlug } from '@/lib/guides';
@@ -276,12 +276,18 @@ export async function markdownState(stateSlug: string) {
     .slice(0, 3)
     .map((area) => area.name)
     .join(', ');
+  const seo = stateSeoOverride({ stateSlug, clinicCount: totalClinics });
+  const areaNote = nearbyAreas ? `, across areas such as ${nearbyAreas}` : '';
 
   return joinSections([
-    totalClinics > 0
-      ? `# ${totalClinics} aesthetic clinics in ${stateData.name}`
-      : `# Aesthetic clinics in ${stateData.name}`,
-    `> Explore ${totalClinics} trusted aesthetic clinics${nearbyAreas ? ` across cities like ${nearbyAreas}` : ''} in ${stateData.name}. Find services, reviews, and opening hours.`,
+    seo
+      ? `# ${seo.jsonLdName}`
+      : totalClinics > 0
+        ? `# ${totalClinics} aesthetic clinics in ${stateData.name}`
+        : `# Aesthetic clinics in ${stateData.name}`,
+    seo
+      ? `> Looking for a skin clinic in Kuala Lumpur? This directory lists ${totalClinics} aesthetic clinics in Kuala Lumpur${areaNote}. Compare listings when you are choosing the best aesthetic clinic for your visit, then confirm services, reviews and the doctor with the clinic.`
+      : `> Explore ${totalClinics} trusted aesthetic clinics${nearbyAreas ? ` across cities like ${nearbyAreas}` : ''} in ${stateData.name}. Find services, reviews, and opening hours.`,
     doctorsResult.count
       ? listItem(
           `Doctors in ${stateData.name}`,

@@ -22,6 +22,7 @@ const GUIDE_ORDER = [
   'acne-scar-laser-treatment',
   'non-invasive-skin-tightening-treatments',
   'dermal-filler-injections-malaysia',
+  'juvederm-lip-filler-malaysia',
   'face-lifting-treatment-malaysia',
   'filler-nasolabial-folds',
   'whitehead-removal',
