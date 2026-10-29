@@ -12,6 +12,7 @@ const GUIDE_ORDER = [
   'the-complete-guide-to-finding-an-aesthetic-clinic-in-malaysia',
   'how-to-compare-lcp-certified-aesthetic-clinics',
   'check-registered-medical-practitioner-malaysia',
+  'skin-specialist-clinic-malaysia',
   'botox-clinics-how-to-compare-them',
   'microneedling-treatment-malaysia',
   'chemical-peel-treatment-malaysia',
