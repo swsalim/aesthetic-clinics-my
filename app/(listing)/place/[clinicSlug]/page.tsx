@@ -133,12 +133,9 @@ const formatOpeningHoursForJsonLd = (hours: Partial<ClinicHours>[] | null) => {
 
 // Helper function to build full address
 const buildFullAddress = (clinic: ClinicDetails) => {
-  return [
-    clinic.address,
-    clinic.neighborhood,
-    `${clinic.postal_code} ${clinic.area?.name}`,
-    clinic.state?.name,
-  ]
+  const postalCity = [clinic.postal_code, clinic.city].filter(Boolean).join(' ');
+
+  return [clinic.address, clinic.neighborhood, postalCity, clinic.state?.name]
     .filter(Boolean)
     .join(', ');
 };
@@ -600,7 +597,11 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                   <ul className="my-0 flex list-none flex-col gap-3 pl-0">
                     {parsedClinic.email && (
                       <li className="flex items-center gap-2 text-sm">
-                        <MailIcon weight="duotone" className="h-4 w-4 shrink-0 text-blue-400" aria-hidden="true" />
+                        <MailIcon
+                          weight="duotone"
+                          className="h-4 w-4 shrink-0 text-blue-400"
+                          aria-hidden="true"
+                        />
                         <a href={`mailto:${parsedClinic.email}`} className="min-w-0 break-all">
                           {parsedClinic.email}
                         </a>
@@ -608,7 +609,11 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                     )}
                     {parsedClinic.website && (
                       <li className="flex items-center gap-2 text-sm">
-                        <GlobeIcon weight="duotone" className="h-4 w-4 shrink-0 text-blue-400" aria-hidden="true" />
+                        <GlobeIcon
+                          weight="duotone"
+                          className="h-4 w-4 shrink-0 text-blue-400"
+                          aria-hidden="true"
+                        />
                         <a
                           href={`${parsedClinic.website}?utm_source=aestheticclinics.my`}
                           target="_blank"

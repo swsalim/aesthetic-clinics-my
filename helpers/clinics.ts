@@ -14,8 +14,8 @@ import {
 
 import { getFeaturedListingSlugs } from '@/config/featured';
 
-import { hasAdminCredentials } from '@/lib/supabase/admin-guard';
 import { createAdminClient, createServerClient } from '@/lib/supabase';
+import { hasAdminCredentials } from '@/lib/supabase/admin-guard';
 
 /**
  * Fetches the clinics configured as featured listings (see config/featured.ts).
@@ -71,7 +71,7 @@ export const getFeaturedListings = unstable_cache(
 );
 
 export const getRecentClinics = unstable_cache(
-  async (limit: number = 20) => {
+  async (limit: number = 4) => {
     if (!hasAdminCredentials()) return [];
 
     const supabase = createAdminClient();
@@ -107,8 +107,8 @@ export const getRecentClinics = unstable_cache(
   },
   ['recent-clinics'],
   {
-    revalidate: 1_209_600, // Cache for 2 weeks
-    tags: ['clinics'],
+    revalidate: 2_592_000, // Cache for 30 days
+    tags: ['recent-clinics'],
   },
 );
 

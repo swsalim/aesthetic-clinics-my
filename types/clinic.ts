@@ -252,6 +252,7 @@ export interface ClinicDetails {
   postal_code: string;
   address: string;
   neighborhood: string;
+  city: string;
   phone: string;
   email: string;
   website: string;
