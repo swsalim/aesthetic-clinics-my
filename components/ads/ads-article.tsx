@@ -1,36 +1,36 @@
 'use client';
 
-import { useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
-declare global {
-  interface Window {
-    adsbygoogle: Array<Record<string, unknown>>;
-  }
-}
+import { AD_PLACEHOLDER_CLASS, useAdViewport } from './use-ad-viewport';
 
 export default function AdsArticle() {
-  useEffect(() => {
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (err) {
-      console.error('Error loading AdSense:', err);
-    }
-  }, []);
+  const { ref, isInView, adFilled } = useAdViewport();
 
   return (
-    <aside className="my-4 block w-full before:block before:text-center before:text-[10px] before:font-medium before:uppercase before:leading-4 before:text-gray-500 before:content-['Advertisement'] md:my-8">
-      <div className="relative mx-auto min-h-[250px] w-full bg-gray-50 text-center">
-        <ins
-          className="adsbygoogle relative mx-auto min-h-[250px] w-full bg-gray-50 text-center"
-          style={{
-            display: 'block',
-            textAlign: 'center',
-          }}
-          data-ad-layout="in-article"
-          data-ad-format="fluid"
-          data-ad-client="ca-pub-3799479098488751"
-          data-ad-slot="1923127772"
-        />
+    <aside ref={ref} className="my-4 w-full md:my-8">
+      <div className="mb-1 text-center text-[10px] font-medium uppercase leading-4 text-gray-500">
+        Advertisement
+      </div>
+
+      <div
+        className={cn(
+          'mx-auto flex min-h-[250px] w-full items-center justify-center overflow-hidden rounded-lg',
+          !adFilled && AD_PLACEHOLDER_CLASS,
+        )}
+      >
+        {isInView ? (
+          <ins
+            className="adsbygoogle block min-h-[250px] w-full max-w-full"
+            style={{ display: 'block', textAlign: 'center' }}
+            data-ad-layout="in-article"
+            data-ad-format="fluid"
+            data-ad-client="ca-pub-3799479098488751"
+            data-ad-slot="1923127772"
+          />
+        ) : (
+          <div className="min-h-[250px] w-full" aria-hidden />
+        )}
       </div>
     </aside>
   );

@@ -2,4 +2,11 @@ import type { ComponentType } from 'react';
 
 import dynamic from 'next/dynamic';
 
-export const LazyAdsLeaderboard: ComponentType = dynamic(() => import('./ads-leaderboard'));
+type AdsLeaderboardProps = {
+  className?: string;
+  variant?: 'default' | 'rail';
+};
+
+export const LazyAdsLeaderboard: ComponentType<AdsLeaderboardProps> = dynamic(
+  () => import('./ads-leaderboard'),
+);
