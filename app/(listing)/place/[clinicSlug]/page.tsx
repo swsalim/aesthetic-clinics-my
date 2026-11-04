@@ -18,6 +18,7 @@ import {
 import { isFeaturedListing } from '@/config/featured';
 import { siteConfig } from '@/config/site';
 
+import { buildFullAddress } from '@/lib/build-full-address';
 import { clinicPageTitle } from '@/lib/clinic-title';
 import { absoluteUrl } from '@/lib/utils';
 
@@ -129,15 +130,6 @@ const formatOpeningHoursForJsonLd = (hours: Partial<ClinicHours>[] | null) => {
       closes: closeTime,
     };
   });
-};
-
-// Helper function to build full address
-const buildFullAddress = (clinic: ClinicDetails) => {
-  const postalCity = [clinic.postal_code, clinic.city].filter(Boolean).join(' ');
-
-  return [clinic.address, clinic.neighborhood, postalCity, clinic.state?.name]
-    .filter(Boolean)
-    .join(', ');
 };
 
 const renderOpeningHours = (parsedClinic: ClinicDetails) => {

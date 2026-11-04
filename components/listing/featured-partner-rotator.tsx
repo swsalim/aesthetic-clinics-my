@@ -4,30 +4,19 @@ import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
-import { ClinicHours, ClinicSpecialHours } from '@/types/clinic';
 import { ArrowRightIcon, MapPinIcon, SparklesIcon } from 'lucide-react';
 
+import { buildFullAddress } from '@/lib/build-full-address';
 import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
 
 import { ClinicStatus } from '@/components/clinic-status';
+import type { FeaturedPartnerCard } from '@/components/listing/featured-partner-card';
 import { MediaImage } from '@/components/image/media-image';
 import { buttonVariants } from '@/components/ui/button';
 import { StarRating } from '@/components/ui/star-rating';
 
-export type FeaturedPartnerCard = {
-  slug: string;
-  name: string;
-  address: string;
-  postalCode: string;
-  state: string;
-  area: string;
-  image?: string;
-  rating?: number | null;
-  hours: Partial<ClinicHours>[];
-  specialHours: Partial<ClinicSpecialHours>[];
-  isPermanentlyClosed: boolean;
-};
+export type { FeaturedPartnerCard } from '@/components/listing/featured-partner-card';
 
 const STORAGE_KEY = 'featured-partner-index';
 
@@ -106,6 +95,14 @@ export function FeaturedPartnerRotator({ partners }: { partners: FeaturedPartner
 
   if (!partner) return null;
 
+  const fullAddress = buildFullAddress({
+    address: partner.address,
+    neighborhood: partner.neighborhood,
+    postal_code: partner.postalCode,
+    city: partner.city || partner.area,
+    state: { name: partner.state },
+  });
+
   return (
     <Link
       href={`/place/${partner.slug}`}
@@ -145,9 +142,7 @@ export function FeaturedPartnerRotator({ partners }: { partners: FeaturedPartner
 
           <p className="flex min-w-0 items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
             <MapPinIcon className="mt-0.5 size-4 shrink-0 text-blue-400" aria-hidden="true" />
-            <span className="min-w-0">
-              {partner.address}, {partner.postalCode}, {partner.area}, {partner.state}
-            </span>
+            <span className="min-w-0">{fullAddress}</span>
           </p>
 
           <span

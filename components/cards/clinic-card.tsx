@@ -9,8 +9,9 @@ import {
   MapPin as MapPinIcon,
   Phone as PhoneIcon,
   Sparkle as SparklesIcon,
-} from '@phosphor-icons/react/dist/ssr';
+} from '@phosphor-icons/react';
 
+import { buildFullAddress } from '@/lib/build-full-address';
 import { type MediaFields, resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';
 import { cn } from '@/lib/utils';
@@ -25,6 +26,8 @@ interface ClinicCardProps {
   slug: string;
   name: string;
   address: string;
+  neighborhood?: string;
+  city?: string;
   phone: string;
   postalCode: string;
   state: string;
@@ -45,6 +48,8 @@ export function ClinicCard({
   slug,
   name,
   address,
+  neighborhood = '',
+  city = '',
   phone,
   postalCode,
   state,
@@ -62,6 +67,14 @@ export function ClinicCard({
 }: ClinicCardProps) {
   const imageSrc =
     typeof image === 'string' ? image : resolveMediaUrl(image) ?? undefined;
+
+  const fullAddress = buildFullAddress({
+    address,
+    neighborhood,
+    postal_code: postalCode,
+    city: city || area,
+    state: { name: state },
+  });
 
   const card = (
     <Card
@@ -133,9 +146,7 @@ export function ClinicCard({
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <MapPinIcon weight="duotone" className="h-4 w-4 flex-shrink-0 text-blue-300" aria-hidden="true" />
-            <p className="line-clamp-2 text-sm text-gray-500 dark:text-gray-300">
-              {address}, {postalCode}, {area}, {state}
-            </p>
+            <p className="line-clamp-2 text-sm text-gray-500 dark:text-gray-300">{fullAddress}</p>
           </div>
           <div className="flex items-center gap-2">
             <PhoneIcon weight="duotone" className="h-4 w-4 flex-shrink-0 text-blue-300" aria-hidden="true" />

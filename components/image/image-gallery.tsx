@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { ClinicImage } from '@/types/clinic';
-import { CaretLeft, CaretRight, X } from '@phosphor-icons/react/dist/ssr';
+import { CaretLeft, CaretRight, X } from '@phosphor-icons/react';
 import type { Swiper as SwiperInstance } from 'swiper';
 import 'swiper/css';
 import { A11y, Keyboard } from 'swiper/modules';

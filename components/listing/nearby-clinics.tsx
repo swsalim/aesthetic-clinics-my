@@ -46,6 +46,8 @@ async function NearbyClinicsContent({
                 slug={clinic.slug ?? ''}
                 name={clinic.name ?? ''}
                 address={clinic.address ?? ''}
+                neighborhood={clinic.neighborhood ?? ''}
+                city={clinic.city ?? ''}
                 phone={clinic.phone ?? ''}
                 image={clinic.images?.[0] as ClinicImage | undefined}
                 postalCode={clinic.postal_code ?? ''}

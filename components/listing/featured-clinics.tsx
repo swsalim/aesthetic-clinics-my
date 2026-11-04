@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
 import { ClinicImage } from '@/types/clinic';
 import { ArrowRightIcon, AwardIcon, MapPinIcon } from 'lucide-react';
@@ -15,13 +16,18 @@ import {
   FeaturedClinicSpotlight,
   type FeaturedClinicSpotlightData,
 } from '@/components/listing/featured-clinic-spotlight';
-import {
-  type FeaturedPartnerCard,
-  FeaturedPartnerRotator,
-} from '@/components/listing/featured-partner-rotator';
+import type { FeaturedPartnerCard } from '@/components/listing/featured-partner-card';
 import Container from '@/components/ui/container';
 import { StarRating } from '@/components/ui/star-rating';
 import { Wrapper } from '@/components/ui/wrapper';
+
+const FeaturedPartnerRotator = dynamic(
+  () =>
+    import('@/components/listing/featured-partner-rotator').then((mod) => ({
+      default: mod.FeaturedPartnerRotator,
+    })),
+  { loading: () => null },
+);
 
 /* Hallmark · macrostructure: Split Studio (section) · genre: editorial · tone: luxury-utilitarian
  * section: spotlight diptych + supporting pair · enrichment: Tier-A gradient wash
@@ -147,6 +153,8 @@ export async function FeaturedClinics() {
       slug: clinic.slug ?? '',
       name: clinic.name ?? '',
       address: clinic.address ?? '',
+      neighborhood: clinic.neighborhood ?? '',
+      city: clinic.city ?? '',
       postalCode: clinic.postal_code ?? '',
       state: clinic.state?.name ?? '',
       area: clinic.area?.name ?? '',
@@ -202,6 +210,8 @@ export async function FeaturedClinics() {
                     slug={clinic.slug ?? ''}
                     name={clinic.name ?? ''}
                     address={clinic.address ?? ''}
+                    neighborhood={clinic.neighborhood ?? ''}
+                    city={clinic.city ?? ''}
                     phone={clinic.phone ?? ''}
                     postalCode={clinic.postal_code ?? ''}
                     state={clinic.state?.name ?? ''}

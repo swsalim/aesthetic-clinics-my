@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import { Star as StarIcon } from '@phosphor-icons/react/dist/ssr';
+import { Star as StarIcon } from '@phosphor-icons/react';
 
 interface PartialStarProps {
   fillPercentage: number;

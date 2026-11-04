@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import { ClinicDoctor } from '@/types/clinic';
-import { Medal as AwardIcon, UserSquare as SquareUserRoundIcon } from '@phosphor-icons/react/dist/ssr';
+import { Medal as AwardIcon, UserSquare as SquareUserRoundIcon } from '@phosphor-icons/react';
 
 import { resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';

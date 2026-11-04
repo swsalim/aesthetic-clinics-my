@@ -1,6 +1,6 @@
 'use client';
 
-import { Car as CarIcon } from '@phosphor-icons/react/dist/ssr';
+import { Car as CarIcon } from '@phosphor-icons/react';
 
 import { selineTrack } from '@/lib/analytics';
 import { cn } from '@/lib/utils';

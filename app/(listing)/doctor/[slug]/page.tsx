@@ -280,6 +280,7 @@ export default async function DentistPage({ params }: DentistPageProps) {
                         slug={clinic.slug}
                         name={clinic.name}
                         address={clinic.address ?? ''}
+                        neighborhood={clinic.neighborhood ?? ''}
                         phone={clinic.phone ?? ''}
                         postalCode={clinic.postal_code ?? ''}
                         state={clinic.state?.name ?? ''}
