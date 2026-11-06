@@ -1,6 +1,6 @@
 'use client';
 
-import { Phone as PhoneIcon } from '@phosphor-icons/react';
+import { Phone as PhoneIcon } from '@phosphor-icons/react/dist/ssr';
 
 import { selineTrack } from '@/lib/analytics';
 import { cn } from '@/lib/utils';

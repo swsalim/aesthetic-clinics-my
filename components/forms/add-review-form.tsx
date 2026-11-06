@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CircleNotch as Loader2, Star as StarIcon } from '@phosphor-icons/react';
+import { CircleNotch as Loader2, Star as StarIcon } from '@phosphor-icons/react/dist/ssr';
 import * as z from 'zod';
 
 import { Textarea } from '@/components/form-fields/textarea';

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { UserSquare as SquareUserRoundIcon } from '@phosphor-icons/react';
+import { UserSquare as SquareUserRoundIcon } from '@phosphor-icons/react/dist/ssr';
 
 import { resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';

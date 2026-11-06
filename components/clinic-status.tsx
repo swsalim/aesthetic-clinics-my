@@ -8,7 +8,7 @@ import {
   ClockCountdown as ClockAlertIcon,
   Hourglass as ClockFadingIcon,
   Clock as ClockIcon,
-} from '@phosphor-icons/react';
+} from '@phosphor-icons/react/dist/ssr';
 
 import { Badge } from '@/components/ui/badge';
 

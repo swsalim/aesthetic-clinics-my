@@ -9,7 +9,7 @@ import {
   MapPin as MapPinIcon,
   Phone as PhoneIcon,
   Sparkle as SparklesIcon,
-} from '@phosphor-icons/react';
+} from '@phosphor-icons/react/dist/ssr';
 
 import { buildFullAddress } from '@/lib/build-full-address';
 import { type MediaFields, resolveMediaUrl } from '@/lib/media';
