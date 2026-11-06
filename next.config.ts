@@ -1,8 +1,22 @@
+import bundleAnalyzer from '@next/bundle-analyzer';
 import type { NextConfig } from 'next';
 
 import { MEDIA_DEVICE_SIZES, MEDIA_IMAGE_SIZES } from './lib/media-sizes';
 
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/place/dr-d-clinic-ativo-plaza-kepong',
+        destination: '/place/dr-d-signature-clinic',
+        permanent: true,
+      },
+    ];
+  },
   experimental: {
     optimizePackageImports: ['@phosphor-icons/react'],
   },
@@ -40,18 +54,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Bundle analyzer configuration
-  ...(process.env.ANALYZE === 'true' && {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    webpack: (config: any) => {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const { BundleAnalyzerPlugin } = require('@next/bundle-analyzer')({
-        enabled: true,
-      });
-      config.plugins.push(new BundleAnalyzerPlugin());
-      return config;
-    },
-  }),
   // Advanced webpack configuration for better code splitting
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   webpack: (config: any, { isServer }: { isServer: boolean }) => {
@@ -89,4 +91,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);
