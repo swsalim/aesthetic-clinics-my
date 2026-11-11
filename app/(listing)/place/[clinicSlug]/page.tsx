@@ -281,6 +281,11 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
     },
   ];
 
+  const paidClinics = [
+    'dr-a-clinic-damansara-ttdi-kuala-lumpur',
+    'dr-a-clinic-sunway-geo-subang-jaya',
+  ];
+
   return (
     <>
       <BusinessJsonLd
@@ -364,7 +369,7 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                     <GlobeIcon weight="duotone" className="h-5 w-5 text-blue-300" />
                     <Link
                       href={`${parsedClinic.website}?utm_source=aestheticclinics.my`}
-                      rel="nofollow"
+                      rel={paidClinics.includes(parsedClinic.slug) ? '' : 'nofollow'}
                       prefetch={false}>
                       <span className="text-sm">{parsedClinic.website}</span>
                     </Link>
@@ -609,7 +614,7 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                         <a
                           href={`${parsedClinic.website}?utm_source=aestheticclinics.my`}
                           target="_blank"
-                          rel="nofollow noopener noreferrer"
+                          rel={paidClinics.includes(parsedClinic.slug) ? '' : 'nofollow'}
                           className="min-w-0 break-all">
                           {parsedClinic.website}
                         </a>
