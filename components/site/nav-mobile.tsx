@@ -92,11 +92,10 @@ export default function NavMobile() {
   return (
     <div
       ref={rootRef}
-      className="lg:hidden"
+      className="relative z-50 lg:hidden"
       role={open ? 'dialog' : undefined}
       aria-modal={open ? true : undefined}
-      aria-label={open ? 'Menu' : undefined}
-    >
+      aria-label={open ? 'Menu' : undefined}>
       <button
         ref={toggleRef}
         type="button"
@@ -107,13 +106,7 @@ export default function NavMobile() {
         aria-expanded={open}
         aria-controls="mobile-primary-nav"
         aria-label={open ? 'Close menu' : 'Open menu'}
-        className={cn(
-          'fixed right-3 top-3 z-50 inline-flex size-11 items-center justify-center rounded-full border transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-          open
-            ? 'border-gray-200 bg-white/95 text-gray-700 shadow-sm backdrop-blur hover:bg-gray-50 focus-visible:ring-blue-500 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900/95 dark:text-gray-200 dark:hover:bg-gray-800 dark:focus-visible:ring-offset-gray-900 dark:active:bg-gray-700'
-            : 'border-white/40 bg-white/15 text-white hover:bg-white/25 focus-visible:ring-white focus-visible:ring-offset-blue-500 active:bg-white/30',
-        )}
-      >
+        className="fixed right-3 top-3 z-50 inline-flex size-11 items-center justify-center rounded-full border border-gray-200 bg-white/95 text-gray-700 shadow-sm backdrop-blur transition-colors duration-150 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900/95 dark:text-gray-200 dark:hover:bg-gray-800 dark:focus-visible:ring-offset-gray-900 dark:active:bg-gray-700">
         {open ? (
           <X className="size-5" aria-hidden="true" />
         ) : (
@@ -140,8 +133,7 @@ export default function NavMobile() {
         className={cn(
           'fixed inset-x-0 top-0 z-40 hidden max-h-[calc(100dvh-6.5rem)] overflow-y-auto border-b border-gray-200 bg-white py-4 pl-5 pr-16 shadow-lg dark:border-gray-800 dark:bg-gray-900',
           open && 'block',
-        )}
-      >
+        )}>
         <ul className="divide-y divide-gray-100 dark:divide-gray-800">
           {mobileNavItems.map((item) => {
             const active = isNavItemActive(pathname, item);
@@ -162,16 +154,14 @@ export default function NavMobile() {
                     active
                       ? 'text-blue-500 dark:text-blue-300'
                       : 'text-gray-900 hover:text-gray-900 dark:text-gray-100 dark:hover:text-gray-100',
-                  )}
-                >
+                  )}>
                   <span
                     className={cn(
                       'inline-flex size-9 shrink-0 items-center justify-center rounded-lg border bg-gray-50 dark:bg-gray-800',
                       active
                         ? 'border-blue-200 bg-blue-50 text-blue-500 dark:border-blue-800 dark:bg-blue-900/40 dark:text-blue-300'
                         : 'border-gray-200 text-gray-600 dark:border-gray-700 dark:text-gray-300',
-                    )}
-                  >
+                    )}>
                     <Icon className="size-4" aria-hidden="true" />
                   </span>
                   <span className="min-w-0">

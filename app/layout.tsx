@@ -99,7 +99,7 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          'flex min-h-screen flex-col font-figtree antialiased dark:bg-gray-900 dark:text-gray-100',
+          'relative flex min-h-screen flex-col font-figtree antialiased dark:bg-gray-900 dark:text-gray-100',
           figtree.variable,
           fraunces.variable,
         )}
