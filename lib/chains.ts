@@ -65,9 +65,14 @@ function normalizeName(name: string): string {
   return name
     .toLowerCase()
     .replace(/&/g, ' and ')
+    .replace(/['’]/g, '')
     .replace(/[^a-z0-9]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function rawTokens(name: string): string[] {
+  return name.split(/[^A-Za-z0-9'’]+/).filter(Boolean);
 }
 
 function locationTokens(branch: ChainBranchInput): Set<string> {
@@ -77,20 +82,27 @@ function locationTokens(branch: ChainBranchInput): Set<string> {
   return new Set(normalizeName(words).split(' ').filter((token) => token.length > 2));
 }
 
-export function sharedPrefixKey(branch: ChainBranchInput): string | null {
-  const tokens = normalizeName(branch.name).split(' ').filter(Boolean);
+function prefixTokens(branch: ChainBranchInput): string[] {
   const locations = locationTokens(branch);
   const kept: string[] = [];
 
-  for (const token of tokens) {
-    if (locations.has(token) && kept.length > 0) break;
+  for (const token of rawTokens(branch.name)) {
+    const key = token.toLowerCase().replace(/['’]/g, '');
+    if (!key) continue;
+    if (locations.has(key) && kept.length > 0) break;
     kept.push(token);
     if (kept.length >= 4) break;
   }
 
-  while (kept.length > 0 && GENERIC_TOKENS.has(kept[kept.length - 1]!)) {
+  while (kept.length > 0 && GENERIC_TOKENS.has(kept[kept.length - 1]!.toLowerCase().replace(/['’]/g, ''))) {
     kept.pop();
   }
+
+  return kept;
+}
+
+export function sharedPrefixKey(branch: ChainBranchInput): string | null {
+  const kept = prefixTokens(branch).map((token) => token.toLowerCase().replace(/['’]/g, ''));
 
   if (kept.length === 0) return null;
   if (GENERIC_TOKENS.has(kept[0]!)) return null;
@@ -99,6 +111,12 @@ export function sharedPrefixKey(branch: ChainBranchInput): string | null {
   const key = kept.join(' ');
   if (key.length < 4) return null;
   return key;
+}
+
+export function sharedPrefixLabel(branch: ChainBranchInput): string | null {
+  const kept = prefixTokens(branch);
+  if (!sharedPrefixKey(branch)) return null;
+  return kept.join(' ');
 }
 
 function titleFromKey(key: string): string {
@@ -144,9 +162,20 @@ export function groupClinicChains<T extends ChainBranchInput>(branches: T[]): Ch
     }
     if (!slug || usedSlugs.has(slug)) continue;
     usedSlugs.add(slug);
+    const labels = bucket
+      .map((branch) => sharedPrefixLabel(branch))
+      .filter((label): label is string => Boolean(label));
+    const labelCounts = new Map<string, number>();
+    for (const label of labels) {
+      labelCounts.set(label, (labelCounts.get(label) ?? 0) + 1);
+    }
+    const name =
+      [...labelCounts.entries()].sort(
+        (a, b) => b[1] - a[1] || a[0].length - b[0].length || a[0].localeCompare(b[0]),
+      )[0]?.[0] ?? titleFromKey(key);
     groups.push({
       slug,
-      name: titleFromKey(key),
+      name,
       source: 'shared-prefix',
       branches: sortBranches(bucket),
     });

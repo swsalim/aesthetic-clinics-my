@@ -30,7 +30,7 @@ export function chainCopy(group: ChainGroup) {
       answer: `${count} ${group.name} ${branchWord} ${count === 1 ? 'is' : 'are'} listed${stateSentence}.`,
     },
     {
-      question: `Which cities have a ${group.name} listing?`,
+      question: `Which cities list ${group.name}?`,
       answer:
         cities.length > 0
           ? `${group.name} listings are in ${joinList(cities.slice(0, 12))}${cities.length > 12 ? `, and ${cities.length - 12} more` : ''}.`

@@ -91,7 +91,7 @@ async function fetchChainBranches(): Promise<ChainBranchInput[]> {
 
 export const getChainGroups = unstable_cache(
   async (): Promise<ChainGroup[]> => groupClinicChains(await fetchChainBranches()),
-  ['chain-groups-v1'],
+  ['chain-groups-v2'],
   { revalidate: 86_400, tags: ['clinics', 'chains'] },
 );
 

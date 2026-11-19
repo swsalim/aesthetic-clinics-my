@@ -42,6 +42,32 @@ const chains = groupClinicChains([
 assert.equal(chains.find((chain) => chain.slug === 'dr-chong-clinic')?.branches.length, 2);
 assert.equal(chains.some((chain) => chain.slug === 'aglow-clinic'), false);
 assert.equal(chains.find((chain) => chain.name === 'Lumi')?.branches.length, 3);
+
+const idos = groupClinicChains([
+  {
+    name: "IDO'S Clinic - Cheras C180",
+    slug: 'idos-cheras',
+    areaName: 'Cheras',
+    neighborhood: 'C180',
+    stateName: 'Kuala Lumpur',
+  },
+  {
+    name: "IDO'S Clinic - Sri Petaling",
+    slug: 'idos-sp',
+    areaName: 'Sri Petaling',
+    stateName: 'Kuala Lumpur',
+  },
+  {
+    name: "IDO'S Clinic - Sutera Utama",
+    slug: 'idos-jb',
+    areaName: 'Johor Bahru',
+    neighborhood: 'Sutera Utama',
+    stateName: 'Johor',
+  },
+]);
+assert.equal(idos[0]?.name, "IDO'S");
+assert.equal(idos[0]?.slug, 'idos');
+assert.equal(idos[0]?.branches.length, 3);
 assert.equal(chains.some((chain) => chain.branches.some((branch) => branch.slug === 'solo')), false);
 
 const myclinic = groupClinicChains([
