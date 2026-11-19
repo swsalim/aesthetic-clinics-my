@@ -24,7 +24,8 @@ import Container from '@/components/ui/container';
 import { Pagination } from '@/components/ui/pagination';
 import { Wrapper } from '@/components/ui/wrapper';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 86_400;
+export const dynamicParams = true;
 
 type DentistsByStatePageProps = {
   params: Promise<{
@@ -61,11 +62,7 @@ export async function generateMetadata({
     totalDoctors > 0
       ? `Discover ${totalDoctors} aesthetic doctors in ${stateData.name}. Browse by city or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details.`
       : `Discover aesthetic doctors in ${stateData.name}. Browse by city or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details.`;
-  const url = !page
-    ? absoluteUrl(`/${state}/doctors`)
-    : page === '1'
-      ? absoluteUrl(`/${state}/doctors`)
-      : absoluteUrl(`/${state}/doctors?page=${page}`);
+  const url = absoluteUrl(`/${state}/doctors`);
 
   // Build the OG image URL
   const ogImageUrl = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/og`);
@@ -77,7 +74,10 @@ export async function generateMetadata({
     alternates: {
       canonical: url,
     },
-    robots: totalDoctors > 0 ? { index: true, follow: true } : { index: false, follow: true },
+    robots:
+      totalDoctors > 0 && (!page || page === '1')
+        ? { index: true, follow: true }
+        : { index: false, follow: true },
     openGraph: {
       title,
       description,

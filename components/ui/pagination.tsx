@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 
+import { listingPageHref } from '@/lib/listing-href';
 import { cn } from '@/lib/utils';
 
 import { Button, buttonVariants } from './button';
@@ -14,6 +15,8 @@ import { Button, buttonVariants } from './button';
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
+  /** When set, page 2+ uses `${basePath}/page/2` instead of `?page=`. */
+  basePath?: string;
 }
 
 function getPageNumbers(current: number, total: number) {
@@ -46,10 +49,12 @@ const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages }) => {
+export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, basePath }) => {
   const pathname = usePathname();
   if (totalPages <= 1) return null;
   const pageNumbers = getPageNumbers(currentPage, totalPages);
+  const hrefFor = (page: number) =>
+    basePath ? listingPageHref(basePath, page) : page <= 1 ? pathname : `${pathname}?page=${page}`;
 
   return (
     <nav className={cn('flex items-center justify-center gap-2 py-6')} aria-label="Pagination">
@@ -62,13 +67,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages 
           aria-label="Previous page"
           rounded>
           <Link
-            href={
-              currentPage === 1
-                ? '#'
-                : currentPage - 1 === 1
-                  ? `${pathname}`
-                  : `${pathname}?page=${currentPage - 1}`
-            }
+            href={currentPage === 1 ? '#' : hrefFor(currentPage - 1)}
             onClick={scrollToTop}
             className={cn(
               'flex items-center justify-center py-4 hover:border-blue-600 hover:bg-blue-50 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:bg-blue-900 dark:hover:text-blue-400',
@@ -86,13 +85,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages 
               rounded
               aria-current={page === currentPage ? 'page' : undefined}>
               <Link
-                href={
-                  page === 1
-                    ? `${pathname}`
-                    : page === currentPage
-                      ? '#'
-                      : `${pathname}?page=${page}`
-                }
+                href={page === currentPage ? '#' : hrefFor(page)}
                 onClick={scrollToTop}
                 className={cn(
                   'flex size-12 items-center justify-center rounded-full py-4 font-semibold transition-colors',
@@ -117,7 +110,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages 
           rounded
           aria-label="Next page">
           <Link
-            href={`${pathname}?page=${currentPage + 1}`}
+            href={hrefFor(currentPage + 1)}
             onClick={scrollToTop}
             className={cn(
               buttonVariants({ variant: 'outline' }),
@@ -137,7 +130,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages 
           aria-label="Previous page"
           rounded>
           <Link
-            href={`${pathname}?page=${currentPage - 1}`}
+            href={currentPage <= 1 ? '#' : hrefFor(currentPage - 1)}
             onClick={scrollToTop}
             className={cn(
               'flex items-center justify-center rounded-full py-4 hover:border-blue-600 hover:bg-blue-50 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:bg-blue-900 dark:hover:text-blue-400',
@@ -156,7 +149,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages 
           disabled={currentPage === totalPages}
           aria-label="Next page">
           <Link
-            href={`${pathname}?page=${currentPage + 1}`}
+            href={hrefFor(currentPage + 1)}
             onClick={scrollToTop}
             className={cn(
               'flex items-center justify-center rounded-full py-4 hover:border-blue-600 hover:bg-blue-50 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:bg-blue-900 dark:hover:text-blue-400',

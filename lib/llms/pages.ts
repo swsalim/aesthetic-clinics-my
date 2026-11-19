@@ -3,6 +3,7 @@ import { Clinic, ClinicDetails } from '@/types/clinic';
 import { locationSeoOverride, stateSeoOverride } from '@/config/location-seo';
 import { siteConfig } from '@/config/site';
 
+import { factualDescriptionText } from '@/lib/factual-description';
 import { getAllGuides, getGuideBySlug } from '@/lib/guides';
 import {
   escapeMd,
@@ -78,6 +79,7 @@ export async function markdownHome() {
       ),
       listItem('Doctors', mdUrl('/doctors'), 'Aesthetic doctors practising in Malaysia'),
       listItem('About', mdUrl('/about'), 'What this directory covers'),
+      listItem('Clinic chains', mdUrl('/chains'), 'Branches grouped from clinic names'),
     ].join('\n'),
     '## States',
     statesWithClinics.length
@@ -453,9 +455,16 @@ export async function markdownClinic(clinicSlug: string) {
           mdUrl(`/${clinic.state.slug}/${clinic.area.slug}`),
         )
       : null,
-    htmlToText(clinic.description)
-      ? joinSections(['## About', htmlToText(clinic.description)])
-      : null,
+    joinSections([
+      '## About',
+      factualDescriptionText({
+        html: clinic.description,
+        services: clinic.services ?? [],
+        name: clinic.name,
+        area: clinic.area?.name,
+        state: clinic.state?.name,
+      }),
+    ]),
     serviceNames.length
       ? joinSections(['## Services', serviceNames.map((name) => `- ${name}`).join('\n')])
       : null,

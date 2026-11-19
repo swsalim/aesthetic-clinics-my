@@ -20,8 +20,10 @@ import { siteConfig } from '@/config/site';
 
 import { buildFullAddress } from '@/lib/build-full-address';
 import { clinicPageTitle } from '@/lib/clinic-title';
+import { factualDescriptionHtml } from '@/lib/factual-description';
 import { absoluteUrl } from '@/lib/utils';
 
+import { getChainGroups } from '@/helpers/chains';
 import { getClinicBySlug, getClinicListings } from '@/helpers/clinics';
 import { getServiceIcon } from '@/helpers/services';
 
@@ -236,6 +238,10 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
   if (!parsedClinic) {
     notFound();
   }
+
+  const chain = (await getChainGroups()).find((group) =>
+    group.branches.some((branch) => branch.slug === parsedClinic.slug),
+  );
 
   const memberOf: { '@type': string; '@id': string } | null = null;
 
@@ -463,12 +469,27 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                 </article>
               )}
               <Prose className="space-y-8">
-                {parsedClinic.description && (
-                  <article>
-                    <h2 className="my-0">About {parsedClinic.name}</h2>
-                    <TruncatedHtml html={parsedClinic.description} limit={80} />
-                  </article>
-                )}
+                <article>
+                  <h2 className="my-0">About {parsedClinic.name}</h2>
+                  <TruncatedHtml
+                    html={factualDescriptionHtml({
+                      html: parsedClinic.description,
+                      services: parsedClinic.services ?? [],
+                      name: parsedClinic.name,
+                      area: parsedClinic.area?.name,
+                      state: parsedClinic.state?.name,
+                    })}
+                    limit={80}
+                  />
+                  {chain ? (
+                    <p className="mt-4">
+                      <Link href={`/chains/${chain.slug}`} prefetch={false}>
+                        {chain.name} branches in Malaysia
+                      </Link>
+                      <span> · {chain.branches.length} listings</span>
+                    </p>
+                  ) : null}
+                </article>
 
                 {parsedClinic.featured_video && (
                   <div>
@@ -518,10 +539,8 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                       {parsedClinic.services.map((service, index) => (
                         <div
                           key={service.slug ?? service.name ?? String(index)}
-                          tabIndex={0}
                           aria-label={service.name}
-                          className="flex cursor-pointer flex-col items-center justify-center rounded-xl bg-white p-3 text-gray-900 shadow-md outline-none transition hover:shadow-lg focus:ring-2 focus:ring-red-400 dark:bg-gray-950 dark:text-gray-50"
-                          role="button">
+                          className="flex flex-col items-center justify-center rounded-xl bg-white p-3 text-gray-900 shadow-md dark:bg-gray-950 dark:text-gray-50">
                           {getServiceIcon(service.slug ?? '')}
                           <div className="mt-4 text-center text-xs">{service.name}</div>
                         </div>
@@ -704,15 +723,13 @@ export default async function ClinicPage({ params }: ClinicPageProps) {
                     <h2 className="">{parsedClinic.name} Services</h2>
                     <div className="grid grid-cols-3 gap-4">
                       {parsedClinic.services.map((service, index) => (
-                        <Link
+                        <div
                           key={service.slug ?? service.name ?? String(index)}
-                          href={`/services/${service.slug}`}
                           aria-label={service.name}
-                          className="flex cursor-pointer flex-col items-center justify-center rounded-xl bg-white p-3 text-gray-900 shadow-md outline-none transition hover:shadow-lg focus:ring-2 focus:ring-red-400 dark:bg-gray-950/40 dark:text-gray-50"
-                          role="button">
+                          className="flex flex-col items-center justify-center rounded-xl bg-white p-3 text-gray-900 shadow-md dark:bg-gray-950/40 dark:text-gray-50">
                           {getServiceIcon(service.slug ?? '')}
                           <div className="mt-4 text-center text-xs">{service.name}</div>
-                        </Link>
+                        </div>
                       ))}
                     </div>
                   </div>

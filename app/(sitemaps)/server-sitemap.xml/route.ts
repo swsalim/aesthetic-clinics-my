@@ -4,6 +4,7 @@ import { getAllGuides } from '@/lib/guides';
 import { absoluteUrl } from '@/lib/utils';
 
 import { getAreaListings } from '@/helpers/areas';
+import { getChainGroups } from '@/helpers/chains';
 import { getClinicListings } from '@/helpers/clinics';
 import { getDoctorListings, getDoctorsByState } from '@/helpers/doctors';
 import { getStateListings } from '@/helpers/states';
@@ -45,11 +46,12 @@ function entry(path: string, lastmod?: string): ISitemapField {
 }
 
 export async function GET() {
-  const [states, areas, clinics, doctors] = await Promise.all([
+  const [states, areas, clinics, doctors, chains] = await Promise.all([
     getStateListings(),
     getAreaListings(),
     getClinicListings(),
     getDoctorListings(),
+    getChainGroups(),
   ]);
 
   const doctorCounts = await Promise.all(
@@ -101,6 +103,11 @@ export async function GET() {
   });
 
   const staticPages = ['/', '/browse', '/about', '/doctors', '/advertise-with-us', '/submit'];
+
+  fields.push(entry('/chains', contentLastmod));
+  chains.forEach((chain) => {
+    fields.push(entry(`/chains/${chain.slug}`, contentLastmod));
+  });
 
   staticPages.forEach((page) => {
     fields.push(entry(page, contentLastmod));
