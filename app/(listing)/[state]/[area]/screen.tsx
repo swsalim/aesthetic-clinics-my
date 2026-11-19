@@ -1,0 +1,504 @@
+import React from 'react';
+
+import { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+
+import { Clinic, ClinicImage } from '@/types/clinic';
+import { ArrowRightIcon } from 'lucide-react';
+
+import { isFeatured, isFeaturedPartner } from '@/config/featured';
+import { locationSeoOverride } from '@/config/location-seo';
+import { siteConfig } from '@/config/site';
+
+import { buildCityHubCopy, buildCityHubFacts, slugifyLabel } from '@/lib/city-hub';
+import { imageKitUrl } from '@/lib/imagekit-url';
+import { resolveMediaUrl } from '@/lib/media';
+import { MEDIA } from '@/lib/media-sizes';
+import { absoluteUrl, cn, getPagination } from '@/lib/utils';
+
+import { getAreaBySlug, getAreaHubSource } from '@/helpers/areas';
+import { getChainGroups } from '@/helpers/chains';
+import { getFeaturedListings } from '@/helpers/clinics';
+import { getStateBySlug } from '@/helpers/states';
+
+import { CityHub } from '@/components/listing/city-hub';
+
+import { LazyAdsArticle } from '@/components/ads/lazy-ads-article';
+import { ClinicCard } from '@/components/cards/clinic-card';
+import AddBookingForm from '@/components/forms/add-booking-form';
+import { MediaImage } from '@/components/image/media-image';
+import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
+import CollectionPageJsonLd from '@/components/structured-data/collection-page-json-ld';
+import Breadcrumb from '@/components/ui/breadcrumb';
+import { buttonVariants } from '@/components/ui/button';
+import Container from '@/components/ui/container';
+import { Pagination } from '@/components/ui/pagination';
+import Prose from '@/components/ui/prose';
+import { Wrapper } from '@/components/ui/wrapper';
+
+export const revalidate = 86_400;
+
+type AreaScreenProps = {
+  params: Promise<{
+    state: string;
+    area: string;
+    page?: string;
+  }>;
+};
+
+function pageNumber(raw: string | undefined): number {
+  const parsed = raw ? Number(raw) : 1;
+  if (!Number.isFinite(parsed) || parsed < 1) return 1;
+  return Math.floor(parsed);
+}
+
+export async function generateAreaMetadata({ params }: AreaScreenProps): Promise<Metadata> {
+  const { state, area, page: pageParam } = await params;
+  const currentPage = pageNumber(pageParam);
+
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`[generateMetadata] Processing: state="${state}", area="${area}"`);
+  }
+
+  const limit = 20;
+  const { from, to } = getPagination(currentPage, limit);
+  const areaData = await getAreaBySlug(area, from, to, state);
+
+  if (!areaData) {
+    notFound();
+  }
+
+  const validState = areaData?.state?.slug === state;
+
+  if (!validState || !areaData) {
+    notFound();
+  }
+
+  const clinicCount = areaData.total_clinics || 0;
+  const hubSource = await getAreaHubSource(area, state);
+  const facts = buildCityHubFacts(hubSource?.clinics ?? [], hubSource?.serviceRows ?? []);
+  const hub = buildCityHubCopy({
+    city: areaData.name,
+    state: areaData.state.name ?? '',
+    facts: facts.clinicCount > 0 ? facts : { ...facts, clinicCount },
+    nearbyNames: [],
+  });
+  const seo = locationSeoOverride({
+    stateSlug: state,
+    areaSlug: area,
+    clinicCount,
+    clinicNames: facts.clinics.slice(0, 3).map((clinic) => clinic.name),
+  });
+  const title = seo?.title ?? hub.title;
+  const description = seo?.description ?? hub.description;
+  const url = absoluteUrl(`/${state}/${area}`);
+
+  // Build the OG image URL with optional background image
+  const ogImageUrl = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/og-list`);
+  ogImageUrl.searchParams.set('title', title);
+  if (areaData.image || areaData.state?.image) {
+    ogImageUrl.searchParams.set('image', areaData.image || areaData.state?.image || '');
+  }
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    robots:
+      clinicCount > 0 && currentPage === 1
+        ? { index: true, follow: true }
+        : { index: false, follow: true },
+    openGraph: {
+      title,
+      description,
+      url,
+      images: [
+        {
+          url: ogImageUrl,
+          width: siteConfig.openGraph.width,
+          height: siteConfig.openGraph.height,
+          alt: title,
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      title,
+      description,
+      card: 'summary_large_image',
+      creator: siteConfig.creator,
+      images: [
+        {
+          url: new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/og?title=${title}`),
+          width: siteConfig.openGraph.width,
+          height: siteConfig.openGraph.height,
+          alt: title,
+        },
+      ],
+    },
+  };
+}
+
+export default async function AreaScreen({ params }: AreaScreenProps) {
+  const { state, area, page: pageParam } = await params;
+  const isJohorBahru = state === 'johor' && area === 'johor-bahru';
+  const currentPage = pageNumber(pageParam);
+
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`[AreaPage] Processing: state="${state}", area="${area}"`);
+  }
+
+  const limit = isJohorBahru ? 21 : 20;
+  const { from, to } = getPagination(currentPage, limit);
+
+  // Fetch area metadata and clinics data in parallel
+  const [areaData, stateData] = await Promise.all([
+    getAreaBySlug(area, from, to, state),
+    getStateBySlug(state, from, to),
+  ]);
+
+  if (!areaData || areaData.state?.slug !== state) {
+    notFound();
+  }
+
+  const totalClinics = areaData.total_clinics || 0;
+  const totalPages = Math.ceil(totalClinics / limit);
+  if (currentPage > 1 && currentPage > totalPages) {
+    notFound();
+  }
+
+  // Featured listings pinned to the top of this area's listing.
+  const featuredListings = (await getFeaturedListings()).filter(
+    (clinic) => clinic.area?.slug === area,
+  );
+  const featuredSlugs = new Set(featuredListings.map((clinic) => clinic.slug));
+  const listingClinics = (areaData.clinics ?? []).filter(
+    (clinic) => !featuredSlugs.has(clinic.slug),
+  );
+
+  const hubSource = await getAreaHubSource(area, state);
+  const facts = buildCityHubFacts(hubSource?.clinics ?? [], hubSource?.serviceRows ?? []);
+  const displayFacts = facts.clinicCount > 0 ? facts : { ...facts, clinicCount: totalClinics };
+  const nearbyAreas = (stateData?.areas ?? []).filter((item) => item.slug && item.slug !== area);
+  const hub = buildCityHubCopy({
+    city: areaData.name,
+    state: areaData.state?.name ?? '',
+    facts: displayFacts,
+    nearbyNames: nearbyAreas.map((item) => item.name).filter((name): name is string => Boolean(name)),
+  });
+  const seo = locationSeoOverride({
+    stateSlug: state,
+    areaSlug: area,
+    clinicCount: totalClinics,
+    clinicNames: displayFacts.clinics.slice(0, 3).map((clinic) => clinic.name),
+  });
+  const title = seo?.h1 ?? hub.h1;
+  const description = seo?.description ?? hub.description;
+  const chains = (await getChainGroups())
+    .map((group) => ({
+      name: group.name,
+      href: `/chains/${group.slug}`,
+      count: group.branches.filter((branch) => branch.stateSlug === state && branch.areaSlug === area).length,
+    }))
+    .filter((group) => group.count > 0);
+  const seenNeighbourhoods = new Set<string>();
+
+  const breadcrumbItems = [
+    {
+      name: areaData.state?.name,
+      url: absoluteUrl(`/${areaData.state?.slug}`),
+    },
+    {
+      name: areaData.name,
+    },
+  ];
+
+  const JSONLDbreadcrumbs = [
+    {
+      item: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+      name: 'Home',
+      position: '1',
+    },
+    {
+      item: absoluteUrl(`/${state}`),
+      name: areaData.state?.name,
+      position: '2',
+    },
+    {
+      item: absoluteUrl(`/${state}/${area}`),
+      name: areaData.name,
+      position: '3',
+    },
+  ];
+
+  const areaBackgroundSrc =
+    resolveMediaUrl({
+      image: areaData.image,
+      r2_url: areaData.r2_url,
+    }) ||
+    resolveMediaUrl({
+      image: areaData.state?.image,
+      r2_url: areaData.state?.r2_url,
+    });
+
+  return (
+    <>
+      <BreadcrumbJsonLd itemListElements={JSONLDbreadcrumbs} />
+      <CollectionPageJsonLd
+        name={seo?.jsonLdName ?? `Aesthetic Clinics in ${areaData.name}, ${areaData.state?.name}`}
+        url={`/${state}/${area}`}
+        description={description}
+        clinics={(areaData.clinics?.slice(0, 20) as Partial<Clinic>[]) || []}
+      />
+      <Wrapper className="relative overflow-hidden">
+        {/* Optimized background image using Next.js Image */}
+        {areaBackgroundSrc && (
+          <MediaImage
+            src={areaBackgroundSrc}
+            alt={`${areaData.name}, ${areaData.state?.name} aesthetic clinics background`}
+            width={MEDIA.hero.width}
+            height={MEDIA.hero.height}
+            priority
+            sizes={MEDIA.hero.sizes}
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{
+              objectPosition: 'center center',
+            }}
+          />
+        )}
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/50" />
+        <Container className="relative z-10">
+          <div className="flex flex-col gap-4 py-12 md:py-24">
+            <Breadcrumb items={breadcrumbItems} theme="dark" />
+            <h1 className="text-balance text-4xl font-black text-white">{title}</h1>
+            <p className="text-balance text-lg font-medium text-white">{seo?.intro ?? hub.intro}</p>
+          </div>
+        </Container>
+      </Wrapper>
+      <Wrapper size="sm">
+        <Container>
+          <div className="mx-auto mb-10 max-w-2xl">
+            <a
+              href="https://invl.me/clnm6di"
+              className="hover:!border-b-transparent"
+              target="_blank">
+              <Image
+                src="/images/banner-total-image-1.jpg"
+                alt="Total Image Whita Glo"
+                width={600}
+                height={600}
+                priority
+                quality={85}
+                sizes="100vw"
+                className="m-0 h-auto w-full object-cover"
+                style={{
+                  objectPosition: 'center center',
+                }}
+              />
+            </a>
+          </div>
+
+          {isJohorBahru && (
+            <Prose className="mb-12 block lg:hidden">
+              <AddBookingForm currentUrl={absoluteUrl(`/${state}/${area}`)} area={areaData.name} />
+            </Prose>
+          )}
+          {currentPage === 1 && (
+            <CityHub
+              copy={{ ...hub, faqs: hub.faqs }}
+              facts={displayFacts}
+              city={areaData.name}
+              state={areaData.state?.name ?? ''}
+              nearby={nearbyAreas.slice(0, 8).map((item) => ({
+                name: item.name ?? '',
+                href: `/${state}/${item.slug}`,
+              }))}
+              chains={chains}
+            />
+          )}
+          <h2 id="city-listings" className="mb-6 text-balance text-xl font-bold md:text-2xl">
+            {seo?.listingHeading ?? hub.listingHeading}
+          </h2>
+          {listingClinics.length > 0 || featuredListings.length > 0 ? (
+            <>
+              <div className={cn(isJohorBahru && 'grid grid-cols-1 gap-8 lg:grid-cols-sidebar')}>
+                <div
+                  className={cn(
+                    'grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8',
+                    !isJohorBahru && 'lg:grid-cols-4',
+                  )}>
+                  {currentPage === 1 &&
+                    featuredListings.map((clinic) => {
+                      const neighbourhood = slugifyLabel(clinic.neighborhood || clinic.city || '');
+                      const neighbourhoodAnchor =
+                        neighbourhood && !seenNeighbourhoods.has(neighbourhood) ? neighbourhood : '';
+                      if (neighbourhood) seenNeighbourhoods.add(neighbourhood);
+                      return (
+                      <div
+                        key={clinic.slug}
+                        id={neighbourhoodAnchor ? `neighbourhood-${neighbourhoodAnchor}` : undefined}
+                      >
+                      <ClinicCard
+                        slug={clinic.slug ?? ''}
+                        name={clinic.name ?? ''}
+                        address={clinic.address ?? ''}
+                        neighborhood={clinic.neighborhood ?? ''}
+                        city={clinic.city ?? ''}
+                        phone={clinic.phone ?? ''}
+                        image={clinic.images?.[0] as ClinicImage | undefined}
+                        postalCode={clinic.postal_code ?? ''}
+                        state={clinic.state?.name ?? areaData.state?.name ?? ''}
+                        area={clinic.area?.name ?? areaData.name ?? ''}
+                        rating={clinic.rating}
+                        isFeatured={isFeatured(clinic.slug)}
+                        isFeaturedPartner={isFeaturedPartner(clinic.slug)}
+                        hours={clinic.hours ?? []}
+                        specialHours={clinic.special_hours ?? []}
+                        openOnPublicHolidays={clinic.open_on_public_holidays ?? false}
+                        isPermanentlyClosed={clinic.is_permanently_closed ?? false}
+                      />
+                      </div>
+                      );
+                    })}
+                  {listingClinics
+                    .sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0))
+                    .map((clinic, index) => {
+                      const neighbourhood = slugifyLabel(clinic.neighborhood || clinic.city || '');
+                      const neighbourhoodAnchor =
+                        neighbourhood && !seenNeighbourhoods.has(neighbourhood)
+                          ? neighbourhood
+                          : '';
+                      if (neighbourhood) seenNeighbourhoods.add(neighbourhood);
+                      return (
+                        <React.Fragment key={clinic.slug}>
+                          {index === 5 && (
+                            <div className="flex flex-col items-center justify-center gap-2 text-center">
+                              <a
+                                href="https://invl.me/clnm6di"
+                                target="_blank"
+                                className="hover:!border-b-transparent">
+                                <Image
+                                  src="/images/banner-total-image-2.jpg"
+                                  alt="Total Image Whita Glo"
+                                  width={600}
+                                  height={600}
+                                  priority
+                                  quality={85}
+                                  sizes="100vw"
+                                  className="mb-0 h-auto w-full object-cover"
+                                  style={{
+                                    objectPosition: 'center center',
+                                  }}
+                                />
+                              </a>
+                            </div>
+                          )}
+                          {index !== 5 && (index + 1) % 6 == 0 && <LazyAdsArticle />}
+                          <div id={neighbourhoodAnchor ? `neighbourhood-${neighbourhoodAnchor}` : undefined}>
+                          <ClinicCard
+                            slug={clinic.slug ?? ''}
+                            name={clinic.name ?? ''}
+                            address={clinic.address ?? ''}
+                            neighborhood={clinic.neighborhood ?? ''}
+                            city={clinic.city ?? ''}
+                            phone={clinic.phone ?? ''}
+                            image={clinic.images?.[0] as ClinicImage | undefined}
+                            postalCode={clinic.postal_code ?? ''}
+                            state={areaData.state?.name ?? ''}
+                            area={areaData.name ?? ''}
+                            rating={clinic.rating}
+                            isFeatured={isFeatured(clinic.slug) || (clinic.is_featured ?? false)}
+                            isFeaturedPartner={isFeaturedPartner(clinic.slug)}
+                            hours={clinic.hours ?? []}
+                            specialHours={clinic.special_hours ?? []}
+                            openOnPublicHolidays={clinic.open_on_public_holidays ?? false}
+                            isPermanentlyClosed={clinic.is_permanently_closed ?? false}
+                          />
+                          </div>
+                        </React.Fragment>
+                      );
+                    })}
+                </div>
+                {isJohorBahru && (
+                  <Prose className="hidden lg:block">
+                    <AddBookingForm
+                      currentUrl={absoluteUrl(`/${state}/${area}`)}
+                      area={areaData.name}
+                    />
+                  </Prose>
+                )}
+              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                basePath={`/${state}/${area}`}
+              />
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center gap-y-4">
+              <div className="flex flex-col items-center justify-center">
+                <div className="relative size-64 md:size-96">
+                    <MediaImage
+                      src={imageKitUrl('aesthetic-clinics-my/lost-boy.png')}
+                    alt="No aesthetic clinics found"
+                    width={MEDIA.gallery.width}
+                    height={MEDIA.gallery.height}
+                    sizes={MEDIA.gallery.sizes}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </div>
+              <h2 className="text-balance text-2xl font-bold md:text-4xl">Oops!</h2>
+              <p className="text-balance text-lg">
+                We&apos;re not ready in {areaData.name}, {areaData.state?.name}.
+              </p>
+              <div className="flex flex-col gap-y-2 md:flex-row md:gap-x-3">
+                <Link
+                  href="/submit"
+                  className={cn(buttonVariants({ variant: 'primary' }), 'flex flex-row gap-x-2')}
+                  prefetch={false}>
+                  Add a clinic
+                  <ArrowRightIcon className="size-4" />
+                </Link>
+                <Link
+                  href="/"
+                  className={cn(buttonVariants({ variant: 'ghost' }), 'flex flex-row gap-x-2')}
+                  prefetch={false}>
+                  Get back to homepage
+                  <ArrowRightIcon className="size-4" />
+                </Link>
+              </div>
+            </div>
+          )}
+        </Container>
+      </Wrapper>
+      <Wrapper size="sm">
+        <Container>
+          <div className="flex flex-col gap-y-6">
+            <h2 className="text-balance text-xl font-bold md:text-2xl">
+              Aesthetic Clinics near {areaData.name}, {areaData.state?.name}
+            </h2>
+            <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
+              {stateData?.areas?.map((area) => (
+                <h3 className="text-balance text-base font-medium" key={area.slug}>
+                  <Link
+                    href={absoluteUrl(`/${state}/${area.slug}`)}
+                    className="py-1 hover:border-transparent"
+                    prefetch={false}>
+                    {area.name}, {area.state?.name}
+                  </Link>
+                </h3>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </Wrapper>
+    </>
+  );
+}

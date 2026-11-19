@@ -2,6 +2,8 @@ import { unstable_cache } from 'next/cache';
 
 import { Clinic, ClinicState } from '@/types/clinic';
 
+import { CityHubClinic } from '@/lib/city-hub';
+
 import { embeddedCount, fetchApprovedClinics } from '@/helpers/listing-clinics';
 
 import { hasAdminCredentials } from '@/lib/supabase/admin-guard';
@@ -181,6 +183,136 @@ async function fetchAreaBySlug(
     clinics,
     total_clinics: total,
   };
+}
+
+export type AreaHubSource = {
+  clinics: CityHubClinic[];
+  serviceRows: Array<{
+    clinicSlug: string;
+    clinicName: string;
+    serviceName: string;
+    serviceSlug: string;
+  }>;
+};
+
+type HubClinicRow = {
+  id: string;
+  name: string;
+  slug: string;
+  neighborhood: string | null;
+  city: string | null;
+  rating: number | null;
+  review_count: number | null;
+};
+
+type HubServiceRow = {
+  clinic_id: string;
+  service: { name: string; slug: string } | { name: string; slug: string }[] | null;
+};
+
+async function fetchAreaHubSource(
+  slug: string,
+  stateSlug: string | undefined,
+): Promise<AreaHubSource | null> {
+  if (!hasAdminCredentials()) return null;
+
+  const supabase = createAdminClient();
+  let query = supabase
+    .from('areas')
+    .select('id, slug, state:states!inner(slug)')
+    .eq('slug', slug);
+
+  if (stateSlug) {
+    query = query.eq('state.slug', stateSlug);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    throw new Error(`Failed to fetch area hub "${slug}": ${error.message}`);
+  }
+
+  const areas = (data ?? []) as unknown as Array<{ id: string }>;
+  if (areas.length === 0) return null;
+
+  const areaIds = areas.map((area) => area.id);
+  const clinics: HubClinicRow[] = [];
+  const pageSize = 1000;
+  let from = 0;
+
+  while (true) {
+    const { data: clinicRows, error: clinicError } = await supabase
+      .from('clinics')
+      .select('id, name, slug, neighborhood, city, rating, review_count')
+      .in('area_id', areaIds)
+      .eq('status', 'approved')
+      .eq('is_active', true)
+      .order('slug', { ascending: true })
+      .range(from, from + pageSize - 1);
+
+    if (clinicError) {
+      throw new Error(`Failed to list clinics for area hub "${slug}": ${clinicError.message}`);
+    }
+
+    const page = (clinicRows ?? []) as HubClinicRow[];
+    clinics.push(...page);
+    if (page.length < pageSize) break;
+    from += pageSize;
+  }
+
+  const clinicById = new Map(clinics.map((clinic) => [clinic.id, clinic]));
+  const serviceRows: AreaHubSource['serviceRows'] = [];
+  const ids = clinics.map((clinic) => clinic.id);
+
+  for (let index = 0; index < ids.length; index += 80) {
+    const chunk = ids.slice(index, index + 200);
+    if (chunk.length === 0) continue;
+
+    const { data: relations, error: serviceError } = await supabase
+      .from('clinic_service_relations')
+      .select('clinic_id, service:clinic_services(name, slug)')
+      .in('clinic_id', chunk);
+
+    if (serviceError) {
+      throw new Error(`Failed to list services for area hub "${slug}": ${serviceError.message}`);
+    }
+
+    for (const relation of (relations ?? []) as unknown as HubServiceRow[]) {
+      const clinic = clinicById.get(relation.clinic_id);
+      const service = Array.isArray(relation.service) ? relation.service[0] : relation.service;
+      if (!clinic || !service?.name || !service.slug) continue;
+      serviceRows.push({
+        clinicSlug: clinic.slug,
+        clinicName: clinic.name,
+        serviceName: service.name,
+        serviceSlug: service.slug,
+      });
+    }
+  }
+
+  return {
+    clinics: clinics.map((clinic) => ({
+      name: clinic.name,
+      slug: clinic.slug,
+      neighborhood: clinic.neighborhood,
+      city: clinic.city,
+      rating: clinic.rating,
+      reviewCount: clinic.review_count,
+    })),
+    serviceRows,
+  };
+}
+
+export async function getAreaHubSource(
+  areaSlug: string,
+  stateSlug?: string,
+): Promise<AreaHubSource | null> {
+  if (!areaSlug) return null;
+
+  return unstable_cache(
+    async () => fetchAreaHubSource(areaSlug, stateSlug),
+    [`area-hub-v1-${stateSlug ?? 'any'}-${areaSlug}`],
+    { revalidate: 86_400, tags: ['areas', `area-${areaSlug}`] },
+  )();
 }
 
 export const getAreaBySlug = async (

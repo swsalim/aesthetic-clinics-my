@@ -36,7 +36,8 @@ import Container from '@/components/ui/container';
 import { Pagination } from '@/components/ui/pagination';
 import { Wrapper } from '@/components/ui/wrapper';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 86_400;
+export const dynamicParams = true;
 
 type StatePageProps = {
   params: Promise<{
@@ -77,11 +78,7 @@ export async function generateMetadata({
   const description =
     seo?.description ??
     `Explore ${stateData.name}'s best aesthetic clinics. View ratings, services, and treatment options to find the right clinic for your skincare or cosmetic goals.`;
-  const url = !page
-    ? absoluteUrl(`/${state}`)
-    : page === '1'
-      ? absoluteUrl(`/${state}`)
-      : absoluteUrl(`/${state}?page=${page}`);
+  const url = absoluteUrl(`/${state}`);
 
   // Build the OG image URL with optional background image
   const ogImageUrl = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/og-list`);
@@ -96,7 +93,10 @@ export async function generateMetadata({
     alternates: {
       canonical: url,
     },
-    robots: clinicCount > 0 ? { index: true, follow: true } : { index: false, follow: true },
+    robots:
+      clinicCount > 0 && (!page || page === '1')
+        ? { index: true, follow: true }
+        : { index: false, follow: true },
     openGraph: {
       title,
       description,

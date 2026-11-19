@@ -105,6 +105,10 @@ export default function Footer() {
       name: 'Guides',
       href: '/guides',
     },
+    {
+      name: 'Clinic chains',
+      href: '/chains',
+    },
   ];
   return (
     <footer className="bg-gray-900" aria-labelledby="footer-heading">
