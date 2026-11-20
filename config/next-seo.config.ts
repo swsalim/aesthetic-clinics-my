@@ -14,7 +14,7 @@ export const seo: SEOConfig = {
   site_name: 'aestheticclinics.my',
   title: 'Find Aesthetic Clinics Near You in Malaysia',
   description:
-    'Explore top-rated aesthetic clinics across Malaysia. Search by location, compare services and reviews, and book your aesthetic appointment with ease.!',
+    'Browse aesthetic clinics in Malaysia by state and city. Compare listed services, reviews and contact details.',
   image: 'https://www.aestheticclinics.my/images/og-default.png',
   locale: 'en',
   lang: 'en',

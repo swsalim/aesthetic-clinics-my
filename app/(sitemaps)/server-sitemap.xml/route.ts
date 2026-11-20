@@ -1,5 +1,7 @@
 import { getServerSideSitemap, type ISitemapField } from 'next-sitemap';
 
+import { MIN_INDEXABLE_STATE_CLINICS } from '@/config/location-seo';
+
 import { getAllGuides } from '@/lib/guides';
 import { absoluteUrl } from '@/lib/utils';
 
@@ -62,10 +64,13 @@ export async function GET() {
   );
   const doctorCountBySlug = new Map(doctorCounts);
 
-  const indexableStates = states.filter((state) => state.clinic_count > 0);
+  const statesWithClinics = states.filter((state) => state.clinic_count > 0);
+  const indexableStates = states.filter(
+    (state) => state.clinic_count >= MIN_INDEXABLE_STATE_CLINICS,
+  );
   const indexableAreas = areas.filter(
     (area) =>
-      area.clinic_count > 0 && indexableStates.some((state) => state.slug === area.state.slug),
+      area.clinic_count > 0 && statesWithClinics.some((state) => state.slug === area.state.slug),
   );
 
   const contentLastmod = latest([

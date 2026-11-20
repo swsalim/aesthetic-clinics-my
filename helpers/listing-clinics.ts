@@ -78,6 +78,30 @@ export async function fetchApprovedClinics(options: {
 
   const { data, error, count } = await query.range(options.from, options.to);
 
+  // PostgREST returns 416 when the page starts past the last row. Count the
+  // same filter so the caller can notFound() instead of failing the render.
+  if (error && /range not satisfiable/i.test(error.message)) {
+    let countQuery = supabase
+      .from('clinics')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'approved')
+      .eq('is_active', true);
+
+    if (options.stateIds?.length) {
+      countQuery = countQuery.in('state_id', options.stateIds);
+    }
+    if (options.areaIds?.length) {
+      countQuery = countQuery.in('area_id', options.areaIds);
+    }
+
+    const counted = await countQuery;
+    if (counted.error) {
+      throw new Error(`Failed to fetch clinics: ${counted.error.message}`);
+    }
+
+    return { clinics: [], total: counted.count ?? 0 };
+  }
+
   if (error) {
     throw new Error(`Failed to fetch clinics: ${error.message}`);
   }

@@ -1,3 +1,5 @@
+import pluralize from 'pluralize';
+
 export type CityHubClinic = {
   name: string;
   slug: string;
@@ -134,7 +136,7 @@ export function buildCityHubCopy(input: {
   const h1 = `Aesthetic Clinics and Skin Specialists in ${city}`;
   const title =
     count > 0
-      ? `${count} Aesthetic Clinics in ${city}, ${state}`
+      ? `${count} Aesthetic ${pluralize('Clinic', count)} in ${city}, ${state}`
       : `Aesthetic Clinics in ${city}, ${state}`;
 
   const sample = facts.clinics

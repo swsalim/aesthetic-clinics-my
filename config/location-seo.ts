@@ -1,3 +1,15 @@
+import pluralize from 'pluralize';
+
+/** States with fewer approved, active clinics than this are noindex,follow. */
+export const MIN_INDEXABLE_STATE_CLINICS = 3;
+
+export function aestheticClinicTitle(count: number, place: string): string {
+  if (count <= 0) {
+    return `Aesthetic Clinics in ${place}`;
+  }
+  return `${count} Aesthetic ${pluralize('Clinic', count)} in ${place}`;
+}
+
 /**
  * Optional copy for a single location page.
  *
@@ -50,7 +62,7 @@ function joinNames(names: string[]) {
 function kepongSeo(clinicCount: number, clinicNames: string[]): LocationSeo {
   const title =
     clinicCount > 0
-      ? `${clinicCount} Skin Specialist & Aesthetic Clinics in Kepong, KL`
+      ? `${clinicCount} Skin Specialist & Aesthetic ${pluralize('Clinic', clinicCount)} in Kepong, KL`
       : 'Skin Specialist & Aesthetic Clinics in Kepong, KL';
   const description =
     clinicCount > 0
@@ -68,7 +80,7 @@ function kepongSeo(clinicCount: number, clinicNames: string[]): LocationSeo {
     description,
     h1: 'Skin Specialist & Aesthetic Clinics in Kepong, Kuala Lumpur',
     intro: `Compare skin specialists and aesthetic clinics in Kepong, Kuala Lumpur. ${listed} in this directory.${nameSentence} Open a listing for services, reviews and contact details, then confirm the practitioner before you book.`,
-    listingHeading: `${clinicCount} Aesthetic Clinics in Kepong, Kuala Lumpur`,
+    listingHeading: `${clinicCount} Aesthetic ${pluralize('Clinic', clinicCount)} in Kepong, Kuala Lumpur`,
     jsonLdName: 'Skin Specialist and Aesthetic Clinics in Kepong, Kuala Lumpur',
   };
 }
@@ -99,12 +111,12 @@ export type StateSeo = {
 function kualaLumpurSeo(clinicCount: number): StateSeo {
   const title =
     clinicCount > 0
-      ? `Skin Clinic in Kuala Lumpur | Best ${clinicCount} Aesthetic Clinics`
+      ? `Skin Clinic in Kuala Lumpur | ${clinicCount} Aesthetic ${pluralize('Clinic', clinicCount)}`
       : 'Skin Clinic in Kuala Lumpur | Aesthetic Clinics';
   const description =
     clinicCount > 0
-      ? `Skin clinic in Kuala Lumpur: compare ${clinicCount} aesthetic clinics in Kuala Lumpur. Shortlist the best aesthetic clinic using reviews, services and contact details.`
-      : 'Skin clinic in Kuala Lumpur: compare aesthetic clinics in Kuala Lumpur. Shortlist the best aesthetic clinic using reviews, services and contact details.';
+      ? `Skin clinic in Kuala Lumpur: compare ${clinicCount} aesthetic ${pluralize('clinic', clinicCount)} in Kuala Lumpur. Compare reviews, services and contact details, then confirm the doctor with the clinic.`
+      : 'Skin clinic in Kuala Lumpur: compare aesthetic clinics in Kuala Lumpur. Compare reviews, services and contact details, then confirm the doctor with the clinic.';
 
   return {
     title,

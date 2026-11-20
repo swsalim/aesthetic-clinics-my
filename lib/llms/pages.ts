@@ -217,8 +217,8 @@ export function markdownAdvertise() {
 export function markdownAbout() {
   return joinSections([
     '# About AestheticClinics.my',
-    '> AestheticClinics.my helps Malaysians discover trusted aesthetic and cosmetic clinics. Find certified professionals offering safe, effective, and evidence-based treatments in one directory.',
-    'The directory lists LCP-certified aesthetic clinics and aesthetic doctors, with contact details, treatments, doctor credentials, and customer reviews where those are available.',
+    '> AestheticClinics.my lists aesthetic clinics and aesthetic doctors in Malaysia by state and city.',
+    'A listing shows the contact details, treatments, doctor text, and reviews stored for that clinic. It is not a check that a doctor holds a Letter of Credentialing and Privileging.',
     'Clinics are listed across Malaysia, including Kuala Lumpur, Johor Bahru, Penang, Ipoh, and Kota Kinabalu.',
     `HTML version: ${absoluteUrl('/about')}`,
   ]);

@@ -9,7 +9,7 @@ timestamp: 2026-10-27T02:00:00Z
 
 # Aesthetic Clinics MY
 
-Aesthetic Clinics MY (aestheticclinics.my) is an online directory of aesthetic clinics and aesthetic doctors in Malaysia. Visitors can browse clinics by state and city and compare listed treatments, doctor details, reviews, opening hours and contact details. The site positions itself on LCP-certified clinics and doctors (LCP is the Letter of Credentialing and Privileging that Malaysia's Ministry of Health issues for aesthetic medical practice). It is a directory with no physical premises; it does not perform treatments or give medical advice.
+Aesthetic Clinics MY (aestheticclinics.my) is an online directory of aesthetic clinics and aesthetic doctors in Malaysia. Visitors can browse clinics by state and city and compare listed treatments, doctor details, reviews, opening hours and contact details. A listing is not a check that a doctor holds a Letter of Credentialing and Privileging from Malaysia's Ministry of Health. It is a directory with no physical premises; it does not perform treatments or give medical advice.
 
 As of 21 October 2026 the homepage shows 474 listed clinics across 15 states and 35 doctors. These counts come from the live database and change over time.
 

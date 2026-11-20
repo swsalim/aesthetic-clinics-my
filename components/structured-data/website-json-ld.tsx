@@ -1,3 +1,5 @@
+import { siteConfig } from '@/config/site';
+
 import { absoluteUrl } from '@/lib/utils';
 
 import JsonLd from './json-ld';
@@ -15,8 +17,7 @@ export default function WebsiteJsonLd({ name = 'Aesthetic Clinics Malaysia' }: W
         name,
         url: absoluteUrl('/'),
         inLanguage: 'en-US',
-        description:
-          'Discover top aesthetic clinics across Malaysia. Compare services, reviews, and prices to find trusted doctors for your beauty and skincare needs.',
+        description: siteConfig.description,
         potentialAction: {
           '@type': 'SearchAction',
           target: 'https://www.aestheticclinic.my/search?q={search_term_string}',
