@@ -98,6 +98,13 @@ const copy = buildCityHubCopy({
 });
 
 assert.equal(copy.title, '2 Aesthetic Clinics in Cheras, Kuala Lumpur');
+const oneClinic = buildCityHubCopy({
+  city: 'Sibu',
+  state: 'Sarawak',
+  facts: { ...facts, clinicCount: 1 },
+  nearbyNames: [],
+});
+assert.equal(oneClinic.title, '1 Aesthetic Clinic in Sibu, Sarawak');
 assert.match(copy.faqs.find((faq) => faq.question.includes('skin specialist'))?.answer ?? '', /Dr Ko/);
 assert.match(copy.faqs.map((faq) => faq.answer).join(' '), /Acne \(1\)/);
 assert.doesNotMatch(copy.intro, /best|trusted|top/i);

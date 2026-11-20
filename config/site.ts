@@ -3,9 +3,9 @@ import { SiteConfig } from '@/types';
 import { absoluteUrl } from '@/lib/utils';
 
 export const siteConfig: SiteConfig = {
-  title: 'Find the Best Aesthetic Clinics in Malaysia | Aesthetic Clinic MY',
+  title: 'Aesthetic Clinics in Malaysia',
   description:
-    'Discover top aesthetic clinics across Malaysia. Compare services, reviews, and prices to find trusted doctors for your beauty and skincare needs.',
+    'Browse aesthetic clinics in Malaysia by state and city. Compare listed services, reviews and contact details.',
   siteName: 'Aesthetic Clinics MY',
   url: new URL(absoluteUrl()),
   openGraph: {

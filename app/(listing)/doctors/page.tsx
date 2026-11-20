@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { ArrowRightIcon } from 'lucide-react';
+import pluralize from 'pluralize';
 
 import { siteConfig } from '@/config/site';
 
@@ -33,7 +34,10 @@ export async function generateMetadata({ searchParams }: DentistsPageProps): Pro
 
   const totalDoctors = doctorsResult.count || 0;
 
-  const title = `Browse Top ${totalDoctors} Aesthetic Doctors in Malaysia`;
+  const title =
+    totalDoctors > 0
+      ? `${totalDoctors} Aesthetic ${pluralize('Doctor', totalDoctors)} in Malaysia`
+      : 'Aesthetic Doctors in Malaysia';
   const description =
     'Find aesthetic doctors across Malaysia. Browse by state, city, or clinic to find a aesthetic doctor near you. Information includes clinic locations and contact details.';
   const url = !page
@@ -184,7 +188,7 @@ export default async function DentistsPage({ searchParams }: DentistsPageProps) 
         dangerouslySetInnerHTML={addListItemsJsonLd()}
       />
       <Wrapper className="pt-0 md:pt-0">
-        <PageHeading label="Doctors" title="Browse LCP-certified aesthetic doctors in Malaysia">
+        <PageHeading label="Doctors" title="Aesthetic doctors in Malaysia">
           <p className="text-balance">
             Browse aesthetic doctors by{' '}
             <Link

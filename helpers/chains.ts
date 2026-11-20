@@ -28,7 +28,7 @@ function one<T>(value: T | T[] | null | undefined): T | null {
   return Array.isArray(value) ? (value[0] ?? null) : value;
 }
 
-async function fetchChainBranches(): Promise<ChainBranchInput[]> {
+export async function fetchChainBranches(): Promise<ChainBranchInput[]> {
   if (!hasAdminCredentials()) return [];
 
   const supabase = createAdminClient();

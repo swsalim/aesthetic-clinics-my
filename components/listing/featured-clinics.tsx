@@ -42,7 +42,7 @@ const PLACEHOLDER_CLINICS: FeaturedClinicSpotlightData[] = [
     rating: 4.9,
     reviewCount: 128,
     excerpt:
-      'Boutique LCP-certified clinic specialising in skin rejuvenation, injectables, and personalised treatment plans.',
+      'Skin rejuvenation, injectables, and treatment plans recorded on the profile.',
     specialties: ['Botox', 'Fillers', 'Laser'],
     accent: 'from-blue-600/90 via-blue-500/70 to-cyan-400/50',
   },
@@ -62,7 +62,7 @@ const PLACEHOLDER_CLINICS: FeaturedClinicSpotlightData[] = [
     state: 'Johor',
     rating: 4.7,
     reviewCount: 76,
-    excerpt: 'Trusted for subtle, natural-looking results with board-certified aesthetic doctors.',
+    excerpt: 'Subtle, natural-looking results described on the profile.',
     specialties: ['Injectables', 'Skin'],
     accent: 'from-amber-600/80 via-orange-500/60 to-rose-400/45',
   },

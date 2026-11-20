@@ -7,7 +7,7 @@ import { getAllGuides } from '@/lib/guides';
 import Container from '@/components/ui/container';
 
 export function GuidesStrip() {
-  const guides = getAllGuides().slice(0, 6);
+  const guides = getAllGuides().slice(0, 8);
 
   if (guides.length === 0) {
     return null;

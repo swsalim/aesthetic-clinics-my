@@ -32,9 +32,9 @@ import { BrowseStateJumpNav } from './browse-state-jump-nav';
  */
 
 const config = {
-  title: 'Find Top LCP-Certified Aesthetic Clinics across Malaysia',
+  title: 'Aesthetic Clinics across Malaysia',
   description:
-    'Find top LCP-certified aesthetic clinics all over Malaysia and book an appointment today.',
+    'Browse aesthetic clinics in Malaysia by state and city. Every count is the number of approved, active listings.',
   url: '/browse',
 };
 

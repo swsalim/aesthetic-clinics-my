@@ -10,8 +10,7 @@ export default function BrowseClinics() {
           Inspired by You. Perfected by Professionals.
         </h2>
         <p className="text-center text-lg font-medium text-blue-600">
-          Browse top-rated LCP-certified aesthetic clinics and qualified aesthetic doctors in
-          Malaysia with peace of mind.
+          Browse aesthetic clinics and aesthetic doctors listed in Malaysia.
         </p>
       </div>
       <div className="flex flex-col justify-center gap-4 md:flex-row">
