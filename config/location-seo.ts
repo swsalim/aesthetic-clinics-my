@@ -1,6 +1,9 @@
 import pluralize from 'pluralize';
 
-/** States with fewer approved, active clinics than this are noindex,follow. */
+/**
+ * State and city listing pages with fewer approved, active clinics than this
+ * are noindex,follow and left out of the sitemap. One constant, both templates.
+ */
 export const MIN_INDEXABLE_STATE_CLINICS = 3;
 
 export function aestheticClinicTitle(count: number, place: string): string {

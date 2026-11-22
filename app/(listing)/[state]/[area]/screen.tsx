@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation';
 import { Clinic } from '@/types/clinic';
 import { ArrowRightIcon } from 'lucide-react';
 
-import { locationSeoOverride } from '@/config/location-seo';
+import { MIN_INDEXABLE_STATE_CLINICS, locationSeoOverride } from '@/config/location-seo';
 import { siteConfig } from '@/config/site';
 
 import { buildCityHubCopy, buildCityHubFacts, slugifyLabel } from '@/lib/city-hub';
@@ -109,7 +109,7 @@ export async function generateAreaMetadata({ params }: AreaScreenProps): Promise
       canonical: url,
     },
     robots:
-      clinicCount > 0 && currentPage === 1
+      clinicCount >= MIN_INDEXABLE_STATE_CLINICS && currentPage === 1
         ? { index: true, follow: true }
         : { index: false, follow: true },
     openGraph: {

@@ -70,7 +70,8 @@ export async function GET() {
   );
   const indexableAreas = areas.filter(
     (area) =>
-      area.clinic_count > 0 && statesWithClinics.some((state) => state.slug === area.state.slug),
+      area.clinic_count >= MIN_INDEXABLE_STATE_CLINICS &&
+      statesWithClinics.some((state) => state.slug === area.state.slug),
   );
 
   const contentLastmod = latest([
