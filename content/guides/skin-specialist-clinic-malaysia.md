@@ -4,8 +4,8 @@ description: "What a clinic skin specialist is in Malaysia, how a dermatologist 
 slug: skin-specialist-clinic-malaysia
 publishedAt: "2026-10-29"
 updatedAt: "2026-10-29"
-image: /images/guides/skin-specialist-clinic.svg
-imageAlt: "Illustrated clinic record and a simple medical cross, a stand-in for checking a skin specialist."
+image: "/images/guides/skin-specialist-clinic-malaysia/skin-specialist-consultation.webp"
+imageAlt: "Dermatologist using a dermatoscope on a patient's cheek during a daylight visit in a bright clinic room"
 primaryKeyword: "clinic skin specialist"
 summary:
   - "In Malaysia, practising as a specialist requires an entry in the Specialist Register for that specialty. Dermatology is a listed specialty."
@@ -57,6 +57,8 @@ This guide separates a dermatologist from a general practitioner and from an aes
 ## What a Skin Specialist Means in Malaysia
 
 People say skin specialist, consultant dermatologist, and pakar kulit for the doctor they want when a skin problem needs a specialist opinion. The legal category is narrower than the phrase. The [National Specialist Register's about page](https://www.nsr.org.my/About-NSR.html) describes that register as the Malaysian Medical Council's database of specialist medical practitioners. It says only medical practitioners on the Specialist Register can practise in their registered specialty.
+
+![Black dermatoscope and a pair of white gloves on a clinic counter beside a window with green foliage](/images/guides/skin-specialist-clinic-malaysia/dermatoscope-on-counter.webp "1536x864")
 
 The Council's [Procedures and Guidelines for Specialist Registration](https://mmc.gov.my/wp-content/uploads/2025/10/THE-PROCEDURES-AND-GUIDELINES-FOR-SPECIALIST-REGISTRATION-version-After-MPM-459-Meeting.pdf) reproduce section 14A of the Medical Act 1971: no person whose name has not been entered into the Register shall practise as a specialist in that specialty. The same document says the Medical (Amendment) Act 2024 and the Medical (Amendment) Regulations 2025 took effect on 1 July 2025, so use the current Council text rather than an old fee table or validity period.
 

@@ -1,15 +1,17 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr';
 
-import { getAllGuides } from '@/lib/guides';
+import { guideCategoryHref } from '@/lib/guide-categories';
+import { getGuideCategories, GUIDE_IMAGE_HEIGHT, GUIDE_IMAGE_WIDTH } from '@/lib/guides';
 
 import Container from '@/components/ui/container';
 
 export function GuidesStrip() {
-  const guides = getAllGuides().slice(0, 8);
+  const categories = getGuideCategories();
 
-  if (guides.length === 0) {
+  if (categories.length === 0) {
     return null;
   }
 
@@ -22,31 +24,52 @@ export function GuidesStrip() {
               Guides
             </h2>
             <p className="mt-2 text-base text-gray-600 dark:text-gray-300">
-              How to compare clinics, pick one nearby, and handle an urgent visit.
+              Jump to a topic: finding a clinic, injectables, laser, or skin treatments.
             </p>
           </div>
           <Link
             href="/guides"
             prefetch={false}
-            className="inline-flex min-h-11 items-center text-sm font-semibold">
+            className="inline-flex min-h-11 items-center text-sm font-semibold"
+          >
             All guides
             <ArrowRightIcon weight="duotone" className="ms-1 size-4" aria-hidden="true" />
           </Link>
         </div>
-        <ul className="mt-6 divide-y divide-gray-200 border-y border-gray-200 dark:divide-gray-800 dark:border-gray-800">
-          {guides.map((guide) => (
-            <li key={guide.slug}>
-              <Link
-                href={`/guides/${guide.slug}`}
-                prefetch={false}
-                className="flex min-h-11 flex-col gap-1 py-4 hover:border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:flex-row sm:items-baseline sm:justify-between dark:focus-visible:ring-offset-gray-900">
-                <span className="font-medium text-gray-900 dark:text-gray-50">{guide.title}</span>
-                <span className="shrink-0 text-sm text-gray-500 dark:text-gray-400">
-                  {guide.readingTimeMinutes} min read
-                </span>
-              </Link>
-            </li>
-          ))}
+        <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {categories.map(({ category, guides }) => {
+            const cover = guides[0];
+            if (!cover) return null;
+
+            return (
+              <li key={category.id}>
+                <Link
+                  href={guideCategoryHref(category.id)}
+                  prefetch={false}
+                  className="flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white hover:border-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:border-gray-800 dark:bg-gray-950 dark:hover:border-blue-700 dark:focus-visible:ring-offset-gray-900"
+                >
+                  <Image
+                    src={cover.image}
+                    alt=""
+                    width={GUIDE_IMAGE_WIDTH}
+                    height={GUIDE_IMAGE_HEIGHT}
+                    className="aspect-[16/9] w-full object-cover"
+                  />
+                  <span className="flex flex-1 flex-col p-4">
+                    <span className="font-display text-lg font-bold text-gray-900 dark:text-gray-50">
+                      {category.title}
+                    </span>
+                    <span className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                      {category.description}
+                    </span>
+                    <span className="mt-3 text-sm font-semibold text-blue-700 dark:text-blue-300">
+                      {guides.length} guides
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </Container>
     </section>

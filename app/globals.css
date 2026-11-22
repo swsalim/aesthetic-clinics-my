@@ -10,6 +10,16 @@ html body[data-scroll-locked] {
 }
 
 @layer base {
+  html:has([data-guide-page]) {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html:has([data-guide-page]) {
+      scroll-behavior: auto;
+    }
+  }
+
   * {
     @apply font-medium;
   }

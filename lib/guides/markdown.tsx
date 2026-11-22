@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { headingId } from '@/lib/guides/headings';
@@ -57,6 +58,28 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
 
 function isListLine(line: string) {
   return /^-\s+/.test(line) || /^\d+\.\s+/.test(line);
+}
+
+const IMAGE_LINE = /^!\[([^\]]+)\]\(([^)\s]+)(?:\s+"(\d+)x(\d+)")?\)$/;
+
+function isImageLine(line: string) {
+  return IMAGE_LINE.test(line.trim());
+}
+
+function GuideFigure({ alt, src, width, height }: { alt: string; src: string; width: number; height: number }) {
+  return (
+    <figure className="not-prose my-6">
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        loading="lazy"
+        decoding="async"
+        className="aspect-video h-auto w-full rounded-2xl object-cover"
+      />
+    </figure>
+  );
 }
 
 function isTableLine(line: string) {
@@ -190,7 +213,11 @@ export function GuideMarkdown({ markdown }: { markdown: string }) {
 
     if (trimmed.startsWith('### ')) {
       const text = trimmed.slice(4).trim();
-      blocks.push(<h3 key={`h3-${index}`}>{renderInline(text, `h3-${index}`)}</h3>);
+      blocks.push(
+        <h3 key={`h3-${index}`} className="!scroll-mt-36 normal-case lg:!scroll-mt-28">
+          {renderInline(text, `h3-${index}`)}
+        </h3>,
+      );
       index += 1;
       continue;
     }
@@ -199,9 +226,29 @@ export function GuideMarkdown({ markdown }: { markdown: string }) {
       const text = trimmed.slice(3).trim();
       const id = nextHeadingId(text);
       blocks.push(
-        <h2 key={`h2-${index}`} id={id}>
+        <h2
+          key={`h2-${index}`}
+          id={id}
+          className="!scroll-mt-36 normal-case lg:!scroll-mt-28"
+        >
           {renderInline(text, `h2-${index}`)}
         </h2>,
+      );
+      index += 1;
+      continue;
+    }
+
+    const image = IMAGE_LINE.exec(trimmed);
+    if (image) {
+      const [, alt, src, width, height] = image;
+      blocks.push(
+        <GuideFigure
+          key={`img-${index}`}
+          alt={alt}
+          src={src}
+          width={width ? Number(width) : 1536}
+          height={height ? Number(height) : 864}
+        />,
       );
       index += 1;
       continue;
@@ -265,7 +312,8 @@ export function GuideMarkdown({ markdown }: { markdown: string }) {
       !lines[index].trim().startsWith('#') &&
       !lines[index].trim().startsWith('> ') &&
       !isListLine(lines[index].trim()) &&
-      !isTableLine(lines[index].trim())
+      !isTableLine(lines[index].trim()) &&
+      !isImageLine(lines[index].trim())
     ) {
       paragraph.push(lines[index].trim());
       index += 1;

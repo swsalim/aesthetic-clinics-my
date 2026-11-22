@@ -4,55 +4,60 @@ import Link from 'next/link';
 
 import { siteConfig } from '@/config/site';
 
-import { formatGuideDate, getAllGuides, readingTimeLabel } from '@/lib/guides';
+import {
+  formatGuideDate,
+  getAllGuides,
+  getGuideCategories,
+  getGuidesIndexLastmod,
+  GUIDE_IMAGE_HEIGHT,
+  GUIDE_IMAGE_WIDTH,
+} from '@/lib/guides';
 import { absoluteUrl } from '@/lib/utils';
 
-import PageHeading from '@/components/page-heading';
+import { GuideHashScroll } from '@/components/guides/guide-hash-scroll';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import JsonLd from '@/components/structured-data/json-ld';
+import Breadcrumb from '@/components/ui/breadcrumb';
 import Container from '@/components/ui/container';
-import { Wrapper } from '@/components/ui/wrapper';
 
-const config = {
-  title: 'Guides to finding an aesthetic clinic in Malaysia',
-  description:
-    'Practical guides on comparing aesthetic clinics, checking an LCP, and reading a botulinum toxin listing before you book.',
-  url: '/guides',
-};
+const title = 'Guides to finding an aesthetic clinic in Malaysia';
+const description =
+  'Practical guides on comparing aesthetic clinics, checking an LCP, and reading a botulinum toxin listing before you book.';
 
 export const metadata: Metadata = {
-  title: config.title,
-  description: config.description,
+  title,
+  description,
   alternates: {
-    canonical: config.url,
+    canonical: '/guides',
   },
   openGraph: {
-    title: config.title,
-    description: config.description,
-    url: config.url,
+    title,
+    description,
+    url: '/guides',
+    type: 'website',
+    locale: 'en_US',
+    siteName: siteConfig.siteName,
     images: [
       {
-        url: absoluteUrl('/images/guides/finding-a-clinic.svg'),
-        width: siteConfig.openGraph.width,
-        height: siteConfig.openGraph.height,
-        alt: 'Illustrated checklist for finding an aesthetic clinic in Malaysia',
+        url: siteConfig.openGraph.image,
+        width: 1200,
+        height: 630,
+        alt: title,
       },
     ],
-    locale: 'en_US',
-    type: 'website',
   },
   twitter: {
-    title: config.title,
-    description: config.description,
     card: 'summary_large_image',
+    title,
+    description,
     creator: siteConfig.creator,
-    images: [absoluteUrl('/images/guides/finding-a-clinic.svg')],
+    images: [siteConfig.openGraph.image],
   },
 };
 
 export default function GuidesPage() {
   const guides = getAllGuides();
-  const [featured, ...rest] = guides;
+  const categories = getGuideCategories();
 
   const breadcrumbs = [
     { position: '1', name: 'Home', item: absoluteUrl('/') },
@@ -61,14 +66,21 @@ export default function GuidesPage() {
 
   return (
     <>
+      <GuideHashScroll />
       <JsonLd id="guides-collection-jsonld">
         {{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          name: config.title,
-          description: config.description,
+          name: title,
+          description,
           url: absoluteUrl('/guides'),
           inLanguage: 'en-MY',
+          dateModified: getGuidesIndexLastmod(),
+          isPartOf: {
+            '@type': 'WebSite',
+            name: siteConfig.siteName,
+            url: absoluteUrl('/'),
+          },
           mainEntity: {
             '@type': 'ItemList',
             itemListElement: guides.map((guide, index) => ({
@@ -81,83 +93,88 @@ export default function GuidesPage() {
         }}
       </JsonLd>
       <BreadcrumbJsonLd itemListElements={breadcrumbs} />
-      <Wrapper className="pt-0 md:pt-0">
-        <PageHeading label="Guides" title={config.title}>
-          <p>
-            Practical notes on comparing clinics, checking an LCP, and reading a botulinum toxin
-            listing before you book.
-          </p>
-        </PageHeading>
-        <Container className="flex flex-col gap-12">
-          {featured && (
-            <article>
-              <Link
-                href={`/guides/${featured.slug}`}
-                prefetch={false}
-                className="group grid overflow-hidden rounded-2xl border border-gray-200 bg-white no-underline shadow-sm transition hover:border-blue-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] dark:border-gray-700 dark:bg-gray-900/40 dark:hover:border-blue-700"
-              >
-                <Image
-                  src={featured.image}
-                  alt={featured.imageAlt}
-                  width={1200}
-                  height={900}
-                  unoptimized
-                  className="h-full w-full bg-blue-50 object-cover"
-                />
-                <div className="flex flex-col justify-center p-6 sm:p-8 md:p-10">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-blue-700 dark:text-blue-300">
-                    Featured
-                  </p>
-                  <h2 className="mt-3 font-display text-2xl font-black tracking-tight text-gray-900 group-hover:text-blue-700 md:text-3xl dark:text-gray-50 dark:group-hover:text-blue-300">
-                    {featured.title}
-                  </h2>
-                  <p className="mt-4 text-base leading-relaxed text-gray-600 dark:text-gray-300">
-                    {featured.description}
-                  </p>
-                  <p className="mt-6 text-sm font-medium text-gray-500 dark:text-gray-400">
-                    {readingTimeLabel(featured.readingTimeMinutes)}
-                    <span aria-hidden="true"> · </span>
-                    <time dateTime={featured.updatedAt}>{formatGuideDate(featured.updatedAt)}</time>
-                  </p>
-                </div>
-              </Link>
-            </article>
-          )}
 
-          {rest.length > 0 && (
-            <section aria-labelledby="more-guides">
-              <h2 id="more-guides" className="sr-only">
-                More guides
-              </h2>
-              <ul className="divide-y divide-gray-200 border-y border-gray-200 dark:divide-gray-800 dark:border-gray-800">
-                {rest.map((guide) => (
-                  <li key={guide.slug} className="py-6">
-                    <article>
-                      <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-gray-50">
-                        <Link
-                          href={`/guides/${guide.slug}`}
-                          prefetch={false}
-                          className="text-gray-900 no-underline hover:text-blue-700 dark:text-gray-50 dark:hover:text-blue-300"
-                        >
-                          {guide.title}
-                        </Link>
-                      </h3>
-                      <p className="mt-2 max-w-3xl text-base leading-relaxed text-gray-600 dark:text-gray-300">
-                        {guide.description}
-                      </p>
-                      <p className="mt-3 text-sm font-medium text-gray-500 dark:text-gray-400">
-                        {readingTimeLabel(guide.readingTimeMinutes)}
-                        <span aria-hidden="true"> · </span>
-                        <time dateTime={guide.updatedAt}>{formatGuideDate(guide.updatedAt)}</time>
-                      </p>
+      <section className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+        <Container className="py-10 md:py-14">
+          <Breadcrumb items={[{ name: 'Guides' }]} />
+          <h1 className="mt-4 max-w-3xl text-balance font-display text-[clamp(2rem,5vw,3.25rem)] font-black leading-[1.05] tracking-tight text-gray-900 dark:text-gray-50">
+            Guides
+          </h1>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-gray-600 md:text-lg dark:text-gray-300">
+            Practical notes on comparing clinics, checking an LCP, and reading a treatment listing
+            before you book.
+          </p>
+          <nav aria-label="Guide categories" className="mt-6">
+            <ul className="flex gap-2 overflow-x-auto pb-1">
+              {categories.map(({ category, guides: items }) => (
+                <li key={category.id} className="shrink-0">
+                  <a
+                    href={`#${category.id}`}
+                    className="inline-flex min-h-11 items-center rounded-full border border-gray-200 bg-white px-4 text-sm font-semibold text-gray-800 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:hover:border-blue-700 dark:hover:bg-blue-950/40 dark:hover:text-blue-200"
+                  >
+                    {category.title}
+                    <span className="ms-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+                      {items.length}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </Container>
+      </section>
+
+      <div className="bg-white dark:bg-gray-950">
+        <Container className="space-y-14 py-10 md:py-14">
+          {categories.map(({ category, guides: items }, categoryIndex) => (
+            <section key={category.id} id={category.id} className="scroll-mt-28">
+              <div className="max-w-2xl">
+                <h2 className="font-display text-2xl font-black text-gray-900 md:text-3xl dark:text-gray-50">
+                  {category.title}
+                </h2>
+                <p className="mt-2 text-base leading-relaxed text-gray-600 dark:text-gray-300">
+                  {category.description}
+                </p>
+              </div>
+              <ul className="mt-6 grid gap-5 sm:grid-cols-2">
+                {items.map((guide, index) => (
+                  <li key={guide.slug}>
+                    <article className="h-full overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+                      <Link
+                        href={`/guides/${guide.slug}`}
+                        prefetch={false}
+                        className="block hover:border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                      >
+                        <Image
+                          src={guide.image}
+                          alt={guide.imageAlt}
+                          width={GUIDE_IMAGE_WIDTH}
+                          height={GUIDE_IMAGE_HEIGHT}
+                          priority={categoryIndex === 0 && index === 0}
+                          className="aspect-[16/9] w-full object-cover"
+                        />
+                        <div className="p-5">
+                          <h3 className="font-display text-xl font-black text-gray-900 dark:text-gray-50">
+                            {guide.title}
+                          </h3>
+                          <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                            {guide.description}
+                          </p>
+                          <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                            {guide.readingTimeMinutes} min read
+                            <span aria-hidden="true"> · </span>
+                            <time dateTime={guide.updatedAt}>{formatGuideDate(guide.updatedAt)}</time>
+                          </p>
+                        </div>
+                      </Link>
                     </article>
                   </li>
                 ))}
               </ul>
             </section>
-          )}
+          ))}
         </Container>
-      </Wrapper>
+      </div>
     </>
   );
 }

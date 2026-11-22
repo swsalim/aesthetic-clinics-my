@@ -1,16 +1,14 @@
-import React from 'react';
+import { Suspense } from 'react';
 
 import { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { Clinic, ClinicImage } from '@/types/clinic';
+import { Clinic } from '@/types/clinic';
 import { ArrowRightIcon, PersonStandingIcon } from 'lucide-react';
 
 import pluralize from 'pluralize';
 
-import { isFeatured, isFeaturedPartner } from '@/config/featured';
 import {
   MIN_INDEXABLE_STATE_CLINICS,
   aestheticClinicTitle,
@@ -19,6 +17,8 @@ import {
 import { siteConfig } from '@/config/site';
 
 import { imageKitUrl } from '@/lib/imagekit-url';
+import { getLocationFacetsSafe } from '@/lib/listing/location-clinic-index';
+import { listingClinicFromPage } from '@/lib/listing/location-filters';
 import { resolveMediaUrl } from '@/lib/media';
 import { MEDIA } from '@/lib/media-sizes';
 import { absoluteUrl, cn, getPagination } from '@/lib/utils';
@@ -27,20 +27,16 @@ import { getFeaturedListings } from '@/helpers/clinics';
 import { getDoctorsByState } from '@/helpers/doctors';
 import { getStateBySlug, getStateListings } from '@/helpers/states';
 
-import { LazyAdsArticle } from '@/components/ads/lazy-ads-article';
-import { ClinicCard } from '@/components/cards/clinic-card';
 import { MediaImage } from '@/components/image/media-image';
-import {
-  getFeaturedListingCardPlaceholder,
-  getFeaturedPartnerCardPlaceholder,
-} from '@/components/listing/featured-clinic-spotlight';
+import { ClinicResultGrid } from '@/components/listing/location/clinic-result-grid';
+import { LocationBrowser } from '@/components/listing/location/location-browser';
+import { LocationHero, locationHeroStats } from '@/components/listing/location/location-hero';
+import { LocationSeo } from '@/components/listing/location/location-seo';
 import BreadcrumbJsonLd from '@/components/structured-data/breadcrumb-json-ld';
 import CollectionPageJsonLd from '@/components/structured-data/collection-page-json-ld';
-import Breadcrumb from '@/components/ui/breadcrumb';
 import { buttonVariants } from '@/components/ui/button';
 import Container from '@/components/ui/container';
 import { Pagination } from '@/components/ui/pagination';
-import { Wrapper } from '@/components/ui/wrapper';
 
 export const revalidate = 86_400;
 export const dynamicParams = true;
@@ -156,14 +152,16 @@ export default async function StateScreen({ params }: StatePageProps) {
   const currentPage = pageNumber(page);
   const { from, to } = getPagination(currentPage, limit);
 
-  // Fetch state metadata and clinics data in parallel
-  const stateData = await getStateBySlug(state, from, to);
+  const [stateData, doctorsResult, facets] = await Promise.all([
+    getStateBySlug(state, from, to),
+    getDoctorsByState(state, 5, 0),
+    getLocationFacetsSafe({ kind: 'state', stateSlug: state }),
+  ]);
 
   if (!stateData) {
     notFound();
   }
 
-  const doctorsResult = await getDoctorsByState(state, 5, 0);
   const doctors = doctorsResult.data;
   const totalDoctors = doctorsResult.count || 0;
 
@@ -183,12 +181,29 @@ export default async function StateScreen({ params }: StatePageProps) {
   }
   const seo = stateSeoOverride({ stateSlug: state, clinicCount: totalClinics });
 
-  const nearbyAreas = stateData.areas
-    ?.slice(0, 3)
-    .map((area) => area.name)
-    .join(', ');
-
-  const nearbyAreasWithLinks = stateData.areas?.slice(0, 3);
+  const nearbyAreasWithLinks = stateData.areas?.slice(0, 3) ?? [];
+  const nearbyAreas = nearbyAreasWithLinks.map((area) => area.name).join(', ');
+  const relatedLinks = [
+    ...(stateData.areas ?? [])
+      .filter((area) => area.slug)
+      .map((area) => ({
+        href: `/${state}/${area.slug}`,
+        label: area.name ?? area.slug ?? '',
+      })),
+    ...facets.services.slice(0, 6).map((service) => ({
+      href: `/services/${service.slug}`,
+      label: service.name,
+    })),
+  ];
+  const sortedListings = [...listingClinics].sort(
+    (left, right) => Number(right.is_featured) - Number(left.is_featured),
+  );
+  const pageClinics = [
+    ...(currentPage === 1 ? featuredListings : []),
+    ...sortedListings,
+  ].map((clinic) => listingClinicFromPage(clinic, { state: stateData.name }));
+  const listHeading = `${totalClinics} Aesthetic ${pluralize('Clinic', totalClinics)} in ${stateData.name}`;
+  const heroStats = locationHeroStats(totalClinics, facets);
 
   const title = `Aesthetic Clinics in ${stateData.name}`;
   const description =
@@ -228,79 +243,69 @@ export default async function StateScreen({ params }: StatePageProps) {
         description={description}
         clinics={(stateData.clinics?.slice(0, 20) as Partial<Clinic>[]) || []}
       />
-      <Wrapper className="relative overflow-hidden">
-        {/* Optimized background image using Next.js Image */}
-        {stateBackgroundSrc && (
-          <MediaImage
-            src={stateBackgroundSrc}
-            alt={`${stateData.name} aesthetic clinics background`}
-            width={MEDIA.hero.width}
-            height={MEDIA.hero.height}
-            priority
-            sizes={MEDIA.hero.sizes}
-            className="absolute inset-0 h-full w-full object-cover"
-            style={{
-              objectPosition: 'center center',
-            }}
-          />
-        )}
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/50" />
-        <Container className="relative z-10">
-          <div className="flex flex-col gap-4 py-12 md:py-24">
-            <Breadcrumb items={breadcrumbItems} theme="dark" />
-            <h1 className="text-balance text-4xl font-black text-white">{title}</h1>
-            <p className="text-balance text-lg font-medium text-white">
-              {seo ? (
+      <LocationHero
+        breadcrumbItems={breadcrumbItems}
+        heading={title}
+        intro={
+          seo ? (
+            <>
+              Looking for a skin clinic in Kuala Lumpur? This directory lists {totalClinics}{' '}
+              aesthetic clinics in Kuala Lumpur
+              {nearbyAreasWithLinks.length > 0 ? (
                 <>
-                  Looking for a skin clinic in Kuala Lumpur? This directory lists {totalClinics}{' '}
-                  aesthetic clinics in Kuala Lumpur
-                  {nearbyAreasWithLinks && nearbyAreasWithLinks.length > 0 ? (
-                    <>
-                      , across areas such as{' '}
-                      {nearbyAreasWithLinks.map((area, index) => (
-                        <React.Fragment key={area.slug}>
-                          <Link
-                            href={absoluteUrl(`/${area.state?.slug}/${area.slug}`)}
-                            className="text-blue-300 hover:border-blue-300 hover:text-blue-300"
-                            prefetch={false}
-                          >
-                            {area.name}
-                          </Link>
-                          {index < nearbyAreasWithLinks.length - 2 && ', '}
-                          {index === nearbyAreasWithLinks.length - 2 && ', and '}
-                        </React.Fragment>
-                      ))}
-                    </>
-                  ) : null}
-                  . Compare listings, then confirm services, reviews and the doctor with the clinic.
-                </>
-              ) : (
-                <>
-                  Explore {totalClinics} {pluralize('aesthetic clinic', totalClinics)} across cities like{' '}
-                  {nearbyAreasWithLinks?.map((area, index) => (
-                    <React.Fragment key={area.slug}>
+                  , across areas such as{' '}
+                  {nearbyAreasWithLinks.map((area, index) => (
+                    <span key={area.slug}>
                       <Link
-                        href={absoluteUrl(`/${area.state?.slug}/${area.slug}`)}
-                        className="text-blue-300 hover:border-blue-300 hover:text-blue-300"
-                        prefetch={false}
-                      >
+                        href={`/${area.state?.slug}/${area.slug}`}
+                        className="font-semibold text-blue-600 hover:text-blue-700"
+                        prefetch={false}>
                         {area.name}
                       </Link>
                       {index < nearbyAreasWithLinks.length - 2 && ', '}
                       {index === nearbyAreasWithLinks.length - 2 && ', and '}
-                    </React.Fragment>
-                  ))}{' '}
-                  in {stateData?.name}. Find services, reviews, and opening hours.
+                    </span>
+                  ))}
                 </>
-              )}
-            </p>
-          </div>
-        </Container>
-      </Wrapper>
+              ) : null}
+              . Compare listings, then confirm services, reviews and the doctor with the clinic.
+            </>
+          ) : (
+            <>
+              Explore {totalClinics} {pluralize('aesthetic clinic', totalClinics)}
+              {nearbyAreasWithLinks.length > 0 ? (
+                <>
+                  {' '}
+                  across cities like{' '}
+                  {nearbyAreasWithLinks.map((area, index) => (
+                    <span key={area.slug}>
+                      <Link
+                        href={`/${area.state?.slug}/${area.slug}`}
+                        className="font-semibold text-blue-600 hover:text-blue-700"
+                        prefetch={false}>
+                        {area.name}
+                      </Link>
+                      {index < nearbyAreasWithLinks.length - 2 && ', '}
+                      {index === nearbyAreasWithLinks.length - 2 && ', and '}
+                    </span>
+                  ))}
+                </>
+              ) : null}{' '}
+              in {stateData.name}. Find services, reviews, and opening hours.
+            </>
+          )
+        }
+        backHref={`/${state}`}
+        placeName={stateData.name}
+        currentPage={currentPage}
+        backgroundSrc={stateBackgroundSrc}
+        searchBasePath={`/${state}`}
+        searchPlaceholder={`Search clinics in ${stateData.name}...`}
+        stats={heroStats}
+      />
 
-      <Wrapper size="sm">
-        <Container>
+      <section className="bg-white dark:bg-gray-900">
+        <Container className="py-8 md:py-10">
           <div className="flex flex-col gap-y-6">
             {totalDoctors > 0 && (
               <div className="flex flex-col gap-y-4 rounded-lg border-blue-300 bg-blue-50/70 px-6 py-4 text-blue-900">
@@ -347,149 +352,77 @@ export default async function StateScreen({ params }: StatePageProps) {
                 </div>
               </div>
             )}
-            <h2 className="mb-6 text-balance text-xl font-bold md:text-2xl">
-              {totalClinics} Aesthetic {pluralize('Clinic', totalClinics)} in {stateData.name}
-            </h2>
-            {listingClinics.length > 0 || featuredListings.length > 0 ? (
+            {pageClinics.length > 0 || currentPage > 1 ? (
               <>
-                <div
-                  className={cn(
-                    'grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8 lg:grid-cols-4',
-                  )}
+                <Suspense
+                  fallback={
+                    <div className="lg:grid lg:grid-cols-sidebar-left lg:items-start lg:gap-8">
+                      <div className="hidden lg:block" aria-hidden="true" />
+                      <div>
+                        <h2 className="mb-4 font-display text-xl font-bold md:text-2xl">{listHeading}</h2>
+                        <ClinicResultGrid
+                          clinics={pageClinics}
+                          showSampleCards={currentPage === 1 && featuredListings.length === 0}
+                          sampleState={stateData.name}
+                          sampleArea={stateData.areas?.[0]?.name}
+                        />
+                        <Pagination currentPage={currentPage} totalPages={totalPages} basePath={`/${state}`} />
+                      </div>
+                    </div>
+                  }
                 >
-                  {currentPage === 1 &&
-                    (featuredListings.length > 0 ? (
-                      featuredListings.map((clinic) => (
-                        <ClinicCard
-                          key={clinic.slug}
-                          slug={clinic.slug ?? ''}
-                          name={clinic.name ?? ''}
-                          address={clinic.address ?? ''}
-                          neighborhood={clinic.neighborhood ?? ''}
-                          city={clinic.city ?? ''}
-                          phone={clinic.phone ?? ''}
-                          postalCode={clinic.postal_code ?? ''}
-                          state={clinic.state?.name ?? stateData.name}
-                          area={clinic.area?.name ?? ''}
-                          image={clinic.images?.[0] as ClinicImage | undefined}
-                          rating={clinic.rating}
-                          isFeatured={isFeatured(clinic.slug)}
-                          isFeaturedPartner={isFeaturedPartner(clinic.slug)}
-                          hours={clinic.hours ?? []}
-                          specialHours={clinic.special_hours ?? []}
-                          openOnPublicHolidays={clinic.open_on_public_holidays ?? false}
-                          isPermanentlyClosed={clinic.is_permanently_closed ?? false}
-                        />
-                      ))
-                    ) : (
-                      <>
-                        <ClinicCard
-                          key="featured-placeholder-partner"
-                          {...getFeaturedPartnerCardPlaceholder(
-                            stateData.name,
-                            stateData.areas?.[0]?.name,
-                          )}
-                        />
-                        <ClinicCard
-                          key="featured-placeholder-listing"
-                          {...getFeaturedListingCardPlaceholder(
-                            stateData.name,
-                            stateData.areas?.[1]?.name ?? stateData.areas?.[0]?.name,
-                          )}
-                        />
-                      </>
-                    ))}
-                  {listingClinics
-                    .sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0))
-                    .map((clinic, index) => {
-                      return (
-                        <React.Fragment key={clinic.slug}>
-                          {index === 5 && (
-                            <div className="flex flex-col items-center justify-center gap-2 text-center">
-                              <a
-                                href="https://invl.me/clnm6di"
-                                target="_blank"
-                                className="hover:!border-b-transparent"
-                              >
-                                <Image
-                                  src="/images/banner-total-image-2.jpg"
-                                  alt="Total Image Whita Glo"
-                                  width={600}
-                                  height={600}
-                                  priority
-                                  quality={85}
-                                  sizes="100vw"
-                                  className="mb-0 h-auto w-full object-cover"
-                                  style={{
-                                    objectPosition: 'center center',
-                                  }}
-                                />
-                              </a>
-                            </div>
-                          )}
-                          {index !== 5 && (index + 1) % 6 == 0 && <LazyAdsArticle />}
-                          <ClinicCard
-                            key={clinic.slug}
-                            slug={clinic.slug ?? ''}
-                            name={clinic.name ?? ''}
-                            address={clinic.address ?? ''}
-                            neighborhood={clinic.neighborhood ?? ''}
-                            city={clinic.city ?? ''}
-                            phone={clinic.phone ?? ''}
-                            postalCode={clinic.postal_code ?? ''}
-                            state={clinic.state?.name ?? ''}
-                            area={clinic.area?.name ?? ''}
-                            image={clinic.images?.[0] as ClinicImage | undefined}
-                            rating={clinic.rating}
-                            isFeatured={isFeatured(clinic.slug) || (clinic.is_featured ?? false)}
-                            isFeaturedPartner={isFeaturedPartner(clinic.slug)}
-                            hours={clinic.hours ?? []}
-                            specialHours={clinic.special_hours ?? []}
-                            openOnPublicHolidays={clinic.open_on_public_holidays ?? false}
-                            isPermanentlyClosed={clinic.is_permanently_closed ?? false}
-                          />
-                        </React.Fragment>
-                      );
-                    })}
-                </div>
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  basePath={`/${state}`}
-                />
+                  <LocationBrowser
+                    basePath={`/${state}`}
+                    scope={{ kind: 'state', stateSlug: state }}
+                    limit={limit}
+                    currentPage={currentPage}
+                    totalClinics={totalClinics}
+                    totalPages={totalPages}
+                    clinics={pageClinics}
+                    facets={facets}
+                    showSampleCards={currentPage === 1 && featuredListings.length === 0}
+                    sampleState={stateData.name}
+                    sampleArea={stateData.areas?.[0]?.name}
+                    emptyHref={`/${state}`}
+                    listHeading={listHeading}
+                  />
+                </Suspense>
+                {currentPage === 1 ? (
+                  <LocationSeo
+                    placeName={stateData.name}
+                    placeLabel={stateData.name}
+                    clinicCount={totalClinics}
+                    weekendCount={facets.weekend}
+                    links={relatedLinks}
+                  />
+                ) : null}
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center gap-y-4">
-                <div className="flex flex-col items-center justify-center">
-                  <div className="relative size-64 md:size-96">
-                    <MediaImage
-                      src={imageKitUrl('aesthetic-clinics-my/lost-boy.png')}
-                      alt="No aesthetic clinics found"
-                      width={MEDIA.gallery.width}
-                      height={MEDIA.gallery.height}
-                      className="h-full w-full object-cover"
-                      sizes={MEDIA.gallery.sizes}
-                    />
-                  </div>
+              <div className="flex flex-col items-center justify-center gap-y-4 py-8">
+                <div className="relative size-64 md:size-96">
+                  <MediaImage
+                    src={imageKitUrl('aesthetic-clinics-my/lost-boy.png')}
+                    alt="No aesthetic clinics found"
+                    width={MEDIA.empty.width}
+                    height={MEDIA.empty.height}
+                    className="h-full w-full object-cover"
+                    sizes={MEDIA.empty.sizes}
+                  />
                 </div>
-                <h2 className="text-balance text-2xl font-bold md:text-4xl">Oops!</h2>
-                <p className="text-balance text-lg">
-                  No aesthetic clinics found in {stateData.name}.
-                </p>
+                <h2 className="text-balance font-display text-2xl font-bold md:text-4xl">Oops!</h2>
+                <p className="text-balance text-lg">No aesthetic clinics found in {stateData.name}.</p>
                 <div className="flex flex-col gap-y-2 md:flex-row md:gap-x-3">
                   <Link
                     href="/submit"
                     className={cn(buttonVariants({ variant: 'primary' }), 'flex flex-row gap-x-2')}
-                    prefetch={false}
-                  >
+                    prefetch={false}>
                     Add a clinic
                     <ArrowRightIcon className="size-4" />
                   </Link>
                   <Link
                     href="/"
                     className={cn(buttonVariants({ variant: 'ghost' }), 'flex flex-row gap-x-2')}
-                    prefetch={false}
-                  >
+                    prefetch={false}>
                     Get back to homepage
                     <ArrowRightIcon className="size-4" />
                   </Link>
@@ -498,30 +431,7 @@ export default async function StateScreen({ params }: StatePageProps) {
             )}
           </div>
         </Container>
-      </Wrapper>
-
-      <Wrapper size="sm">
-        <Container>
-          <div className="flex flex-col gap-y-6">
-            <h2 className="text-balance text-xl font-bold md:text-2xl">
-              Aesthetic Clinics near {stateData.name}
-            </h2>
-            <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
-              {stateData.areas?.map((area) => (
-                <h3 className="text-balance text-base font-medium" key={area.slug}>
-                  <Link
-                    href={absoluteUrl(`/${state}/${area.slug}`)}
-                    className="py-1 hover:border-transparent"
-                    prefetch={false}
-                  >
-                    {area.name}, {area.state?.name}
-                  </Link>
-                </h3>
-              ))}
-            </div>
-          </div>
-        </Container>
-      </Wrapper>
+      </section>
     </>
   );
 }

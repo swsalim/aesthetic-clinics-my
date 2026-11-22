@@ -4,8 +4,8 @@ description: "Learn how dermaplane treatment works, who may not suit it, possibl
 slug: dermaplane-treatment
 publishedAt: "2026-10-21"
 updatedAt: "2026-10-21"
-image: /images/guides/dermaplane.svg
-imageAlt: "Illustrated blade and skin surface, a stand-in for a professional dermaplane facial."
+image: "/images/guides/dermaplane-treatment/dermaplane-facial.webp"
+imageAlt: "Clinician holding a sterile blade just above a cheek during a facial in a bright treatment room"
 primaryKeyword: "dermaplane treatment"
 summary:
   - "A dermaplane treatment uses a sterile blade or specialised instrument to remove surface dead skin cells and fine facial hair."
@@ -45,6 +45,8 @@ Imagine booking a facial before a wedding, then discovering that the treatment u
 ## What Is a Dermaplane Treatment?
 
 A dermaplane treatment is a professional exfoliation procedure that uses a sterile blade or specialised instrument to remove surface dead skin cells and fine facial hair. The instrument moves across prepared skin with controlled strokes. Some people seek it for facial hair removal or because they want to discuss a temporary change in how their skin looks and feels.
+
+![Sterile scalpel handle and a folded gauze square on a white clinic tray in even daylight](/images/guides/dermaplane-treatment/dermaplane-blade-tray.webp "1536x864")
 
 Dermaplaning cuts hair at the skin surface. It doesn’t permanently remove hair, change its growth pattern, or guarantee lighter skin. Regrowth can feel different because the cut end feels blunt, but the hair itself hasn’t become thicker. Harvard Health describes dermaplaning tools as forms of razors or scalpels and notes the risk of small nicks, especially when technique or hygiene is poor.
 

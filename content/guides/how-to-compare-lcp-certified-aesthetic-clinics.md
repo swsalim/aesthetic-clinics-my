@@ -4,8 +4,8 @@ description: "How to compare LCP-certified aesthetic clinics in Malaysia using t
 slug: how-to-compare-lcp-certified-aesthetic-clinics
 publishedAt: "2026-10-17"
 updatedAt: "2026-10-26"
-image: /images/guides/compare-lcp.svg
-imageAlt: "Two clinic cards side by side, a simple illustration of comparing LCP details rather than slogans."
+image: "/images/guides/how-to-compare-lcp-certified-aesthetic-clinics/clinic-reception-certificate.webp"
+imageAlt: "Clinic staff member at a daylight reception desk, with blank papers and a framed certificate turned away"
 primaryKeyword: "lcp-certified aesthetic clinic"
 summary:
   - "LCP means Letter of Credentialing and Privileging. The Medical Practice Division of the Ministry of Health Malaysia issues it for stated aesthetic procedures."
@@ -54,6 +54,8 @@ The rules sit in the [Guidelines on Aesthetic Medical Practice for Registered Me
 ## What the letter actually says
 
 The guideline says the Medical Practice Division issues the LCP on the recommendation of the Main Credentialing and Privileging Committee of Aesthetic Medical Practice, after the doctor has completed the required training and assessment. With that letter, the doctor's name is listed in the National Registry of Registered Medical Practitioners Practising Aesthetic Medical Practice.
+
+![Two blank pale-blue clinic folders and a pen on a wooden desk, ready for a side-by-side comparison](/images/guides/how-to-compare-lcp-certified-aesthetic-clinics/clinic-folders.webp "1536x864")
 
 The registry has three chapters:
 

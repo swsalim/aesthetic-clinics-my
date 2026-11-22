@@ -4,8 +4,8 @@ description: "Injection filler in Malaysia: what dermal filler is, vascular risk
 slug: dermal-filler-injections-malaysia
 publishedAt: "2026-10-20"
 updatedAt: "2026-10-20"
-image: /images/guides/dermal-filler.svg
-imageAlt: "Illustrated syringe and checklist for comparing a dermal filler consultation."
+image: "/images/guides/dermal-filler-injections-malaysia/filler-syringe-tray.webp"
+imageAlt: "Gloved hands holding a capped syringe horizontally above gauze on a steel tray in a bright clinic"
 primaryKeyword: "injection filler"
 summary:
   - "Injection filler means a dermal filler implanted with a needle or cannula. In the Ministry of Health guideline, filler injection (excluding silicone and fat) is minimally invasive."
@@ -46,6 +46,8 @@ An injection filler is a gel placed under the skin to change contour or to softe
 ## What dermal filler is
 
 The US Food and Drug Administration describes [dermal fillers](https://www.fda.gov/medical-devices/aesthetic-cosmetic-devices/dermal-fillers-soft-tissue-fillers), also called soft-tissue fillers, as medical device implants. They are approved in the United States for specific uses in adults 22 and older, including a smoother or fuller look in areas such as nasolabial folds, lips, cheeks, chin, and the back of the hands. The effect lasts for a time that depends on the material and the place it is injected. Some fillers are absorbed, so a later treatment may be discussed if someone wants to maintain a look. The FDA says the result depends on the tissue underneath and on the volume and type of filler.
+
+![Clinician marking a cheek with a white pencil before a filler visit, in a bright clinic treatment room](/images/guides/dermal-filler-injections-malaysia/cheek-marking.webp "1536x864")
 
 In Malaysia, filler injection is regulated as a medical procedure, not as a beauty add-on. The [Guidelines on Aesthetic Medical Practice for Registered Medical Practitioners](https://hq.moh.gov.my/medicalprac/wp-content/uploads/2022/02/Guidelines_on_Aesthetic_Medical_Practice_for_Registered_Medical_Practitioners_2nd_edition.pdf) (second edition) put filler injection, excluding silicone and fat, on the minimally invasive list for general practitioners. The same chapter says a general practitioner may only perform non-invasive and minimally invasive procedures, and needs a Letter of Credentialing and Privileging (LCP) for the procedures they intend to perform.
 

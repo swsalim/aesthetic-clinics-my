@@ -106,6 +106,22 @@ export default function Footer() {
       href: '/guides',
     },
     {
+      name: 'Finding a clinic',
+      href: '/guides#finding-a-clinic',
+    },
+    {
+      name: 'Injectables',
+      href: '/guides#injectables',
+    },
+    {
+      name: 'Laser and pigment',
+      href: '/guides#laser-and-pigment',
+    },
+    {
+      name: 'Skin treatments',
+      href: '/guides#skin-treatments',
+    },
+    {
       name: 'Clinic chains',
       href: '/chains',
     },

@@ -4,8 +4,8 @@ description: "Compare non invasive skin tightening treatments in Malaysia, inclu
 slug: non-invasive-skin-tightening-treatments
 publishedAt: "2026-10-20"
 updatedAt: "2026-10-20"
-image: /images/guides/skin-tightening.svg
-imageAlt: "Illustrated curves suggesting skin laxity beside a clinic checklist card."
+image: "/images/guides/non-invasive-skin-tightening-treatments/ultrasound-jawline.webp"
+imageAlt: "Ultrasound handpiece resting on a jawline with clear gel, held in a gloved hand inside a bright clinic"
 primaryKeyword: "non invasive skin tightening treatments"
 summary:
   - "Clinics often call radiofrequency and ultrasound 'non-invasive'. In the Ministry of Health guideline, skin tightening with those devices, limited to the upper dermis, sits on the minimally invasive list."
@@ -46,6 +46,8 @@ People comparing non invasive skin tightening treatments are usually deciding be
 ## What these treatments are
 
 Skin tightening, in clinic advertising, usually means a device that heats tissue under the surface so the skin may look or feel firmer. It does not cut skin away, and it does not pull tissue the way a surgical lift does.
+
+![Side profile of a jaw with a white ultrasound handpiece resting under the chin in a bright clinic](/images/guides/non-invasive-skin-tightening-treatments/jawline-handpiece.webp "1536x864")
 
 The Ministry of Health Malaysia sets the categories in the [Guidelines on Aesthetic Medical Practice for Registered Medical Practitioners](https://hq.moh.gov.my/medicalprac/wp-content/uploads/2022/02/Guidelines_on_Aesthetic_Medical_Practice_for_Registered_Medical_Practitioners_2nd_edition.pdf) (second edition, Medical Practice Division). A non-invasive procedure, in that document, is an external treatment with no break in the skin, aimed at the epidermis only. For general practitioners the listed examples are superficial chemical peels, microdermabrasion, and intense pulsed light.
 

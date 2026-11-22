@@ -17,6 +17,8 @@ interface PaginationProps {
   totalPages: number;
   /** When set, page 2+ uses `${basePath}/page/2` instead of `?page=`. */
   basePath?: string;
+  /** Keeps filter query params in the URL instead of following the unfiltered page links. */
+  onPageChange?: (page: number) => void;
 }
 
 function getPageNumbers(current: number, total: number) {
@@ -49,12 +51,26 @@ const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, basePath }) => {
+export const Pagination: React.FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  basePath,
+  onPageChange,
+}) => {
   const pathname = usePathname();
   if (totalPages <= 1) return null;
   const pageNumbers = getPageNumbers(currentPage, totalPages);
-  const hrefFor = (page: number) =>
-    basePath ? listingPageHref(basePath, page) : page <= 1 ? pathname : `${pathname}?page=${page}`;
+  const hrefFor = (page: number) => {
+    if (onPageChange) return '#city-listings';
+    if (basePath) return listingPageHref(basePath, page);
+    return page <= 1 ? pathname : `${pathname}?page=${page}`;
+  };
+  const selectPage = (page: number) => (event: React.MouseEvent) => {
+    scrollToTop();
+    if (!onPageChange) return;
+    event.preventDefault();
+    onPageChange(page);
+  };
 
   return (
     <nav className={cn('flex items-center justify-center gap-2 py-6')} aria-label="Pagination">
@@ -68,7 +84,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
           rounded>
           <Link
             href={currentPage === 1 ? '#' : hrefFor(currentPage - 1)}
-            onClick={scrollToTop}
+            onClick={selectPage(currentPage - 1)}
             className={cn(
               'flex items-center justify-center py-4 hover:border-blue-600 hover:bg-blue-50 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:bg-blue-900 dark:hover:text-blue-400',
               currentPage === 1 && 'pointer-events-none cursor-not-allowed opacity-50',
@@ -86,7 +102,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
               aria-current={page === currentPage ? 'page' : undefined}>
               <Link
                 href={page === currentPage ? '#' : hrefFor(page)}
-                onClick={scrollToTop}
+                onClick={selectPage(page)}
                 className={cn(
                   'flex size-12 items-center justify-center rounded-full py-4 font-semibold transition-colors',
                   page === currentPage
@@ -110,8 +126,8 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
           rounded
           aria-label="Next page">
           <Link
-            href={hrefFor(currentPage + 1)}
-            onClick={scrollToTop}
+            href={currentPage === totalPages ? '#' : hrefFor(currentPage + 1)}
+            onClick={selectPage(currentPage + 1)}
             className={cn(
               buttonVariants({ variant: 'outline' }),
               'flex items-center justify-center rounded-full py-4 hover:border-blue-600 hover:bg-blue-50 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:bg-blue-900 dark:hover:text-blue-400',
@@ -131,7 +147,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
           rounded>
           <Link
             href={currentPage <= 1 ? '#' : hrefFor(currentPage - 1)}
-            onClick={scrollToTop}
+            onClick={selectPage(currentPage - 1)}
             className={cn(
               'flex items-center justify-center rounded-full py-4 hover:border-blue-600 hover:bg-blue-50 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:bg-blue-900 dark:hover:text-blue-400',
               currentPage === 1 && 'pointer-events-none cursor-not-allowed opacity-50',
@@ -149,8 +165,8 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
           disabled={currentPage === totalPages}
           aria-label="Next page">
           <Link
-            href={hrefFor(currentPage + 1)}
-            onClick={scrollToTop}
+            href={currentPage === totalPages ? '#' : hrefFor(currentPage + 1)}
+            onClick={selectPage(currentPage + 1)}
             className={cn(
               'flex items-center justify-center rounded-full py-4 hover:border-blue-600 hover:bg-blue-50 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:bg-blue-900 dark:hover:text-blue-400',
               currentPage === totalPages && 'pointer-events-none cursor-not-allowed opacity-50',

@@ -4,8 +4,8 @@ description: "Laser treatment for pimple scars: icepick, boxcar and rolling scar
 slug: acne-scar-laser-treatment
 publishedAt: "2026-10-22"
 updatedAt: "2026-10-22"
-image: /images/guides/acne-scar-laser.svg
-imageAlt: "Illustrated marks on a simple face shape, a stand-in for different acne scar shapes."
+image: "/images/guides/acne-scar-laser-treatment/acne-scar-cheek.webp"
+imageAlt: "Close-up of a cheek with a few shallow acne-scar dents, shown in daylight with natural skin texture"
 primaryKeyword: "laser treatment for pimple scars"
 summary:
   - "Pimple scars are not one shape. Icepick, boxcar, rolling and raised scars are assessed differently, so one laser is a poor match for every mark."
@@ -51,6 +51,8 @@ Laser treatment for pimple scars is a plan for marks left after acne, not a sing
 ## Acne scar types
 
 Doctors often group facial acne scars by shape. The labels below are a vocabulary for the consultation. They are not a diagnosis you can make from a mirror.
+
+![Clinician holding a dark laser handpiece near shallow acne scars on a cheek in a bright treatment room](/images/guides/acne-scar-laser-treatment/laser-on-acne-scars.webp "1536x864")
 
 **Icepick scars** are narrow and deep, like a small puncture. A treatment that only brushes the surface can leave the pit in place. Doctors sometimes discuss procedures aimed at the pit itself, alone or with a laser used for the surrounding texture.
 

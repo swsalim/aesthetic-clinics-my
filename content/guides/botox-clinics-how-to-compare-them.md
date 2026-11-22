@@ -4,8 +4,8 @@ description: "How to compare clinics that offer botulinum toxin (Botox) in Malay
 slug: botox-clinics-how-to-compare-them
 publishedAt: "2026-10-17"
 updatedAt: "2026-10-26"
-image: /images/guides/compare-botox.svg
-imageAlt: "Illustrated checklist for comparing a botulinum toxin clinic quote, the injector, and the product name."
+image: "/images/guides/botox-clinics-how-to-compare-them/forehead-consultation.webp"
+imageAlt: "Adult forehead and eyes during a clinic consultation, with a doctor's white coat soft in the foreground"
 primaryKeyword: "botox clinics"
 summary:
   - "Botox is a brand name. The medicine is botulinum toxin, and in Malaysia a registered medical practitioner must administer it."
@@ -49,6 +49,8 @@ Use the same three checks at every clinic on your list. Then ask for a written q
 ## What a botox clinic is offering
 
 The Ministry of Health Malaysia publishes the [Guidelines on Aesthetic Medical Practice for Registered Medical Practitioners](https://hq.moh.gov.my/medicalprac/wp-content/uploads/2022/02/Guidelines_on_Aesthetic_Medical_Practice_for_Registered_Medical_Practitioners_2nd_edition.pdf) (second edition, Medical Practice Division, 2020). Chapter 1 of that guideline, written for general practitioners, puts **botulinum toxin injection** on the minimally invasive list. It does not sit with the non-invasive examples, which are superficial chemical peels, microdermabrasion, and intense pulsed light.
+
+![Close view of a relaxed forehead and closed eyes during a consultation, with a white coat at the edge](/images/guides/botox-clinics-how-to-compare-them/forehead-lines.webp "1536x864")
 
 That classification matters when you read an advertisement. A clinic can still describe the visit as quick. The guideline's category is the one to ask about: minimally invasive, performed by a registered medical practitioner whose Letter of Credentialing and Privileging (LCP) covers that procedure.
 

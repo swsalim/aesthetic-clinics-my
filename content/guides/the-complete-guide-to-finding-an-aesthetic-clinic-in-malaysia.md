@@ -4,8 +4,8 @@ description: "How to find an aesthetic clinic in Malaysia, compare clinics in KL
 slug: the-complete-guide-to-finding-an-aesthetic-clinic-in-malaysia
 publishedAt: "2026-10-17"
 updatedAt: "2026-10-26"
-image: /images/guides/finding-a-clinic.svg
-imageAlt: "Illustrated checklist and map pin for shortlisting an aesthetic clinic in Malaysia."
+image: "/images/guides/the-complete-guide-to-finding-an-aesthetic-clinic-in-malaysia/clinic-entrance.webp"
+imageAlt: "Person walking toward the glass entrance of a modern clinic on a city street in warm afternoon light"
 primaryKeyword: "aesthetic clinic malaysia"
 summary:
   - "Shortlist clinics from a real area page, then compare the doctor, the LCP, and a written quote."
@@ -66,6 +66,8 @@ The rules below come from the [Guidelines on Aesthetic Medical Practice for Regi
 ## How to Compare an Aesthetic Clinic in KL
 
 Kuala Lumpur and Selangor are different listing areas, and people searching for an aesthetic clinic in KL often need both. A clinic in Petaling Jaya is on the [Selangor](/selangor) pages, including [Petaling Jaya](/selangor/petaling-jaya), [Subang Jaya](/selangor/subang-jaya), and [Shah Alam](/selangor/shah-alam). A clinic in the federal territory is on the [Kuala Lumpur](/kuala-lumpur) pages, including [Bukit Bintang](/kuala-lumpur/bukit-bintang), [Bangsar](/kuala-lumpur/bangsar), [Mont Kiara](/kuala-lumpur/mont-kiara), [Cheras](/kuala-lumpur/cheras), [Sri Hartamas](/kuala-lumpur/sri-hartamas), and [Kepong](/kuala-lumpur/kepong).
+
+![Visitor speaking with clinic staff across a bright reception desk, holding blank papers with no visible writing](/images/guides/the-complete-guide-to-finding-an-aesthetic-clinic-in-malaysia/clinic-reception-desk.webp "1536x864")
 
 Compare clinics inside the trip you will make. A Bangsar clinic and a Shah Alam clinic can both be "KL" in casual speech. They are not the same appointment once you count the drive back for a review.
 

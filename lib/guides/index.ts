@@ -2,6 +2,8 @@ import matter from 'gray-matter';
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { guideCategories, type GuideCategory } from '@/lib/guide-categories';
+
 import { extractHeadings } from '@/lib/guides/headings';
 import { Guide, GuideFaq, GuideLink } from '@/lib/guides/types';
 
@@ -30,6 +32,9 @@ const GUIDE_ORDER = [
 ];
 
 const WORDS_PER_MINUTE = 200;
+
+export const GUIDE_IMAGE_WIDTH = 1536;
+export const GUIDE_IMAGE_HEIGHT = 864;
 
 function optionalString(value: unknown) {
   if (typeof value !== 'string') {
@@ -169,6 +174,53 @@ export function getAllGuides(): Guide[] {
 
 export function getGuideBySlug(slug: string) {
   return getAllGuides().find((guide) => guide.slug === slug) ?? null;
+}
+
+export function getGuideCategories(): { category: GuideCategory; guides: Guide[] }[] {
+  const all = getAllGuides();
+  const bySlug = new Map(all.map((guide) => [guide.slug, guide]));
+  const used = new Set<string>();
+
+  const groups = guideCategories.map((category) => {
+    const guides = category.slugs.map((slug) => {
+      const guide = bySlug.get(slug);
+      if (!guide) {
+        throw new Error(`Unknown guide in category ${category.id}: ${slug}`);
+      }
+      if (used.has(slug)) {
+        throw new Error(`Guide is listed in more than one category: ${slug}`);
+      }
+      used.add(slug);
+      return guide;
+    });
+
+    return { category, guides };
+  });
+
+  for (const guide of all) {
+    if (!used.has(guide.slug)) {
+      throw new Error(`Guide is missing a category: ${guide.slug}`);
+    }
+  }
+
+  return groups;
+}
+
+/** Other guides in the same topic, then the rest of the catalog. */
+export function getRelatedGuides(guide: Guide, limit = 4): Guide[] {
+  const groups = getGuideCategories();
+  const sameCategory =
+    groups.find((group) => group.guides.some((item) => item.slug === guide.slug))?.guides ?? [];
+  const rest = getAllGuides().filter(
+    (item) => item.slug !== guide.slug && !sameCategory.some((related) => related.slug === item.slug),
+  );
+
+  return [...sameCategory.filter((item) => item.slug !== guide.slug), ...rest].slice(0, limit);
+}
+
+export function getGuidesIndexLastmod(): string {
+  const dates = getAllGuides().map((guide) => guide.updatedAt);
+  return dates.sort().at(-1) ?? '2026-01-01';
 }
 
 export function formatGuideDate(isoDate: string) {

@@ -4,8 +4,8 @@ description: "Learn how microneedling treatment works in Malaysia, including pos
 slug: microneedling-treatment-malaysia
 publishedAt: "2026-10-20"
 updatedAt: "2026-10-21"
-image: /images/guides/microneedling.svg
-imageAlt: "Illustrated rows of fine needles, a simple stand-in for a professional microneedling device."
+image: "/images/guides/microneedling-treatment-malaysia/microneedling-cheek.webp"
+imageAlt: "Gloved hand holding a slim microneedling pen against a cheek in a bright, unmarked clinic room"
 primaryKeyword: "microneedling treatment"
 summary:
   - "Microneedling treatment uses a pen, stamp or roller to make controlled punctures. Depth, device and protocol differ, so a consultation matters more than a package price."
@@ -51,6 +51,8 @@ Microneedling treatment is a minimally invasive procedure that uses fine needles
 ## What Is Microneedling Treatment?
 
 Microneedling treatment uses a pen-shaped, stamped or rolling device to insert small needles into the skin repeatedly. The controlled penetration creates tiny channels. A practitioner adjusts the approach according to the treatment area, skin concern and device. The aim may include improving the appearance of texture, but results aren't permanent guarantees and suitability differs between people.
+
+![Silver microneedling pen with a needle cartridge tip resting in a white sterile tray](/images/guides/microneedling-treatment-malaysia/microneedling-pen-tray.webp "1536x864")
 
 People commonly ask about microneedling for acne-scar appearance, fine lines, enlarged-looking pores and uneven texture. Pigmentation needs particular care because several conditions can look similar while responding differently to treatment. A doctor should assess the concern before recommending a procedure.
 

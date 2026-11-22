@@ -4,8 +4,8 @@ description: "How laser treatment for hyperpigmentation is assessed in Malaysia,
 slug: laser-treatment-hyperpigmentation
 publishedAt: "2026-10-26"
 updatedAt: "2026-10-26"
-image: /images/guides/laser-hyperpigmentation.svg
-imageAlt: "Illustrated face with darker patches and a light beam, a stand-in for pigmentation rather than a specific laser."
+image: "/images/guides/laser-treatment-hyperpigmentation/cheek-pigment-portrait.webp"
+imageAlt: "Centered portrait of an adult with brown patches across both cheeks against a plain grey background"
 primaryKeyword: "laser treatment for hyperpigmentation"
 summary:
   - "Hyperpigmentation means an area of skin looks darker than nearby skin. The cause and depth of pigment affect whether laser treatment is appropriate."
@@ -51,6 +51,8 @@ Laser treatment for hyperpigmentation can sound straightforward in an advertisem
 ## What Is Hyperpigmentation?
 
 Hyperpigmentation is an area of skin that appears darker than the surrounding skin because the skin produces or retains more pigment. It can appear on the face, neck, hands or other areas. Common concerns include melasma, marks left after inflammation such as acne, and individual sun-related dark spots. These concerns can look similar in a mirror while having different causes.
+
+![Gloved hand holding an unmarked laser handpiece against a cheek in a bright clinic, with the screen off](/images/guides/laser-treatment-hyperpigmentation/laser-on-cheek.webp "1536x864")
 
 [Laser treatment in Malaysia](/guides/laser-treatment-malaysia) explains how pigment lasers differ from hair-removal and resurfacing devices. [Melasma treatment in Malaysia](/guides/melasma-treatment-malaysia) is the separate page when the patches are symmetrical and tend to return. [Laser treatment for pimple scars](/guides/acne-scar-laser-treatment) is about scar shape, which is not the same question as a flat dark mark left after a spot.
 

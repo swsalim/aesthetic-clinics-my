@@ -5,8 +5,8 @@ description: "Learn how filler for nasolabial folds is assessed in Malaysia, wha
 slug: filler-nasolabial-folds
 publishedAt: "2026-10-23"
 updatedAt: "2026-10-23"
-image: /images/guides/filler-nasolabial.svg
-imageAlt: "Illustrated cheek curves beside a checklist, a stand-in for a nasolabial filler consultation."
+image: "/images/guides/filler-nasolabial-folds/smile-line-closeup.webp"
+imageAlt: "Close view of a gentle smile and the natural folds running from the nose toward the corners of the mouth"
 primaryKeyword: "filler nasolabial folds"
 summary:
   - "Nasolabial folds are the lines running from the sides of the nose towards the corners of the mouth."
@@ -52,6 +52,8 @@ This guide explains the assessment process without promising a cosmetic result. 
 ## What Are Nasolabial Folds?
 
 Nasolabial folds are creases that run from each side of the nose towards the corner of the mouth. They can appear when you smile and may remain visible when your face is relaxed. The depth and shape differ between people because facial bones, fat compartments, skin elasticity, genetics and everyday facial movement all contribute.
+
+![Side profile of an adult mouth and cheek showing the natural fold from the nose toward the lip](/images/guides/filler-nasolabial-folds/smile-line-profile.webp "1536x864")
 
 Ageing can alter skin support and facial volume, but younger adults can also have visible folds. Weight changes, sun exposure and natural facial structure can affect their appearance. A visible fold doesn’t automatically mean that treatment is needed.
 

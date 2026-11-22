@@ -5,8 +5,8 @@ description: "Learn what causes whiteheads, safer home-care steps, professional 
 slug: whitehead-removal
 publishedAt: "2026-10-23"
 updatedAt: "2026-10-23"
-image: /images/guides/whitehead-removal.svg
-imageAlt: "Illustrated small bumps on a simple face shape, a stand-in for closed comedones."
+image: "/images/guides/whitehead-removal/closed-comedones-chin.webp"
+imageAlt: "Close-up of a chin with small pale closed bumps on natural skin, photographed in soft daylight"
 primaryKeyword: "whitehead removal"
 summary:
   - "Whiteheads are closed pores blocked by oil and dead skin cells."
@@ -51,6 +51,8 @@ This guide explains practical whitehead removal options for readers in Malaysia,
 ## What Are Whiteheads?
 
 A whitehead is a small, flesh-coloured or pale bump formed when oil and dead skin cells block a pore and the pore remains closed. The medical term is a closed comedone. Whiteheads commonly appear on the face, especially the forehead, nose and chin, but similar bumps can occur elsewhere.
+
+![Three unmarked pump bottles and a folded white towel on a bathroom shelf in soft daylight](/images/guides/whitehead-removal/skincare-bottles.webp "1536x864")
 
 Blackheads form through a similar blockage, but the pore stays open. The dark colour comes from the material reacting with air, not from dirt. Papules are raised, inflamed bumps; pustules contain visible pus. A tiny bump that looks like a whitehead could also be milia, irritation or another skin condition, so appearance alone cannot confirm the cause.
 

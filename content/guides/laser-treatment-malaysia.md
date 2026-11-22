@@ -4,8 +4,8 @@ description: "What laser treatment is, how facial, pigmentation and hair-removal
 slug: laser-treatment-malaysia
 publishedAt: "2026-10-22"
 updatedAt: "2026-10-26"
-image: /images/guides/laser-treatment.svg
-imageAlt: "Illustrated beam and target, a stand-in for a clinic laser device rather than a specific machine."
+image: "/images/guides/laser-treatment-malaysia/laser-handpiece-tray.webp"
+imageAlt: "Handheld cosmetic laser device with a dark screen, resting on a white tray in a bright treatment room"
 primaryKeyword: "laser treatment"
 summary:
   - "Laser treatment is a light-based procedure. Devices differ in how they affect the skin, so the name on a poster is not a treatment plan."
@@ -57,6 +57,8 @@ A clinic menu can list laser facial treatment, face laser treatment and laser tr
 ## What laser treatment is
 
 In a clinic, a laser device delivers light that the skin, hair or pigment absorbs. Heat or a very short pulse then affects that target. A consultation should cover your concern, your skin tone, medicines, past procedures and whether the skin is inflamed or infected on the day.
+
+![Clinician pressing an unmarked white laser handpiece to a cheek during a session in a bright clinic](/images/guides/laser-treatment-malaysia/laser-facial-session.webp "1536x864")
 
 People look up laser facial treatment and face laser treatment when they want a change in tone or texture. Those phrases cover many devices. A doctor should name the device in ordinary language and say which layer of the skin it is aimed at. A brand name on its own does not explain the visit.
 

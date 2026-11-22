@@ -4,8 +4,8 @@ description: "How to check a registered medical practitioner in Malaysia against
 slug: check-registered-medical-practitioner-malaysia
 publishedAt: "2026-10-26"
 updatedAt: "2026-10-26"
-image: /images/guides/check-registered-practitioner.svg
-imageAlt: "Illustrated record card and magnifying glass, a stand-in for checking a medical register."
+image: "/images/guides/check-registered-medical-practitioner-malaysia/doctor-certificate-folder.webp"
+imageAlt: "Doctor holding an open certificate folder with the printed lines blurred, beside a stethoscope on a desk"
 primaryKeyword: "registered medical practitioner in malaysia"
 summary:
   - "Search the doctor's full name in the Malaysian Medical Council MeRITS search for a registered doctor."
@@ -51,6 +51,8 @@ This guide explains how to check a **registered medical practitioner in Malaysia
 ## What Is a Registered Medical Practitioner in Malaysia?
 
 A registered medical practitioner in Malaysia is a medical practitioner whose registration is recorded by the Malaysian Medical Council (MMC), also known in Malay as Majlis Perubatan Malaysia. The MMC says all medical practitioners must be registered with it to practise a legitimate medical profession in Malaysia. Registration gives the practitioner legal standing to practise medicine within the conditions that apply to their registration. The MMC describes provisional, full, specialist and temporary registration categories on its [registration page](https://mmc.gov.my/registrations/).
+
+![Closed laptop and a stethoscope on a light wood clinic desk, with the screen off and no readable text](/images/guides/check-registered-medical-practitioner-malaysia/clinic-laptop-stethoscope.webp "1536x864")
 
 [The MMC registration guidance](https://mmc.gov.my/registrations/) says provisional registration allows qualified new practitioners to undergo graduate training under supervision, and that full registration allows a medical practitioner to practise without supervision. It also describes full registration without conditions, and full registration subject to restrictions and conditions. These categories are different, so a search result should be read carefully rather than treated as a simple yes-or-no badge.
 

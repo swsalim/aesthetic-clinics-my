@@ -4,8 +4,8 @@ description: "Compare melasma treatment options in Malaysia, understand risks an
 slug: melasma-treatment-malaysia
 publishedAt: "2026-10-21"
 updatedAt: "2026-10-21"
-image: /images/guides/melasma.svg
-imageAlt: "Illustrated facial patches and a sun, a stand-in for melasma and light exposure."
+image: "/images/guides/melasma-treatment-malaysia/melasma-cheek-portrait.webp"
+imageAlt: "Front portrait of an adult with symmetrical brown patches on both cheeks, photographed in soft daylight"
 primaryKeyword: "melasma treatment"
 summary:
   - "Melasma is a chronic pigmentation condition. A dermatologist or qualified aesthetic doctor should confirm the diagnosis before prescription products, chemical peels, laser or light-based procedures."
@@ -48,6 +48,8 @@ Brown or grey-brown patches can appear gradually across the cheeks, forehead, no
 ## What Is Melasma?
 
 Melasma is an acquired condition involving increased pigmentation. It usually appears as fairly flat brown or grey-brown patches on areas exposed to light, especially the cheeks, forehead, bridge of the nose and upper lip. The patches often appear on both sides of the face, although appearance alone cannot confirm the diagnosis.
+
+![Straw sun hat and an unmarked white tube on a sunny windowsill, with trees visible through the window](/images/guides/melasma-treatment-malaysia/sun-hat-and-sunscreen.webp "1536x864")
 
 Several other skin conditions can resemble melasma. A doctor may need to distinguish it from post-inflammatory pigmentation, medication-related pigmentation or another lesion that needs separate care. A photograph or online description cannot make that distinction reliably.
 

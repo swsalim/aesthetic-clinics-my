@@ -4,8 +4,8 @@ description: "Compare chemical peel treatment clinics in Malaysia by doctor cred
 slug: chemical-peel-treatment-malaysia
 publishedAt: "2026-10-21"
 updatedAt: "2026-10-21"
-image: /images/guides/chemical-peel.svg
-imageAlt: "Illustrated layers and a checklist for comparing a chemical peel consultation."
+image: "/images/guides/chemical-peel-treatment-malaysia/chemical-peel-forehead.webp"
+imageAlt: "Clinician applying clear liquid to a forehead with cotton during a peel in a bright treatment room"
 primaryKeyword: "chemical peel treatment"
 summary:
   - "A chemical peel treatment uses a chemical solution to remove selected layers of skin under professional supervision."
@@ -47,6 +47,8 @@ relatedLinks:
 ## Chemical Peel Treatment in Malaysia
 
 A chemical peel treatment applies a chemical solution to the skin to remove layers at a selected depth. Clinics may discuss peels for concerns such as uneven tone, acne-related skin changes or texture, but suitability depends on an individual assessment. A qualified medical professional should review your skin, medical history and treatment goals before recommending any procedure.
+
+![Glass bowl of gauze on a white tray, set out for a chemical peel in a bright clinic room](/images/guides/chemical-peel-treatment-malaysia/peel-gauze-bowl.webp "1536x864")
 
 A consultation usually covers the intended concern, the formulation and strength under consideration, preparation requirements, possible reactions and follow-up. The American Academy of Dermatology explains that treatment depth affects what happens during and after a peel, and that the skill of the person performing it matters. [Read the AAD chemical peel FAQ](https://www.aad.org/public/cosmetic/younger-looking/chemical-peels-faqs) for general background.
 
